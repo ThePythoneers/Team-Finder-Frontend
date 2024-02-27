@@ -1,5 +1,4 @@
 import businessTeam from "@/assets/images/business team.png";
-import logo from "@/assets/images/logo.jpg";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { LogInCard } from "./components/logInCard";
@@ -8,12 +7,11 @@ import { SignUpCard } from "./components/signUpCard";
 export function HomePage() {
   return (
     <>
-      <header className="p-4 flex items-center">
-        <img src={logo} alt="logo" className="h-16 w-16 rounded-full" />
-        Happy to see you
-      </header>
-      <main className="m-4 lg:flex lg:justify-center lg:items-center lg:max-h-[1000px]">
-        <Tabs defaultValue="logIn" className="lg:min-w-[550px]">
+      <main className="px-4 pt-4 h-screen lg:flex lg:justify-center lg:items-center">
+        <Tabs
+          defaultValue="logIn"
+          className="lg:min-w-[550px] md:max-w-[750px] md:mx-auto lg:mx-0"
+        >
           <TabsList className="w-full mb-2 md:h-auto">
             <TabsTrigger value="logIn" className="w-full md:text-xl">
               Log In
@@ -29,7 +27,11 @@ export function HomePage() {
             <SignUpCard />
           </TabsContent>
         </Tabs>
-        <img src={businessTeam} alt="businessTeam" className="mx-auto lg:mx-0 lg:w-[40%]" />
+        <img
+          src={businessTeam}
+          alt="businessTeam"
+          className="mx-auto lg:mx-0 lg:w-[40%]"
+        />
       </main>
     </>
   );

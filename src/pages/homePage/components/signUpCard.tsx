@@ -19,9 +19,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+import { EyeOffIcon, EyeIcon } from "lucide-react";
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
+import axios from "axios";
+import { REGISTER_URL_ADMIN } from "@/api/URL";
+import { useNavigate } from "react-router-dom";
 
 const registerSchema = z.object({
   username: z.string().min(4, {
@@ -40,6 +43,7 @@ const registerSchema = z.object({
 });
 
 export function SignUpCard() {
+  const navigate = useNavigate();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -53,6 +57,13 @@ export function SignUpCard() {
   });
   const onSubmit = (values: z.infer<typeof registerSchema>) => {
     console.log(values);
+    try {
+      axios.post(REGISTER_URL_ADMIN, values);
+      console.log("You registered with succes");
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <>
@@ -106,7 +117,9 @@ export function SignUpCard() {
                 name="password"
                 render={({ field }) => (
                   <FormItem className="mb-2">
-                    <FormLabel className="lg:text-lg">Password</FormLabel>
+                    <FormLabel className="lg:text-lg" htmlFor="password">
+                      Password
+                    </FormLabel>
                     <FormControl>
                       <div className="flex items-center border border-input rounded-md ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
                         <Input
@@ -121,9 +134,9 @@ export function SignUpCard() {
                           onClick={() => setIsPasswordVisible((prev) => !prev)}
                         >
                           {isPasswordVisible ? (
-                            <EyeOpenIcon />
+                            <EyeIcon className="w-5 h-5" />
                           ) : (
-                            <EyeNoneIcon />
+                            <EyeOffIcon className="w-5 h-5" />
                           )}
                         </Label>
                       </div>

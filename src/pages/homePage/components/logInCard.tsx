@@ -19,11 +19,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+import { EyeOffIcon, EyeIcon } from "lucide-react";
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
+import useSignIn from "react-auth-kit/hooks/useSignIn";
+import axios from "axios";
+import { LOGIN_URL } from "@/api/URL";
 
-const registerSchema = z.object({
+const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   password: z.string().min(4, {
     message: "Password must be at least 4 characters",
@@ -32,15 +35,33 @@ const registerSchema = z.object({
 
 export function LogInCard() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const form = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
-  const onSubmit = (values: z.infer<typeof registerSchema>) => {
-    console.log(values);
+
+  const signIn = useSignIn();
+  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+    // console.log(values);
+    try {
+      const response = await axios.post(LOGIN_URL, values);
+      signIn({
+        auth: {
+          token: response.data.access_token,
+          type: response.data.token_type,
+        },
+        userState: {
+          user_id: response.data.id,
+          username: response.data.name,
+          email: response.data.email,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <>
@@ -77,7 +98,9 @@ export function LogInCard() {
                 name="password"
                 render={({ field }) => (
                   <FormItem className="mb-2">
-                    <FormLabel className="lg:text-lg">Password</FormLabel>
+                    <FormLabel className="lg:text-lg" htmlFor="password">
+                      Password
+                    </FormLabel>
                     <FormControl>
                       <div className="flex items-center border border-input rounded-md ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
                         <Input
@@ -92,9 +115,9 @@ export function LogInCard() {
                           onClick={() => setIsPasswordVisible((prev) => !prev)}
                         >
                           {isPasswordVisible ? (
-                            <EyeOpenIcon />
+                            <EyeIcon className="w-5 h-5" />
                           ) : (
-                            <EyeNoneIcon />
+                            <EyeOffIcon className="w-5 h-5" />
                           )}
                         </Label>
                       </div>
@@ -103,7 +126,6 @@ export function LogInCard() {
                   </FormItem>
                 )}
               />
-
               <Button className="mt-2 lg:text-lg">Log In</Button>
             </form>
           </Form>
