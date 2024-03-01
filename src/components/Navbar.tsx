@@ -6,7 +6,7 @@ import {
   FolderGit2Icon,
   LogOutIcon,
   SettingsIcon,
-  XSquareIcon,
+  XIcon,
   SunIcon,
   MoonIcon,
 } from "lucide-react";
@@ -40,6 +40,8 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { Card } from "./ui/card";
 import { useTheme } from "./providers/themeProvider";
+import { Badge } from "./ui/badge";
+import { NewProjectModal } from "./NewProjectModal";
 
 export function Navbar() {
   const auth: AuthUser | null = useAuthUser();
@@ -63,6 +65,7 @@ export function Navbar() {
           </ul>
         </div>
         <div className="flex gap-2">
+          <NewProjectModal />
           <Sheet>
             <SheetTrigger asChild>
               <Avatar className="cursor-pointer">
@@ -71,10 +74,25 @@ export function Navbar() {
             </SheetTrigger>
             <SheetContent className="w-full lg:max-w-[25%]">
               <SheetHeader className="mb-2">
-                <SheetTitle className="lg:text-2xl">Edit Profile</SheetTitle>
+                <SheetTitle className="lg:text-2xl">
+                  {auth ? auth.username : "Obito"}
+                </SheetTitle>
                 <SheetDescription className="lg:text-lg">
-                  Make changes to your profile here. Click save when you're
-                  done.
+                  {auth ? auth.email : "seby.danyel@gmail.com"}
+                  <div className="flex gap-x-2 flex-wrap justify-center sm:justify-start">
+                    <Badge className="block w-fit mt-2">
+                      {auth ? "Manager" : "Admin"}
+                    </Badge>
+                    <Badge className="block w-fit mt-2">
+                      {auth ? "Manager" : "Admin"}
+                    </Badge>
+                    <Badge className="block w-fit mt-2">
+                      {auth ? "Manager" : "Admin"}
+                    </Badge>
+                    <Badge className="block w-fit mt-2">
+                      {auth ? "Manager" : "Admin"}
+                    </Badge>
+                  </div>
                 </SheetDescription>
                 <Separator />
               </SheetHeader>
@@ -85,7 +103,7 @@ export function Navbar() {
                     <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent className="mt-1">
                   <Card className="w-36 p-2">
                     <DropdownMenuItem>
                       <Button
@@ -117,6 +135,8 @@ export function Navbar() {
                   </Card>
                 </DropdownMenuContent>
               </DropdownMenu>
+              <Separator className="my-2" />
+              Python
             </SheetContent>
           </Sheet>
 
@@ -131,7 +151,7 @@ export function Navbar() {
                 <DrawerHeader>
                   <DrawerClose className="ml-auto">
                     <Button variant={"ghost"} size={"icon"}>
-                      <XSquareIcon />
+                      <XIcon className="w-6 h-6" />
                     </Button>
                   </DrawerClose>
                   <DrawerTitle>{auth ? auth.username : "Obito"}</DrawerTitle>
