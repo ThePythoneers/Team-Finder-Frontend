@@ -21,9 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { EyeOffIcon, EyeIcon } from "lucide-react";
 import { useState } from "react";
-import { Label } from "@/components/ui/label";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
-import axios from "axios";
 import { LOGIN_URL } from "@/api/URL";
 
 const loginSchema = z.object({
@@ -45,18 +43,24 @@ export function LogInCard() {
 
   const signIn = useSignIn();
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
-    // console.log(values);
     try {
-      const response = await axios.post(LOGIN_URL, values);
+      const response = await fetch(LOGIN_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `grant_type=password&clientId=my-trusted-client&username=${values.email}&password=${values.password}&scope=user_info`,
+      });
+      if (!response.ok) throw new Error("There was a problem");
+      const data = await response.json();
       signIn({
         auth: {
-          token: response.data.access_token,
-          type: response.data.token_type,
+          token: data.access_token,
+          type: data.token_type,
         },
         userState: {
-          user_id: response.data.id,
-          username: response.data.name,
-          email: response.data.email,
+          user_id: data.id,
+          username: data.username,
+          email: data.email,
+          organization_id: data.organization_id,
         },
       });
     } catch (error) {
@@ -93,40 +97,44 @@ export function LogInCard() {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="password"
                 render={({ field }) => (
-                  <FormItem className="mb-2">
-                    <FormLabel className="lg:text-lg" htmlFor="password">
+                  <FormItem className="mb-4">
+                    <FormLabel className="lg:text-lg" htmlFor="passwordInput">
                       Password
                     </FormLabel>
                     <FormControl>
                       <div className="flex items-center border border-input rounded-md ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
                         <Input
-                          id="password"
+                          id="passwordInput"
                           type={isPasswordVisible ? "text" : "password"}
                           {...field}
                           className="lg:text-base border-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                         />
-                        <Label
-                          htmlFor="password"
+                        <Button
+                          variant="ghost"
+                          type="button"
+                          size="icon"
                           className="mx-4 cursor-pointer"
                           onClick={() => setIsPasswordVisible((prev) => !prev)}
                         >
                           {isPasswordVisible ? (
-                            <EyeIcon className="w-5 h-5" />
+                            <EyeIcon className="size-5" />
                           ) : (
-                            <EyeOffIcon className="w-5 h-5" />
+                            <EyeOffIcon className="size-5" />
                           )}
-                        </Label>
+                        </Button>
                       </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button className="mt-2 lg:text-lg">Log In</Button>
+
+              <Button className="lg:text-lg">Log In</Button>
             </form>
           </Form>
         </CardContent>

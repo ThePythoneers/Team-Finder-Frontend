@@ -3,6 +3,7 @@ import { HomePage } from "./pages/homePage";
 import { ThemeProvider } from "./components/providers/themeProvider";
 import { RegisterEmployeePage } from "./pages/registerEmployee";
 import { OrganizationPage } from "./pages/organizationPage";
+import { EmployeesPage } from "./pages/employeesPage";
 //import RequireAuth from '@auth-kit/react-router/RequireAuth'
 
 const router = createBrowserRouter([
@@ -11,12 +12,18 @@ const router = createBrowserRouter([
     element: <HomePage />,
   },
   {
-    path: "/2",
+    path: "invite/:organization_invite_id",
     element: <RegisterEmployeePage />,
   },
   {
-    path: "/3",
+    path: "/org",
     element: <OrganizationPage />,
+    children: [
+      {
+        path: "/org/employees",
+        element: <EmployeesPage />,
+      },
+    ],
   },
 ]);
 

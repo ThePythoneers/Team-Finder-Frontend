@@ -14,7 +14,6 @@ import { Button } from "@/components/ui/button";
 import { EyeOffIcon, EyeIcon } from "lucide-react";
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
-import axios from "axios";
 import { REGISTER_URL_EMPLOYEE } from "@/api/URL";
 import { useNavigate } from "react-router-dom";
 
@@ -39,10 +38,16 @@ export function RegisterEmployeePage() {
       password: "",
     },
   });
-  const onSubmit = (values: z.infer<typeof registerSchema>) => {
-    // console.log(values);
+  const onSubmit = async (values: z.infer<typeof registerSchema>) => {
     try {
-      axios.post(REGISTER_URL_EMPLOYEE, values);
+      const response = await fetch(REGISTER_URL_EMPLOYEE, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+      if (!response.ok) throw new Error("There was a problem");
+      const data = await response.json();
+      console.log(data);
       console.log("You registered with succes");
       navigate("/");
     } catch (error) {
@@ -52,7 +57,7 @@ export function RegisterEmployeePage() {
   return (
     <>
       <main className="h-screen px-4 pt-4 md:mx-auto md:max-w-[800px]">
-        <h1 className="mb-6 text-lg lg:text-xl text-center">
+        <h1 className="mb-6 text-2xl lg:text-3xl text-center">
           Congratulations! The organization <span>ASSIST</span> invited you to
           be part of their team!
         </h1>
@@ -66,6 +71,7 @@ export function RegisterEmployeePage() {
                   <FormLabel className="lg:text-lg">Username</FormLabel>
                   <FormControl>
                     <Input
+                      type="text"
                       placeholder="Team Finder"
                       className="lg:text-base"
                       {...field}
@@ -75,6 +81,7 @@ export function RegisterEmployeePage() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="email"
@@ -93,11 +100,12 @@ export function RegisterEmployeePage() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="password"
               render={({ field }) => (
-                <FormItem className="mb-2">
+                <FormItem className="mb-4">
                   <FormLabel className="lg:text-lg" htmlFor="password">
                     Password
                   </FormLabel>
@@ -107,7 +115,7 @@ export function RegisterEmployeePage() {
                         id="password"
                         type={isPasswordVisible ? "text" : "password"}
                         {...field}
-                        className="lg:text-base border-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                        className="border-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 lg:text-base"
                       />
                       <Label
                         htmlFor="password"
@@ -115,9 +123,9 @@ export function RegisterEmployeePage() {
                         onClick={() => setIsPasswordVisible((prev) => !prev)}
                       >
                         {isPasswordVisible ? (
-                          <EyeIcon className="w-5 h-5" />
+                          <EyeIcon className="size-5" />
                         ) : (
-                          <EyeOffIcon className="w-5 h-5" />
+                          <EyeOffIcon className="size-5" />
                         )}
                       </Label>
                     </div>
@@ -126,7 +134,8 @@ export function RegisterEmployeePage() {
                 </FormItem>
               )}
             />
-            <Button className="mt-2 lg:text-lg">Sign Up</Button>
+
+            <Button className="lg:text-lg">Sign Up</Button>
           </form>
         </Form>
       </main>

@@ -1,9 +1,5 @@
-import Axios from "axios";
+const BASE_URL = "http://localhost:8000";
 
-const BASE_URL = "https://localhost:8000/api";
-
-Axios.defaults.baseURL = BASE_URL;
-
-export const LOGIN_URL = "/token";
-export const REGISTER_URL_ADMIN = "/register";
-export const REGISTER_URL_EMPLOYEE = "";
+export const LOGIN_URL = `${BASE_URL}/auth/token`;
+export const REGISTER_URL_ADMIN = `${BASE_URL}/auth/register/organization`;
+export const REGISTER_URL_EMPLOYEE = `${BASE_URL}/auth/employee`;
