@@ -1,4 +1,3 @@
-import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { AuthUser } from "@/types";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { NewProjectModal } from "./components/NewProjectModal";
@@ -7,15 +6,18 @@ import { MobileNav } from "./components/MobileNav";
 import { DesktopNav } from "./components/DesktopNav";
 import { Link } from "react-router-dom";
 
-export function Navbar() {
-  const auth: AuthUser | null = useAuthUser();
+type NavbarProps = {
+  auth: AuthUser | null;
+};
+
+export function Navbar({ auth }: NavbarProps) {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   return (
     <>
       <nav className="sticky top-0 z-50 backdrop-blur min-h-12 py-2 px-4 flex items-center justify-between border-b border-border/40 bg-background/25 md:px-[10%]">
         <div className="flex gap-2 items-center">
-          <Link to="#" className="text-xl mr-4">
-            ASSIST Software
+          <Link to={`/${auth?.organization_name}`} className="text-xl mr-4">
+            {auth?.organization_name}
           </Link>
           <DesktopNav auth={auth} />
         </div>

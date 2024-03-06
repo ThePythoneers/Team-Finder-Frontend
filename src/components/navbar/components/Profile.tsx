@@ -41,30 +41,21 @@ export function Profile({ auth }: Props) {
       <Sheet>
         <SheetTrigger>
           <Avatar className="cursor-pointer">
-            <AvatarFallback>O</AvatarFallback>
+            <AvatarFallback>
+              {auth?.username.at(0)?.toUpperCase()}
+            </AvatarFallback>
           </Avatar>
         </SheetTrigger>
         <SheetContent className="w-full">
           <SheetHeader className="mb-2">
-            <SheetTitle className="lg:text-2xl">
-              {auth ? auth.username : "Sebastian"}
-            </SheetTitle>
+            <SheetTitle className="lg:text-2xl">{auth?.username}</SheetTitle>
             <SheetDescription className="lg:text-lg">
-              {auth ? auth.email : "seby.danyel@gmail.com"}
+              {auth?.email}
             </SheetDescription>
             <ul className="flex gap-x-2 flex-wrap justify-center sm:justify-start">
-              <Badge className="block w-fit mt-2">
-                {auth ? "Manager" : "Admin"}
-              </Badge>
-              <Badge className="block w-fit mt-2">
-                {auth ? "Manager" : "Admin"}
-              </Badge>
-              <Badge className="block w-fit mt-2">
-                {auth ? "Manager" : "Admin"}
-              </Badge>
-              <Badge className="block w-fit mt-2">
-                {auth ? "Manager" : "Admin"}
-              </Badge>
+              {auth?.roles.map((role) => {
+                return <Badge className="block w-fit mt-2">{role}</Badge>;
+              })}
             </ul>
             <Separator />
           </SheetHeader>

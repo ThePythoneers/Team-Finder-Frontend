@@ -18,7 +18,6 @@ type Props = {
 };
 
 export function MobileNav({ auth }: Props) {
-  auth;
   return (
     <>
       <Drawer direction="right">
@@ -38,7 +37,10 @@ export function MobileNav({ auth }: Props) {
           </DrawerHeader>
           <Separator className="mb-4" />
           <ul className="flex flex-col gap-2 w-full max-w-[75%] mx-auto">
-            <NavLink to={"/org/employees"} className="text-center">
+            <NavLink
+              to={`/${auth?.organization_name}/employees`}
+              className="text-center"
+            >
               {({ isActive }) => {
                 return (
                   <Button
@@ -50,7 +52,10 @@ export function MobileNav({ auth }: Props) {
                 );
               }}
             </NavLink>
-            <NavLink to={"/sajdbjwajdw"} className="w-full text-center">
+            <NavLink
+              to={`/${auth?.organization_name}/projects`}
+              className="w-full text-center"
+            >
               {({ isActive }) => {
                 return (
                   <Button
@@ -62,7 +67,10 @@ export function MobileNav({ auth }: Props) {
                 );
               }}
             </NavLink>
-            <NavLink to={"/sadkwka"} className="text-center">
+            <NavLink
+              to={`/${auth?.organization_name}/departments`}
+              className="text-center"
+            >
               {({ isActive }) => {
                 return (
                   <Button

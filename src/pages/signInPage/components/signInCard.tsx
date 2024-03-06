@@ -19,59 +19,80 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { EyeOffIcon, EyeIcon } from "lucide-react";
+import { EyeOffIcon, EyeIcon, Loader2Icon } from "lucide-react";
 import { useState } from "react";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
-import { LOGIN_URL } from "@/api/URL";
+import { useMutation } from "@tanstack/react-query";
+import { signInUser } from "@/api/auth";
+import { toast } from "sonner";
+import { Link, useNavigate } from "react-router-dom";
+import { serverErrorMsg } from "@/api/URL";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(4, {
-    message: "Password must be at least 4 characters",
-  }),
+  password: z
+    .string()
+    .min(8, {
+      message: "Password must be at least 8 characters",
+    })
+    .max(50, {
+      message: "Password can't be longer than 50 characters",
+    })
+    .refine((password) => /[A-Z]/.test(password), {
+      message: "Password must contain at least one uppercase letter",
+    })
+    .refine((password) => /[0-9]/.test(password), {
+      message: "Password must contain at least one number",
+    })
+    .refine((password) => /[!@#$%^&*(),.?":{}|<>]/.test(password), {
+      message: "Password must contain at least one symbol",
+    }),
 });
 
-export function LogInCard() {
+const signInDefaultValues = {
+  email: "",
+  password: "",
+};
+
+export function SignInCard() {
+  const navigate = useNavigate();
+  const signIn = useSignIn();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: signInDefaultValues,
   });
+  const { mutateAsync: signInMutation, isPending: signInIsPending } =
+    useMutation({
+      mutationFn: signInUser,
+    });
 
-  const signIn = useSignIn();
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     try {
-      const response = await fetch(LOGIN_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `grant_type=password&clientId=my-trusted-client&username=${values.email}&password=${values.password}&scope=user_info`,
-      });
-      if (!response.ok) throw new Error("There was a problem");
-      const data = await response.json();
+      const data = await signInMutation(values);
       signIn({
         auth: {
           token: data.access_token,
           type: data.token_type,
         },
-        userState: {
-          user_id: data.id,
-          username: data.username,
-          email: data.email,
-          organization_id: data.organization_id,
-        },
+        userState: { ...data.user },
       });
+      form.reset(signInDefaultValues);
+      toast.success("You signed in with succes!");
+      navigate(`/${data.user.organization_name}`);
     } catch (error) {
-      console.log(error);
+      if (error instanceof Error) {
+        if (error.message === "Failed to fetch")
+          return toast.warning(serverErrorMsg);
+        toast.error(error.message);
+      }
     }
   };
   return (
     <>
-      <Card>
+      <Card className="w-full md:max-w-[500px] md:mx-auto lg:mx-0">
         <CardHeader>
-          <CardTitle className="lg:text-3xl">Log In</CardTitle>
+          <CardTitle className="lg:text-3xl">Sign In</CardTitle>
           <CardDescription className="lg:text-lg">
             Put your credidentials to authenticate you
           </CardDescription>
@@ -97,7 +118,6 @@ export function LogInCard() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="password"
@@ -133,8 +153,17 @@ export function LogInCard() {
                   </FormItem>
                 )}
               />
-
-              <Button className="lg:text-lg">Log In</Button>
+              <div className="flex items-center justify-between">
+                <Button className="lg:text-lg" disabled={signInIsPending}>
+                  {signInIsPending && (
+                    <Loader2Icon className="mr-2 size-4 animate-spin" />
+                  )}
+                  Sign In
+                </Button>
+                <Button variant="ghost" asChild>
+                  <Link to="/">Don't have an account ?</Link>
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>

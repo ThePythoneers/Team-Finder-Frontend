@@ -12,11 +12,10 @@ type Props = {
 };
 
 export function DesktopNav({ auth }: Props) {
-  auth;
   return (
     <>
       <ul className="hidden lg:flex gap-2">
-        <NavLink to={"/org/employees"} className="flex items-center">
+        <NavLink to={`/${auth?.organization_name}/employees`} className="flex items-center">
           {({ isActive }) => {
             return (
               <Button variant={isActive ? "secondary" : "ghost"}>
@@ -25,7 +24,7 @@ export function DesktopNav({ auth }: Props) {
             );
           }}
         </NavLink>
-        <NavLink to={"/sadwad"} className="flex items-center">
+        <NavLink to={`/${auth?.organization_name}/projects`} className="flex items-center">
           {({ isActive }) => {
             return (
               <Button variant={isActive ? "secondary" : "ghost"}>
@@ -34,7 +33,7 @@ export function DesktopNav({ auth }: Props) {
             );
           }}
         </NavLink>
-        <NavLink to={"/snjabjdwa"} className="flex items-center">
+        <NavLink to={`/${auth?.organization_name}/departments`} className="flex items-center">
           {({ isActive }) => {
             return (
               <Button variant={isActive ? "secondary" : "ghost"}>
