@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-header";
 import { Badge } from "@/components/ui/badge";
-import { EmployeesDropdown } from "@/components/ui/data-table/data-table-employees";
+import { EmployeesDropdown } from "@/pages/employeesPage/components/data-table-employee-dropdown";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEmployeesData } from "@/api/organization";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
@@ -53,21 +53,37 @@ const columns: ColumnDef<User>[] = [
       const roles = data.map((role: string) => {
         if (role === "Organization Admin")
           return (
-            <Badge className="my-1 mr-1" variant="destructive">
+            <Badge
+              key={crypto.randomUUID()}
+              className="my-1 mr-1"
+              variant="destructive"
+            >
               {role}
             </Badge>
           );
         else if (role === "Department Manager")
-          return <Badge className="my-1 mr-1">{role}</Badge>;
+          return (
+            <Badge key={crypto.randomUUID()} className="my-1 mr-1">
+              {role}
+            </Badge>
+          );
         else if (role === "Project Manager")
           return (
-            <Badge className="my-1 mr-1" variant="secondary">
+            <Badge
+              key={crypto.randomUUID()}
+              className="my-1 mr-1"
+              variant="secondary"
+            >
               {role}
             </Badge>
           );
         else if (role === "Employee")
           return (
-            <Badge className="my-1 mr-1" variant="outline">
+            <Badge
+              key={crypto.randomUUID()}
+              className="my-1 mr-1"
+              variant="outline"
+            >
               {role}
             </Badge>
           );

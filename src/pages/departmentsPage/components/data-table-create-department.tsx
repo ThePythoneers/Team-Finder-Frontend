@@ -1,9 +1,9 @@
-import { Button } from "../button";
+import { Button } from "../../../components/ui/button";
 import { Loader2Icon, PlusIcon } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "../popover";
-import { Input } from "../input";
-import { Label } from "../label";
-import { useMutation } from "@tanstack/react-query";
+import { Popover, PopoverContent, PopoverTrigger } from "../../../components/ui/popover";
+import { Input } from "../../../components/ui/input";
+import { Label } from "../../../components/ui/label";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import { serverErrorMsg } from "@/api/URL";
@@ -13,11 +13,14 @@ import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 export function AddDepartmentPopover() {
   const authHeader = useAuthHeader();
   const [newDepartment, setNewDepartment] = useState("");
+  const queryClient = useQueryClient();
   const {
     mutateAsync: createDepartmentMutation,
     isPending: createDepartmentPending,
   } = useMutation({
     mutationFn: createDepartment,
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["departments"] }),
   });
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,7 +32,7 @@ export function AddDepartmentPopover() {
     };
     try {
       await createDepartmentMutation(params);
-      toast.success("You created a new departmet");
+      toast.success("You created a new department");
       setNewDepartment("");
     } catch (error) {
       if (error instanceof Error) {

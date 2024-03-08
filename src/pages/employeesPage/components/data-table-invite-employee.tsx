@@ -1,27 +1,39 @@
-import { Button } from "../button";
+import { Button } from "../../../components/ui/button";
 import { CopyIcon, Loader2Icon, PlusIcon } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "../popover";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "../../../components/ui/popover";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import { serverErrorMsg } from "@/api/URL";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { Input } from "../input";
+import { Input } from "../../../components/ui/input";
 import { getOrganization, refreshInviteLink } from "@/api/organization";
-import { Skeleton } from "../skeleton";
+import { Skeleton } from "../../../components/ui/skeleton";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { AuthUser } from "@/types";
 
 export function InviteEmployeesPopover() {
   const token = useAuthHeader();
+  const auth: AuthUser | null = useAuthUser();
+  const organization_id = auth?.organization;
+
   const { data: organizationData, isLoading } = useQuery({
     queryKey: ["invite", { token }],
+    queryFn: () => getOrganization({ token, organization_id }),
   });
   const [inviteLink, setInviteLink] = useState("");
 
+  const queryClient = useQueryClient();
   const {
     mutateAsync: refreshInviteLinkMutation,
     isPending: refreshInviteLinkPending,
   } = useMutation({
     mutationFn: refreshInviteLink,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["invite"] }),
   });
 
   const handleRefreshClick = async () => {
@@ -41,7 +53,16 @@ export function InviteEmployeesPopover() {
     <>
       <Popover>
         <PopoverTrigger asChild>
-          <Button className="ml-2" variant="ghost" size="icon">
+          <Button
+            className="ml-2"
+            variant="ghost"
+            size="icon"
+            onClick={() =>
+              setInviteLink(
+                `${window.location.origin}/invite/${organizationData.link_ref}`
+              )
+            }
+          >
             <PlusIcon />
           </Button>
         </PopoverTrigger>

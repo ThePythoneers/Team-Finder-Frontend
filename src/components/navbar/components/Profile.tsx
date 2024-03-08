@@ -54,7 +54,45 @@ export function Profile({ auth }: Props) {
             </SheetDescription>
             <ul className="flex gap-x-2 flex-wrap justify-center sm:justify-start">
               {auth?.roles.map((role) => {
-                return <Badge className="block w-fit mt-2">{role}</Badge>;
+                if (role === "Organization Admin")
+                  return (
+                    <Badge
+                      variant="destructive"
+                      key={crypto.randomUUID()}
+                      className="block w-fit mt-2"
+                    >
+                      {role}
+                    </Badge>
+                  );
+                if (role === "Department Manager")
+                  return (
+                    <Badge
+                      key={crypto.randomUUID()}
+                      className="block w-fit mt-2"
+                    >
+                      {role}
+                    </Badge>
+                  );
+                if (role === "Project Manager")
+                  return (
+                    <Badge
+                      variant="secondary"
+                      key={crypto.randomUUID()}
+                      className="block w-fit mt-2"
+                    >
+                      {role}
+                    </Badge>
+                  );
+                if (role === "Employee")
+                  return (
+                    <Badge
+                      variant="outline"
+                      key={crypto.randomUUID()}
+                      className="block w-fit mt-2"
+                    >
+                      {role}
+                    </Badge>
+                  );
               })}
             </ul>
             <Separator />

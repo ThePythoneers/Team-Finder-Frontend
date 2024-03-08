@@ -43,15 +43,26 @@ export const refreshInviteLink = async (token: string | null) => {
   return await response.json();
 };
 
-export const getOrganization = async (token: string | null) => {
+type getOrganizationParams = {
+  token: string | null;
+  organization_id: string | undefined;
+};
+
+export const getOrganization = async ({
+  token,
+  organization_id,
+}: getOrganizationParams) => {
   const headers = {
     "Content-Type": "application/json",
     Authorization: `${token}`,
   };
-  const response = await fetch(`${GET_ORGANIZATION_BASED_ID}`, {
-    method: "GET",
-    headers: headers,
-  });
+  const response = await fetch(
+    `${GET_ORGANIZATION_BASED_ID}?org=${organization_id}`,
+    {
+      method: "GET",
+      headers: headers,
+    }
+  );
   if (!response.ok) {
     const errMsg = await response.json();
     if (errMsg.detail) throw new Error(errMsg.detail);

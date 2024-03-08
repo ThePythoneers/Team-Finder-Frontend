@@ -23,8 +23,8 @@ import { Input } from "@/components/ui/input";
 import React from "react";
 import { DataTablePagination } from "./data-table/data-table-pagination";
 import { DataTableViewOptions } from "./data-table/data-table-column";
-import { AddDepartmentPopover } from "./data-table/data-table-department-add";
-import { InviteEmployeesPopover } from "./data-table/data-table-employees-add";
+import { AddDepartmentPopover } from "../../pages/departmentsPage/components/data-table-create-department";
+import { InviteEmployeesPopover } from "../../pages/employeesPage/components/data-table-invite-employee";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

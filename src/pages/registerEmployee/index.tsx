@@ -117,13 +117,13 @@ export function RegisterEmployeePage() {
             <MapPinIcon /> <p>{organizationInfo.hq_address}</p>
           </div>
         </header>
-        <h1 className="mb-6 text-xl md:text-2xl lg:text-3xl text-center">
+        <h2 className="mb-6 text-xl md:text-2xl lg:text-3xl text-center">
           Congratulations! The organization
           <span className="rounded-md px-4 font-bold">
             {organizationInfo.organization_name}
           </span>
           invited you to be part of their team!
-        </h1>
+        </h2>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <FormField

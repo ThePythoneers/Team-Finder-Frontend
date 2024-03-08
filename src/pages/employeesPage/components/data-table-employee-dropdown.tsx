@@ -11,10 +11,10 @@ import {
   DropdownMenuPortal,
   DropdownMenuSubContent,
   DropdownMenuCheckboxItem,
-} from "../dropdown-menu";
+} from "../../../components/ui/dropdown-menu";
 import { MoreHorizontalIcon, NotebookTabsIcon } from "lucide-react";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { Button } from "../button";
+import { Button } from "../../../components/ui/button";
 import { toast } from "sonner";
 import { serverErrorMsg } from "@/api/URL";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

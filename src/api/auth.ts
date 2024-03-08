@@ -1,5 +1,6 @@
 import {
   GET_ORGANIZATION_BASED_REF,
+  GET_USER,
   LOGIN_URL,
   REGISTER_URL_ADMIN,
   REGISTER_URL_EMPLOYEE,
@@ -29,13 +30,6 @@ export const registerAdminUser = async (body: registerAdminBody) => {
   return await response.json();
 };
 
-type registerEmployeeBody = {
-  username: string;
-  email: string;
-  password: string;
-  link_ref: string | undefined;
-};
-
 export const checkOrganizationInvite = async (link_ref: string | undefined) => {
   wait();
   const response = await fetch(`${GET_ORGANIZATION_BASED_REF}/${link_ref}`);
@@ -47,7 +41,12 @@ export const checkOrganizationInvite = async (link_ref: string | undefined) => {
   }
   return await response.json();
 };
-
+type registerEmployeeBody = {
+  username: string;
+  email: string;
+  password: string;
+  link_ref: string | undefined;
+};
 export const registerEmployee = async (values: registerEmployeeBody) => {
   wait();
   const body = {
@@ -79,6 +78,29 @@ export const signInUser = async (body: loginBody) => {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: `grant_type=password&clientId=my-trusted-client&username=${body.email}&password=${body.password}&scope=user_info`,
+  });
+  if (!response.ok) {
+    const errMsg = await response.json();
+    if (errMsg.detail) throw new Error(errMsg.detail);
+    throw new Error(errMsg);
+  }
+  return await response.json();
+};
+
+type getUserInfoParams = {
+  token: string | null;
+  user: string | undefined;
+};
+
+export const getUserInfo = async ({ token, user }: getUserInfoParams) => {
+  wait();
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `${token}`,
+  };
+  const response = await fetch(`${GET_USER}/${user}`, {
+    method: "GET",
+    headers: headers,
   });
   if (!response.ok) {
     const errMsg = await response.json();
