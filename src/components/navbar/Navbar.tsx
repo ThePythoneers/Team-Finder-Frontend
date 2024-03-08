@@ -23,7 +23,7 @@ export function Navbar({ auth }: NavbarProps) {
         </div>
         <div className="flex gap-2 items-center">
           <NewProjectModal />
-          <Profile auth={auth} />
+          {/* <Profile auth={auth} /> */}
 
           {!isDesktop && <MobileNav auth={auth} />}
         </div>

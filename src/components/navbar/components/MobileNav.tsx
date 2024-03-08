@@ -7,11 +7,16 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { Separator } from "@/components/ui/separator";
-import { GanttChartSquareIcon, MenuIcon } from "lucide-react";
+import {
+  GanttChartSquareIcon,
+  MenuIcon,
+  UsersIcon,
+  XIcon,
+  FolderGit2Icon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AuthUser } from "@/types";
 
-import { XIcon, FolderGit2Icon, NotebookTabsIcon } from "lucide-react";
 import { NavLink } from "react-router-dom";
 type Props = {
   auth: AuthUser | null;
@@ -47,7 +52,7 @@ export function MobileNav({ auth }: Props) {
                     variant={isActive ? "secondary" : "ghost"}
                     className="w-full text-lg"
                   >
-                    <NotebookTabsIcon className="mr-2" /> Employees
+                    <UsersIcon className="mr-2" /> Employees
                   </Button>
                 );
               }}

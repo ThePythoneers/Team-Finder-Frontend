@@ -3,6 +3,7 @@ import {
   LOGIN_URL,
   REGISTER_URL_ADMIN,
   REGISTER_URL_EMPLOYEE,
+  wait,
 } from "./URL";
 
 type registerAdminBody = {
@@ -13,9 +14,6 @@ type registerAdminBody = {
   hq_address: string;
 };
 
-const wait = () => {
-  setTimeout(() => console.log("3sec"), 3000);
-};
 export const registerAdminUser = async (body: registerAdminBody) => {
   wait();
   const response = await fetch(REGISTER_URL_ADMIN, {
@@ -25,6 +23,7 @@ export const registerAdminUser = async (body: registerAdminBody) => {
   });
   if (!response.ok) {
     const errMsg = await response.json();
+    if (errMsg.detail) throw new Error(errMsg.detail);
     throw new Error(errMsg);
   }
   return await response.json();
@@ -40,8 +39,10 @@ type registerEmployeeBody = {
 export const checkOrganizationInvite = async (link_ref: string | undefined) => {
   wait();
   const response = await fetch(`${GET_ORGANIZATION_BASED_REF}/${link_ref}`);
+  console.log(response);
   if (!response.ok) {
     const errMsg = await response.json();
+    if (errMsg.detail) throw new Error(errMsg.detail);
     throw new Error(errMsg);
   }
   return await response.json();
@@ -61,6 +62,7 @@ export const registerEmployee = async (values: registerEmployeeBody) => {
   });
   if (!response.ok) {
     const errMsg = await response.json();
+    if (errMsg.detail) throw new Error(errMsg.detail);
     throw new Error(errMsg);
   }
   return await response.json();
@@ -80,7 +82,8 @@ export const signInUser = async (body: loginBody) => {
   });
   if (!response.ok) {
     const errMsg = await response.json();
-    throw new Error(errMsg.detail);
+    if (errMsg.detail) throw new Error(errMsg.detail);
+    throw new Error(errMsg);
   }
   return await response.json();
 };

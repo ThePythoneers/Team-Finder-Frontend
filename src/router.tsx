@@ -8,6 +8,7 @@ import { Toaster } from "./components/ui/sonner";
 import { SignInPage } from "./pages/signInPage";
 import RequireAuth from "@auth-kit/react-router/RequireAuth";
 import { NotFoundPage } from "./pages/homePage/components/NotFoundPage";
+import { DepartmntsPage } from "./pages/departmentsPage";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: "/:organization_name/employees",
         element: <EmployeesPage />,
+      },
+      {
+        path: "/:organization_name/departments",
+        element: <DepartmntsPage />,
       },
     ],
   },

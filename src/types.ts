@@ -6,3 +6,11 @@ export type AuthUser = {
   organization_name: string;
   roles: string[];
 };
+
+
+export type User = {
+  id: string;
+  username: string;
+  email: string;
+  primary_roles: string[];
+};

@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
-  NotebookTabsIcon,
   FolderGit2Icon,
   GanttChartSquareIcon,
+  UsersIcon,
 } from "lucide-react";
 import { AuthUser } from "@/types";
 
@@ -19,7 +19,7 @@ export function DesktopNav({ auth }: Props) {
           {({ isActive }) => {
             return (
               <Button variant={isActive ? "secondary" : "ghost"}>
-                <NotebookTabsIcon className="mr-2" /> Employees
+                <UsersIcon className="mr-2" /> Employees
               </Button>
             );
           }}

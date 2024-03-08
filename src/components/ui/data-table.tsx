@@ -23,15 +23,19 @@ import { Input } from "@/components/ui/input";
 import React from "react";
 import { DataTablePagination } from "./data-table/data-table-pagination";
 import { DataTableViewOptions } from "./data-table/data-table-column";
+import { AddDepartmentPopover } from "./data-table/data-table-department-add";
+import { InviteEmployeesPopover } from "./data-table/data-table-employees-add";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  type?: "department" | "employee" | "project";
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  type,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -66,6 +70,8 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
+        {type === "department" && <AddDepartmentPopover />}
+        {type === "employee" && <InviteEmployeesPopover />}
         <DataTableViewOptions table={table} />
       </div>
 

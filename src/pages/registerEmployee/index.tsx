@@ -11,9 +11,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { EyeOffIcon, EyeIcon, Loader2Icon } from "lucide-react";
+import { EyeOffIcon, EyeIcon, Loader2Icon, MapPinIcon } from "lucide-react";
 import { useState } from "react";
-import { Label } from "@/components/ui/label";
 import { serverErrorMsg } from "@/api/URL";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -110,9 +109,17 @@ export function RegisterEmployeePage() {
   return (
     <>
       <main className="h-screen px-4 pt-36 md:mx-auto md:max-w-[800px]">
+        <header className="flex justify-between mb-4">
+          <h1 className="bg-primary text-primary-foreground rounded-md px-4 mx-2 font-bold">
+            {organizationInfo.organization_name}
+          </h1>
+          <div className="flex items-center gap-2">
+            <MapPinIcon /> <p>{organizationInfo.hq_address}</p>
+          </div>
+        </header>
         <h1 className="mb-6 text-xl md:text-2xl lg:text-3xl text-center">
           Congratulations! The organization
-          <span className="bg-primary text-primary-foreground rounded-md px-4 mx-2 font-bold">
+          <span className="rounded-md px-4 font-bold">
             {organizationInfo.organization_name}
           </span>
           invited you to be part of their team!
@@ -168,13 +175,15 @@ export function RegisterEmployeePage() {
                   <FormControl>
                     <div className="flex items-center border border-input rounded-md ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
                       <Input
-                        id="password"
+                        id="passwordInput"
                         type={isPasswordVisible ? "text" : "password"}
                         {...field}
-                        className="border-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 lg:text-base"
+                        className="lg:text-base border-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                       />
-                      <Label
-                        htmlFor="password"
+                      <Button
+                        variant="ghost"
+                        type="button"
+                        size="icon"
                         className="mx-4 cursor-pointer"
                         onClick={() => setIsPasswordVisible((prev) => !prev)}
                       >
@@ -183,7 +192,7 @@ export function RegisterEmployeePage() {
                         ) : (
                           <EyeOffIcon className="size-5" />
                         )}
-                      </Label>
+                      </Button>
                     </div>
                   </FormControl>
                   <FormMessage />

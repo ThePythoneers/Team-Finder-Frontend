@@ -1,23 +1,16 @@
 import { DataTable } from "@/components/ui/data-table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-
-import { Role, type_user_fake_db, user_fake_db } from "@/api/fake_db";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-header";
 import { Badge } from "@/components/ui/badge";
-import { RolesDropdownSubMenu } from "@/components/rolesDropdownMenu";
+import { EmployeesDropdown } from "@/components/ui/data-table/data-table-employees";
+import { useQuery } from "@tanstack/react-query";
+import { fetchEmployeesData } from "@/api/organization";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { Skeleton } from "@/components/ui/skeleton";
+import { User } from "@/types";
 
-const columns: ColumnDef<type_user_fake_db>[] = [
+const columns: ColumnDef<User>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -51,76 +44,63 @@ const columns: ColumnDef<type_user_fake_db>[] = [
     ),
   },
   {
-    accessorKey: "roles",
+    accessorKey: "primary_roles",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Roles" />
     ),
-    cell: ({ cell }) => {
-      const data: Role[] | unknown = cell.getValue();
-      const role_names = data.map((role: Role) => {
-        let variant:
-          | "outline"
-          | "default"
-          | "secondary"
-          | "destructive"
-          | null
-          | undefined;
-        switch (role.role_name) {
-          case "Employee":
-            variant = "outline";
-            break;
-          case "Organization Admin":
-            variant = "destructive";
-            break;
-          case "Department Manager":
-            variant = "default";
-            break;
-          case "Project Manager":
-            variant = "secondary";
-            break;
-        }
-        return (
-          <Badge key={role.id} variant={variant} className="mr-1 my-1">
-            {role.role_name}
-          </Badge>
-        );
+    cell: ({ row }) => {
+      const data: string[] = row.original.primary_roles;
+      const roles = data.map((role: string) => {
+        if (role === "Organization Admin")
+          return (
+            <Badge className="my-1 mr-1" variant="destructive">
+              {role}
+            </Badge>
+          );
+        else if (role === "Department Manager")
+          return <Badge className="my-1 mr-1">{role}</Badge>;
+        else if (role === "Project Manager")
+          return (
+            <Badge className="my-1 mr-1" variant="secondary">
+              {role}
+            </Badge>
+          );
+        else if (role === "Employee")
+          return (
+            <Badge className="my-1 mr-1" variant="outline">
+              {role}
+            </Badge>
+          );
       });
-      return role_names;
+      return roles;
     },
   },
   {
     id: "Actions",
     cell: ({ row }) => {
-      const user = row.original;
+      const user: User = row.original;
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="size-8 p-0">
-              <MoreHorizontal className="size-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(user.id)}
-            >
-              Copy user ID
-            </DropdownMenuItem>
-            <RolesDropdownSubMenu />
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      return <EmployeesDropdown user={user} />;
     },
   },
 ];
 
 export function EmployeesPage() {
+  const token = useAuthHeader();
+
+  const { data: EmployeesData, isLoading } = useQuery({
+    queryKey: ["employees", { token }],
+    queryFn: () => fetchEmployeesData(token),
+  });
+
   return (
     <>
       <main className="container mx-auto py-4">
-        <DataTable columns={columns} data={user_fake_db} />
+        {isLoading ? (
+          <Skeleton className="w-full h-[300px]  rounded-md" />
+        ) : (
+          <DataTable columns={columns} data={EmployeesData} type="employee" />
+        )}
       </main>
     </>
   );
