@@ -13,8 +13,6 @@ import { Button } from "@/components/ui/button";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteDepartment, removeDepartmentManager } from "@/api/department";
-import { toast } from "sonner";
-import { serverErrorMsg } from "@/api/URL";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -51,29 +49,11 @@ export function DepartmentsDropdown({ department }: RoleDropdownProps) {
   });
 
   const handleDeleteDepartment = async () => {
-    try {
-      await deleteDepartmentMutation({ token, department_id });
-      toast.success("You deleted a department with success");
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.message === "Failed to fetch")
-          return toast.warning(serverErrorMsg);
-        toast.error(error.message);
-      }
-    }
+    await deleteDepartmentMutation({ token, department_id });
   };
 
   const handleDeleteManager = async () => {
-    try {
-      await deleteManagerMutation({ token, department_id });
-      toast.success("You removed the current manager with success");
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.message === "Failed to fetch")
-          return toast.warning(serverErrorMsg);
-        toast.error(error.message);
-      }
-    }
+    await deleteManagerMutation({ token, department_id });
   };
   return (
     <>

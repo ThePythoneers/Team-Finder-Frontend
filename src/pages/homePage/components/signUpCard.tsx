@@ -23,8 +23,6 @@ import { EyeOffIcon, EyeIcon, Loader2Icon } from "lucide-react";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { registerAdminUser } from "@/api/auth";
-import { toast } from "sonner";
-import { serverErrorMsg } from "@/api/URL";
 import { useNavigate } from "react-router-dom";
 
 const registerSchema = z.object({
@@ -83,18 +81,9 @@ export function SignUpCard() {
     });
 
   const onSubmit = async (values: z.infer<typeof registerSchema>) => {
-    try {
-      await registerMutation(values);
-      form.reset(registerDefaultValues);
-      toast.success("You registered with succes");
-      navigate("/authentication/signIn");
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.message === "Failed to fetch")
-          return toast.warning(serverErrorMsg);
-        toast.error(error.message);
-      }
-    }
+    await registerMutation(values);
+    form.reset(registerDefaultValues);
+    navigate("/authentication/signIn");
   };
 
   return (

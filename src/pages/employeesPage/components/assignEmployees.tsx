@@ -7,8 +7,7 @@ import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { User } from "@/types";
 import { getUnassignedEmployees } from "@/api/department";
-import { AssignButton } from "./components/assignButton";
-import { Tabs, TabsTrigger, TabsList, TabsContent } from "@/components/ui/tabs";
+import { AssignButton } from "./assignButton";
 
 const columns: ColumnDef<User>[] = [
   {
@@ -63,31 +62,17 @@ export function UnassignedEmployeesPage() {
 
   return (
     <>
-      <main className="container mx-auto py-4">
-        <Tabs defaultValue="unassigned">
-          <TabsList className="w-full lg:h-auto">
-            <TabsTrigger value="unassigned" className="w-full lg:text-lg">
-              Assign Employees
-            </TabsTrigger>
-            <TabsTrigger value="assigned" className="w-full lg:text-lg">
-              Current Employees
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="unassigned">
-            {isLoading ? (
-              <Skeleton className="w-full h-[300px]  rounded-md" />
-            ) : (
-              <>
-                <DataTable
-                  columns={columns}
-                  data={unassignedEmployeesData}
-                  type="employee"
-                />
-              </>
-            )}
-          </TabsContent>
-        </Tabs>
-      </main>
+      {isLoading ? (
+        <Skeleton className="w-full h-[300px]  rounded-md" />
+      ) : (
+        <>
+          <DataTable
+            columns={columns}
+            data={unassignedEmployeesData}
+            type="employee"
+          />
+        </>
+      )}
     </>
   );
 }

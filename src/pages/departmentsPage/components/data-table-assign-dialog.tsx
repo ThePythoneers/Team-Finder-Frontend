@@ -1,6 +1,5 @@
-import { serverErrorMsg } from "@/api/URL";
 import { assignDepartmentManager } from "@/api/department";
-import { fetchEmployeesData } from "@/api/organization";
+import { getEmployees } from "@/api/organization";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -28,7 +27,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { useState } from "react";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { toast } from "sonner";
 
 type Props = {
   department: Department;
@@ -42,7 +40,7 @@ export function AssignDepartmentManager({ department }: Props) {
 
   const { data: employees, isLoading } = useQuery({
     queryKey: ["employees", { token }],
-    queryFn: () => fetchEmployeesData(token),
+    queryFn: () => getEmployees(token),
   });
 
   const { mutateAsync: assignManagerMutation } = useMutation({
@@ -52,19 +50,10 @@ export function AssignDepartmentManager({ department }: Props) {
   });
 
   const handleAssignManager = async () => {
-    try {
-      const manager_id = newDepartmentManagerID;
-      const department_id = department.id;
+    const manager_id = newDepartmentManagerID;
+    const department_id = department.id;
 
-      await assignManagerMutation({ token, department_id, manager_id });
-      toast.success("You assigned a new department manager with success");
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.message === "Failed to fetch")
-          return toast.warning(serverErrorMsg);
-        toast.error(error.message);
-      }
-    }
+    await assignManagerMutation({ token, department_id, manager_id });
   };
 
   return (

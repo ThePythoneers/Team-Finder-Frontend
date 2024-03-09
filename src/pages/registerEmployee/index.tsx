@@ -13,11 +13,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { EyeOffIcon, EyeIcon, Loader2Icon, MapPinIcon } from "lucide-react";
 import { useState } from "react";
-import { serverErrorMsg } from "@/api/URL";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { checkOrganizationInvite, registerEmployee } from "@/api/auth";
-import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { NotFoundPage } from "../homePage/components/NotFoundPage";
 
@@ -83,18 +81,10 @@ export function RegisterEmployeePage() {
 
   const onSubmit = async (values: z.infer<typeof registerSchema>) => {
     const body = { ...values, link_ref: link_ref };
-    try {
-      await registerMutation(body);
-      form.reset(registerDefaultValues);
-      toast.success("You registered with succes");
-      navigate("/authentication/signIn");
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.message === "Failed to fetch")
-          return toast.warning(serverErrorMsg);
-        toast.error(serverErrorMsg);
-      }
-    }
+
+    await registerMutation(body);
+    form.reset(registerDefaultValues);
+    navigate("/authentication/signIn");
   };
   if (isLoading)
     return (

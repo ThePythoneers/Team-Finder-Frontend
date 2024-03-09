@@ -8,7 +8,6 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { serverErrorMsg } from "@/api/URL";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Input } from "../../../components/ui/input";
 import { getOrganization, refreshInviteLink } from "@/api/organization";
@@ -19,7 +18,7 @@ import { AuthUser } from "@/types";
 export function InviteEmployeesPopover() {
   const token = useAuthHeader();
   const auth: AuthUser | null = useAuthUser();
-  const organization_id = auth?.organization;
+  const organization_id = auth?.organization_id;
 
   const { data: organizationData, isLoading } = useQuery({
     queryKey: ["invite", { token }],
@@ -37,17 +36,8 @@ export function InviteEmployeesPopover() {
   });
 
   const handleRefreshClick = async () => {
-    try {
-      const data = await refreshInviteLinkMutation(token);
-      setInviteLink(`${window.location.origin}/invite/${data}`);
-      toast.success("You generated a new invite link");
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.message === "Failed to fetch")
-          return toast.warning(serverErrorMsg);
-        toast.error(error.message);
-      }
-    }
+    const data = await refreshInviteLinkMutation(token);
+    setInviteLink(`${window.location.origin}/invite/${data}`);
   };
   return (
     <>

@@ -5,7 +5,7 @@ import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-hea
 import { Badge } from "@/components/ui/badge";
 import { EmployeesDropdown } from "@/pages/rolesPage/components/data-table-role-dropdown";
 import { useQuery } from "@tanstack/react-query";
-import { fetchEmployeesData } from "@/api/organization";
+import { getEmployees } from "@/api/organization";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { User } from "@/types";
@@ -106,7 +106,7 @@ export function RolesPage() {
 
   const { data: EmployeesData, isLoading } = useQuery({
     queryKey: ["employees", { token }],
-    queryFn: () => fetchEmployeesData(token),
+    queryFn: () => getEmployees(token),
   });
 
   return (

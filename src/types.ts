@@ -1,12 +1,13 @@
+export type Token = string | null;
+
 export type AuthUser = {
-  user_id: string;
+  id: string;
   username: string;
   email: string;
-  organization: string;
+  organization_id: string;
   organization_name: string;
   roles: string[];
 };
-
 
 export type User = {
   id: string;
@@ -15,11 +16,10 @@ export type User = {
   primary_roles: string[];
 };
 
-
 export type Department = {
-  department_name: string;
   id: string;
-  created_at: Date;
+  department_name: string;
   department_manager?: string;
   organization_id: string;
-}
+  created_at: Date;
+};

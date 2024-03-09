@@ -1,4 +1,3 @@
-import { serverErrorMsg } from "@/api/URL";
 import { assignUserToDepartment } from "@/api/department";
 import { Button } from "@/components/ui/button";
 import { User } from "@/types";
@@ -15,21 +14,21 @@ export function AssignButton({ user }: Props) {
   console.log(auth);
   console.log(user);
 
-  const { mutateAsync: assignMutation, isPending } = useMutation({
-    mutationFn: assignUserToDepartment,
-  });
+  // const { mutateAsync: assignMutation, isPending } = useMutation({
+  //   mutationFn: assignUserToDepartment,
+  // });
 
-  const handleAssignUser = async() => {
-    try {
-        await assignMutation({token, })
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.message === "Failed to fetch")
-          return toast.warning(serverErrorMsg);
-        toast.error(error.message);
-      }
-    }
-  };
+  // const handleAssignUser = async() => {
+  //   try {
+  //       await assignMutation({token, })
+  //   } catch (error) {
+  //     if (error instanceof Error) {
+  //       if (error.message === "Failed to fetch")
+  //         return toast.warning(serverErrorMsg);
+  //       toast.error(error.message);
+  //     }
+  //   }
+  // };
   return (
     <>
       <Button variant="outline">Assign</Button>

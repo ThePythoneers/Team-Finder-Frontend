@@ -1,57 +1,61 @@
+import { Token } from "@/types";
 import {
   DELETE_ASSIGN_DEPARTMENT_MANAGER,
   DELETE_GET_CREATE_DEPARTMENT,
+  GET_ASSIGNED_EMPLOYEES,
   GET_DEPARTMENTS,
   GET_UNASSIGNED_EMPLOYEES,
-  wait,
 } from "./URL";
+import { checkError, getAuthHeaders } from "./utils";
+import { toast } from "sonner";
 
-export const getDepartments = async (token: string | null) => {
-  wait();
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `${token}`,
-  };
-  const response = await fetch(`${GET_DEPARTMENTS}`, {
-    method: "GET",
-    headers: headers,
-  });
-  if (!response.ok) {
-    const errMsg = await response.json();
-    if (errMsg.detail) throw new Error(errMsg.detail);
-    throw new Error(errMsg);
+export const getDepartments = async (token: Token) => {
+  try {
+    const headers = getAuthHeaders(token);
+    const response = await fetch(`${GET_DEPARTMENTS}`, {
+      method: "GET",
+      headers: headers,
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
   }
-  return await response.json();
 };
 
 type createDepartmentParams = {
   newDepartment: string;
-  token: string | null;
+  token: Token;
 };
 
 export const createDepartment = async ({
   newDepartment,
   token,
 }: createDepartmentParams) => {
-  wait();
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `${token}`,
-  };
-  const body = {
-    department_name: newDepartment,
-  };
-  const response = await fetch(`${DELETE_GET_CREATE_DEPARTMENT}`, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify(body),
-  });
-  if (!response.ok) {
-    const errMsg = await response.json();
-    if (errMsg.detail) throw new Error(errMsg.detail);
-    throw new Error(errMsg);
+  try {
+    const headers = getAuthHeaders(token);
+    const body = {
+      department_name: newDepartment,
+    };
+    const response = await fetch(`${DELETE_GET_CREATE_DEPARTMENT}`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You created a new department with success!!!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
   }
-  return await response.json();
 };
 
 type deleteDepartmentParams = {
@@ -62,23 +66,24 @@ export const deleteDepartment = async ({
   token,
   department_id,
 }: deleteDepartmentParams) => {
-  wait();
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `${token}`,
-  };
-  const body = { department_id };
-  const response = await fetch(`${DELETE_GET_CREATE_DEPARTMENT}`, {
-    method: "DELETE",
-    headers: headers,
-    body: JSON.stringify(body),
-  });
-  if (!response.ok) {
-    const errMsg = await response.json();
-    if (errMsg.detail) throw new Error(errMsg.detail);
-    throw new Error(errMsg);
+  try {
+    const headers = getAuthHeaders(token);
+    const body = { department_id };
+    const response = await fetch(`${DELETE_GET_CREATE_DEPARTMENT}`, {
+      method: "DELETE",
+      headers: headers,
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You deleted a department with success!!!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
   }
-  return await response.json();
 };
 
 type assignDepartmentManagerParams = {
@@ -91,23 +96,24 @@ export const assignDepartmentManager = async ({
   department_id,
   manager_id,
 }: assignDepartmentManagerParams) => {
-  wait();
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `${token}`,
-  };
-  const body = { department_id, manager_id };
-  const response = await fetch(`${DELETE_ASSIGN_DEPARTMENT_MANAGER}`, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify(body),
-  });
-  if (!response.ok) {
-    const errMsg = await response.json();
-    if (errMsg.detail) throw new Error(errMsg.detail);
-    throw new Error(errMsg);
+  try {
+    const headers = getAuthHeaders(token);
+    const body = { department_id, manager_id };
+    const response = await fetch(`${DELETE_ASSIGN_DEPARTMENT_MANAGER}`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You assigned a new department manager with success!!!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
   }
-  return await response.json();
 };
 
 type removeDepartmentManagerParams = {
@@ -118,41 +124,41 @@ export const removeDepartmentManager = async ({
   token,
   department_id,
 }: removeDepartmentManagerParams) => {
-  wait();
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `${token}`,
-  };
-  const body = { department_id };
-  const response = await fetch(`${DELETE_ASSIGN_DEPARTMENT_MANAGER}`, {
-    method: "DELETE",
-    headers: headers,
-    body: JSON.stringify(body),
-  });
-  if (!response.ok) {
-    const errMsg = await response.json();
-    if (errMsg.detail) throw new Error(errMsg.detail);
-    throw new Error(errMsg);
+  try {
+    const headers = getAuthHeaders(token);
+    const body = { department_id };
+    const response = await fetch(`${DELETE_ASSIGN_DEPARTMENT_MANAGER}`, {
+      method: "DELETE",
+      headers: headers,
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
   }
-  return await response.json();
 };
 
 export const getUnassignedEmployees = async (token: string | null) => {
-  wait();
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `${token}`,
-  };
-  const response = await fetch(`${GET_UNASSIGNED_EMPLOYEES}`, {
-    method: "GET",
-    headers: headers,
-  });
-  if (!response.ok) {
-    const errMsg = await response.json();
-    if (errMsg.detail) throw new Error(errMsg.detail);
-    throw new Error(errMsg);
+  try {
+    const headers = getAuthHeaders(token);
+    const response = await fetch(`${GET_UNASSIGNED_EMPLOYEES}`, {
+      method: "GET",
+      headers: headers,
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
   }
-  return await response.json();
 };
 
 type assignUserToDepartmentParams = {
@@ -166,21 +172,48 @@ export const assignUserToDepartment = async ({
   department_id,
   user_id,
 }: assignUserToDepartmentParams) => {
-  wait();
-  const body = { department_id, user_id };
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `${token}`,
-  };
-  const response = await fetch(`${GET_UNASSIGNED_EMPLOYEES}`, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify(body),
-  });
-  if (!response.ok) {
-    const errMsg = await response.json();
-    if (errMsg.detail) throw new Error(errMsg.detail);
-    throw new Error(errMsg);
+  try {
+    const body = { department_id, user_id };
+    const headers = getAuthHeaders(token);
+    const response = await fetch(`${GET_UNASSIGNED_EMPLOYEES}`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You assigned a user to a department with success!!!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
   }
-  return await response.json();
+};
+
+type getDepartmentEmployeesParams = {
+  token: string | null;
+  department_id: string;
+};
+
+export const getDepartmentEmployees = async ({
+  token,
+  department_id,
+}: getDepartmentEmployeesParams) => {
+  try {
+    const headers = getAuthHeaders(token);
+    const response = await fetch(`${GET_ASSIGNED_EMPLOYEES}/${department_id}`, {
+      method: "GET",
+      headers: headers,
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
 };

@@ -1,11 +1,13 @@
+import { toast } from "sonner";
 import {
   GET_ORGANIZATION_BASED_REF,
   GET_USER,
+  GET_USER_INFO_BY_TOKEN,
   LOGIN_URL,
   REGISTER_URL_ADMIN,
   REGISTER_URL_EMPLOYEE,
-  wait,
 } from "./URL";
+import { checkError } from "./utils";
 
 type registerAdminBody = {
   username: string;
@@ -16,31 +18,38 @@ type registerAdminBody = {
 };
 
 export const registerAdminUser = async (body: registerAdminBody) => {
-  wait();
-  const response = await fetch(REGISTER_URL_ADMIN, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  if (!response.ok) {
-    const errMsg = await response.json();
-    if (errMsg.detail) throw new Error(errMsg.detail);
-    throw new Error(errMsg);
+  try {
+    const response = await fetch(REGISTER_URL_ADMIN, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You registered with succes");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
   }
-  return await response.json();
 };
 
 export const checkOrganizationInvite = async (link_ref: string | undefined) => {
-  wait();
-  const response = await fetch(`${GET_ORGANIZATION_BASED_REF}/${link_ref}`);
-  console.log(response);
-  if (!response.ok) {
-    const errMsg = await response.json();
-    if (errMsg.detail) throw new Error(errMsg.detail);
-    throw new Error(errMsg);
+  try {
+    const response = await fetch(`${GET_ORGANIZATION_BASED_REF}/${link_ref}`);
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
   }
-  return await response.json();
 };
+
 type registerEmployeeBody = {
   username: string;
   email: string;
@@ -48,23 +57,30 @@ type registerEmployeeBody = {
   link_ref: string | undefined;
 };
 export const registerEmployee = async (values: registerEmployeeBody) => {
-  wait();
-  const body = {
-    username: values.username,
-    email: values.email,
-    password: values.password,
-  };
-  const response = await fetch(`${REGISTER_URL_EMPLOYEE}/${values.link_ref}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  if (!response.ok) {
-    const errMsg = await response.json();
-    if (errMsg.detail) throw new Error(errMsg.detail);
-    throw new Error(errMsg);
+  try {
+    const body = {
+      username: values.username,
+      email: values.email,
+      password: values.password,
+    };
+    const response = await fetch(
+      `${REGISTER_URL_EMPLOYEE}/${values.link_ref}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You registered with success!!!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
   }
-  return await response.json();
 };
 
 type loginBody = {
@@ -73,18 +89,22 @@ type loginBody = {
 };
 
 export const signInUser = async (body: loginBody) => {
-  wait();
-  const response = await fetch(LOGIN_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `grant_type=password&clientId=my-trusted-client&username=${body.email}&password=${body.password}&scope=user_info`,
-  });
-  if (!response.ok) {
-    const errMsg = await response.json();
-    if (errMsg.detail) throw new Error(errMsg.detail);
-    throw new Error(errMsg);
+  try {
+    const response = await fetch(LOGIN_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `grant_type=password&clientId=my-trusted-client&username=${body.email}&password=${body.password}&scope=user_info`,
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You signed in with succes!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
   }
-  return await response.json();
 };
 
 type getUserInfoParams = {
@@ -93,19 +113,42 @@ type getUserInfoParams = {
 };
 
 export const getUserInfo = async ({ token, user }: getUserInfoParams) => {
-  wait();
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `${token}`,
-  };
-  const response = await fetch(`${GET_USER}/${user}`, {
-    method: "GET",
-    headers: headers,
-  });
-  if (!response.ok) {
-    const errMsg = await response.json();
-    if (errMsg.detail) throw new Error(errMsg.detail);
-    throw new Error(errMsg);
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `${token}`,
+    };
+    const response = await fetch(`${GET_USER}/${user}`, {
+      method: "GET",
+      headers: headers,
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
   }
-  return await response.json();
+};
+
+export const getUserInfoByToken = async (token: string | null) => {
+  try {
+    const response = await fetch(
+      `${GET_USER_INFO_BY_TOKEN}/${token?.slice(7)}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
 };

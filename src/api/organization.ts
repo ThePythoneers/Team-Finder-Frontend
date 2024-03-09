@@ -1,50 +1,54 @@
+import { Token } from "@/types";
 import {
   ASSIGN_PRIMARY_ROLE,
   GET_ORGANIZATION_BASED_ID,
   GET_ORGANIZATION_EMPLOYEES,
   REFRESH_ORGANIZATION_INVITE_LINK,
   REMOVE_PRIMARY_ROLE,
-  wait,
 } from "./URL";
+import { checkError, getAuthHeaders } from "./utils";
+import { toast } from "sonner";
 
-export const fetchEmployeesData = async (token: string | null) => {
-  wait();
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `${token}`,
-  };
+export const getEmployees = async (token: Token) => {
+  try {
+    const headers = getAuthHeaders(token);
 
-  const response = await fetch(`${GET_ORGANIZATION_EMPLOYEES}`, {
-    method: "GET",
-    headers: headers,
-  });
-  if (!response.ok) {
-    const errMsg = await response.json();
-    if (errMsg.detail) throw new Error(errMsg.detail);
-    throw new Error(errMsg);
+    const response = await fetch(`${GET_ORGANIZATION_EMPLOYEES}`, {
+      method: "GET",
+      headers: headers,
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
   }
-  return await response.json();
 };
 
-export const refreshInviteLink = async (token: string | null) => {
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `${token}`,
-  };
-  const response = await fetch(`${REFRESH_ORGANIZATION_INVITE_LINK}`, {
-    method: "PUT",
-    headers: headers,
-  });
-  if (!response.ok) {
-    const errMsg = await response.json();
-    if (errMsg.detail) throw new Error(errMsg.detail);
-    throw new Error(errMsg);
+export const refreshInviteLink = async (token: Token) => {
+  try {
+    const headers = getAuthHeaders(token);
+    const response = await fetch(`${REFRESH_ORGANIZATION_INVITE_LINK}`, {
+      method: "PUT",
+      headers: headers,
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You generated a new invite link");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
   }
-  return await response.json();
 };
 
 type getOrganizationParams = {
-  token: string | null;
+  token: Token;
   organization_id: string | undefined;
 };
 
@@ -52,83 +56,87 @@ export const getOrganization = async ({
   token,
   organization_id,
 }: getOrganizationParams) => {
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `${token}`,
-  };
-  const response = await fetch(
-    `${GET_ORGANIZATION_BASED_ID}?org=${organization_id}`,
-    {
-      method: "GET",
-      headers: headers,
+  try {
+    const headers = getAuthHeaders(token);
+    const response = await fetch(
+      `${GET_ORGANIZATION_BASED_ID}?org=${organization_id}`,
+      {
+        method: "GET",
+        headers: headers,
+      }
+    );
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
     }
-  );
-  if (!response.ok) {
-    const errMsg = await response.json();
-    if (errMsg.detail) throw new Error(errMsg.detail);
-    throw new Error(errMsg);
+    return await response.json();
+  } catch (error) {
+    checkError(error);
   }
-  return await response.json();
 };
 
-type test = {
-  accessToken: string | null;
+type primaryRoleParams = {
+  token: Token;
   user_id: string;
   role_name: string;
 };
 
 export const addPrimaryRole = async ({
-  accessToken,
+  token,
   user_id,
   role_name,
-}: test) => {
-  wait();
-  const body = {
-    user_id,
-    role_name,
-  };
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `${accessToken}`,
-  };
+}: primaryRoleParams) => {
+  try {
+    const body = {
+      user_id,
+      role_name,
+    };
+    const headers = getAuthHeaders(token);
 
-  const response = await fetch(`${ASSIGN_PRIMARY_ROLE}`, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify(body),
-  });
-  if (!response.ok) {
-    const errMsg = await response.json();
-    if (errMsg.detail) throw new Error(errMsg.detail);
-    throw new Error(errMsg);
+    const response = await fetch(`${ASSIGN_PRIMARY_ROLE}`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You added the role with succes!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
   }
-  return await response.json();
 };
 
 export const removePrimaryRole = async ({
-  accessToken,
+  token,
   user_id,
   role_name,
-}: test) => {
-  wait();
-  const body = {
-    user_id,
-    role_name,
-  };
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `${accessToken}`,
-  };
+}: primaryRoleParams) => {
+  try {
+    const body = {
+      user_id,
+      role_name,
+    };
+    const headers = getAuthHeaders(token);
 
-  const response = await fetch(`${REMOVE_PRIMARY_ROLE}`, {
-    method: "PUT",
-    headers: headers,
-    body: JSON.stringify(body),
-  });
-  if (!response.ok) {
-    const errMsg = await response.json();
-    if (errMsg.detail) throw new Error(errMsg.detail);
-    throw new Error(errMsg);
+    const response = await fetch(`${REMOVE_PRIMARY_ROLE}`, {
+      method: "PUT",
+      headers: headers,
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You removed a role with succes!");
+
+    return await response.json();
+  } catch (error) {
+    checkError(error);
   }
-  return await response.json();
 };

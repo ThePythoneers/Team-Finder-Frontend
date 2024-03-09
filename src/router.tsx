@@ -10,7 +10,7 @@ import RequireAuth from "@auth-kit/react-router/RequireAuth";
 import { NotFoundPage } from "./pages/homePage/components/NotFoundPage";
 import { DepartmentsPage } from "./pages/departmentsPage";
 import { SkillsPage } from "./pages/skillsPage";
-import { UnassignedEmployeesPage } from "./pages/unassignedEmployeesPage";
+import { EmployeesPage } from "./pages/employeesPage/index";
 
 const router = createBrowserRouter([
   {
@@ -48,7 +48,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/:organization_name/employees",
-        element: <UnassignedEmployeesPage />,
+        element: <EmployeesPage />,
       },
     ],
   },

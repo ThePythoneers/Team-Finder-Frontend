@@ -68,14 +68,10 @@ export function SkillsPage() {
           <Skeleton className="w-full h-[300px]  rounded-md" />
         ) : (
           <>
-            <section className="space-x-2 mb-2">
-              <Button variant="outline">Create new skill category</Button>
-              <Button variant="outline">Create new skill</Button>
-            </section>
             <DataTable
               columns={columns}
               data={departmentsData}
-              type="department"
+              type="skill"
             />
           </>
         )}

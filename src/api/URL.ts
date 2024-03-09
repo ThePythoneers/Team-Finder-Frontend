@@ -1,16 +1,10 @@
 const BASE_URL = "http://localhost:8000";
 
-export const wait = () => {
-  setTimeout(() => console.log("3sec"), 3000);
-};
-
-export const serverErrorMsg =
-  "Server is down at the moment please try again later!";
-
 // AUTHENTICATION
 export const LOGIN_URL = `${BASE_URL}/auth/token`;
 export const REGISTER_URL_ADMIN = `${BASE_URL}/auth/register/organization`;
 export const REGISTER_URL_EMPLOYEE = `${BASE_URL}/auth/employee`;
+export const GET_USER_INFO_BY_TOKEN = `${BASE_URL}/auth/token-info`;
 
 export const GET_USER = `${BASE_URL}/user/get`;
 
@@ -27,4 +21,7 @@ export const DELETE_GET_CREATE_DEPARTMENT = `${BASE_URL}/department/`;
 export const GET_DEPARTMENTS = `${BASE_URL}/departments`;
 export const DELETE_ASSIGN_DEPARTMENT_MANAGER = `${BASE_URL}/department/manager/`;
 export const GET_UNASSIGNED_EMPLOYEES = `${BASE_URL}/department/unassigned/`;
+export const GET_ASSIGNED_EMPLOYEES = `${BASE_URL}/department/users`;
 export const ASSIGN_USER_TO_DEPARTMENT = `${BASE_URL}/department/user`;
+
+export const CREATE_NEW_SKILL_CATEGORY = `${BASE_URL}/skill/category`;

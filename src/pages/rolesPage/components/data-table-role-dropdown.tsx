@@ -1,4 +1,4 @@
-import { User } from "@/types";
+import { AuthUser, User } from "@/types";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,22 +11,22 @@ import {
   DropdownMenuPortal,
   DropdownMenuSubContent,
   DropdownMenuCheckboxItem,
-} from "../../../components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import { MoreHorizontalIcon, NotebookTabsIcon } from "lucide-react";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { Button } from "../../../components/ui/button";
-import { toast } from "sonner";
-import { serverErrorMsg } from "@/api/URL";
+import { Button } from "@/components/ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addPrimaryRole, removePrimaryRole } from "@/api/organization";
 import { useState } from "react";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 type RoleDropdownProps = {
   user: User;
 };
 
 export function EmployeesDropdown({ user }: RoleDropdownProps) {
-  const accessToken = useAuthHeader();
+  const token = useAuthHeader();
+  const auth: AuthUser | null = useAuthUser();
   const roles = user.primary_roles;
   const user_id = user.id;
 
@@ -43,32 +43,30 @@ export function EmployeesDropdown({ user }: RoleDropdownProps) {
   const queryClient = useQueryClient();
   const { mutateAsync: addRoleMutation } = useMutation({
     mutationFn: addPrimaryRole,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["employees"] }),
+    onSuccess: () => {
+      if (user_id === auth?.id)
+        queryClient.invalidateQueries({ queryKey: ["connectedUser"] });
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+    },
   });
   const { mutateAsync: removeRoleMutation } = useMutation({
     mutationFn: removePrimaryRole,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["employees"] }),
+    onSuccess: () => {
+      if (user_id === auth?.id)
+        queryClient.invalidateQueries({ queryKey: ["connectedUser"] });
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+    },
   });
 
   const handleCheckboxChange = async (checked: boolean, role_name: string) => {
-    try {
-      if (!checked) {
-        await addRoleMutation({ accessToken, user_id, role_name });
-        toast.success("You added the role with succes!");
-      } else {
-        await removeRoleMutation({
-          accessToken,
-          user_id,
-          role_name,
-        });
-        toast.success("You removed a role with succes!");
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.message === "Failed to fetch")
-          return toast.warning(serverErrorMsg);
-        toast.error(error.message);
-      }
+    if (!checked) {
+      await addRoleMutation({ token, user_id, role_name });
+    } else {
+      await removeRoleMutation({
+        token,
+        user_id,
+        role_name,
+      });
     }
   };
 

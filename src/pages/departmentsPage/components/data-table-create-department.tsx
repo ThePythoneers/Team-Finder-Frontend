@@ -1,12 +1,14 @@
 import { Button } from "../../../components/ui/button";
 import { Loader2Icon, PlusIcon } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "../../../components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "../../../components/ui/popover";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { toast } from "sonner";
-import { serverErrorMsg } from "@/api/URL";
 import { createDepartment } from "@/api/department";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
@@ -30,17 +32,8 @@ export function AddDepartmentPopover() {
       newDepartment: newDepartment,
       token: authHeader,
     };
-    try {
-      await createDepartmentMutation(params);
-      toast.success("You created a new department");
-      setNewDepartment("");
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.message === "Failed to fetch")
-          return toast.warning(serverErrorMsg);
-        toast.error(error.message);
-      }
-    }
+    await createDepartmentMutation(params);
+    setNewDepartment("");
   };
   return (
     <>
@@ -68,7 +61,7 @@ export function AddDepartmentPopover() {
               value={newDepartment}
               onChange={(e) => setNewDepartment(e.target.value)}
             />
-            <Button className="mt-2">
+            <Button className="mt-2" type="submit">
               {createDepartmentPending && (
                 <Loader2Icon className="mr-2 size-4 animate-spin" />
               )}

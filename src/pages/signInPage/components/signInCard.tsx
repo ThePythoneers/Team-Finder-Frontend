@@ -24,9 +24,7 @@ import { useState } from "react";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { useMutation } from "@tanstack/react-query";
 import { signInUser } from "@/api/auth";
-import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
-import { serverErrorMsg } from "@/api/URL";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -68,25 +66,16 @@ export function SignInCard() {
     });
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
-    try {
-      const data = await signInMutation(values);
-      signIn({
-        auth: {
-          token: data.access_token,
-          type: data.token_type,
-        },
-        userState: { ...data.user },
-      });
-      form.reset(signInDefaultValues);
-      toast.success("You signed in with succes!");
-      navigate(`/${data.user.organization_name}`);
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.message === "Failed to fetch")
-          return toast.warning(serverErrorMsg);
-        toast.error(error.message);
-      }
-    }
+    const data = await signInMutation(values);
+    signIn({
+      auth: {
+        token: data.access_token,
+        type: data.token_type,
+      },
+      userState: { ...data.user },
+    });
+    form.reset(signInDefaultValues);
+    navigate(`/${data.user.organization_name}`);
   };
   return (
     <>

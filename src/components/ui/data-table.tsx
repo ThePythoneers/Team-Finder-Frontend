@@ -25,11 +25,12 @@ import { DataTablePagination } from "./data-table/data-table-pagination";
 import { DataTableViewOptions } from "./data-table/data-table-column";
 import { AddDepartmentPopover } from "@/pages/departmentsPage/components/data-table-create-department";
 import { InviteEmployeesPopover } from "@/pages/rolesPage/components/data-table-invite-employee";
+import { CreateSkillCategoryPopover } from "@/pages/skillsPage/components/createSkillCategory";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  type?: "department" | "employee" | "project";
+  type?: "department" | "employee" | "project" | "skill";
 }
 
 export function DataTable<TData, TValue>({
@@ -63,33 +64,57 @@ export function DataTable<TData, TValue>({
     <>
       <div className="flex items-center mb-4">
         {type === "employee" && (
-          <Input
-            placeholder="Filter emails..."
-            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("email")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
+          <>
+            <Input
+              placeholder="Filter emails..."
+              value={
+                (table.getColumn("email")?.getFilterValue() as string) ?? ""
+              }
+              onChange={(event) =>
+                table.getColumn("email")?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm"
+            />
+            <InviteEmployeesPopover />
+          </>
         )}
         {type === "department" && (
-          <Input
-            placeholder="Filter departments..."
-            value={
-              (table
-                .getColumn("department_name")
-                ?.getFilterValue() as string) ?? ""
-            }
-            onChange={(event) =>
-              table
-                .getColumn("department_name")
-                ?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
+          <>
+            <Input
+              placeholder="Filter departments..."
+              value={
+                (table
+                  .getColumn("department_name")
+                  ?.getFilterValue() as string) ?? ""
+              }
+              onChange={(event) =>
+                table
+                  .getColumn("department_name")
+                  ?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm"
+            />
+            <AddDepartmentPopover />
+          </>
         )}
-        {type === "department" && <AddDepartmentPopover />}
-        {type === "employee" && <InviteEmployeesPopover />}
+        {type === "skill" && (
+          <>
+            <Input
+              placeholder="Filter skill name..."
+              value={
+                (table.getColumn("skill_name")?.getFilterValue() as string) ??
+                ""
+              }
+              onChange={(event) =>
+                table
+                  .getColumn("skill_name")
+                  ?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm"
+            />
+            <CreateSkillCategoryPopover />
+          </>
+        )}
         <DataTableViewOptions table={table} />
       </div>
 
