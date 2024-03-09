@@ -88,39 +88,40 @@ export function DepartmentsDropdown({ department }: RoleDropdownProps) {
           <DropdownMenuSeparator />
           <DropdownMenuItem>Copy user ID</DropdownMenuItem>
 
-          {user_roles?.includes("Organization Admin") && (
-            <>
-              <DropdownMenuSeparator />
+          {user_roles?.includes("Organization Admin") &&
+            department.department_manager && (
+              <>
+                <DropdownMenuSeparator />
 
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <DropdownMenuItem
-                    className="bg-destructive"
-                    onSelect={(e) => e.preventDefault()}
-                  >
-                    <Trash2Icon className="size-5 mr-2" /> Remove Manager
-                  </DropdownMenuItem>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      the current manager from from our servers.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleDeleteManager}>
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </>
-          )}
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <DropdownMenuItem
+                      className="bg-destructive"
+                      onSelect={(e) => e.preventDefault()}
+                    >
+                      <Trash2Icon className="size-5 mr-2" /> Remove Manager
+                    </DropdownMenuItem>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete the current manager from from our servers.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleDeleteManager}>
+                        Continue
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </>
+            )}
           {user_roles?.includes("Organization Admin") && (
             <>
               <DropdownMenuSeparator />

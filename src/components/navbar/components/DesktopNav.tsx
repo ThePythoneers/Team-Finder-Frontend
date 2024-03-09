@@ -1,8 +1,10 @@
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
+  AlbumIcon,
   FolderGit2Icon,
   GanttChartSquareIcon,
+  NotebookIcon,
   UsersIcon,
 } from "lucide-react";
 import { AuthUser } from "@/types";
@@ -12,19 +14,42 @@ type Props = {
 };
 
 export function DesktopNav({ auth }: Props) {
+  const user_roles = auth?.roles;
   return (
     <>
-      <ul className="hidden lg:flex gap-2">
-        <NavLink to={`/${auth?.organization_name}/employees`} className="flex items-center">
-          {({ isActive }) => {
-            return (
-              <Button variant={isActive ? "secondary" : "ghost"}>
-                <UsersIcon className="mr-2" /> Employees
-              </Button>
-            );
-          }}
-        </NavLink>
-        <NavLink to={`/${auth?.organization_name}/projects`} className="flex items-center">
+      <ul className="flex gap-2">
+        {user_roles?.includes("Organization Admin") && (
+          <NavLink
+            to={`/${auth?.organization_name}/roles`}
+            className="flex items-center"
+          >
+            {({ isActive }) => {
+              return (
+                <Button variant={isActive ? "secondary" : "ghost"}>
+                  <NotebookIcon className="mr-2" /> Roles
+                </Button>
+              );
+            }}
+          </NavLink>
+        )}
+        {user_roles?.includes("Department Manager") && (
+          <NavLink
+            to={`/${auth?.organization_name}/employees`}
+            className="flex items-center"
+          >
+            {({ isActive }) => {
+              return (
+                <Button variant={isActive ? "secondary" : "ghost"}>
+                  <UsersIcon className="mr-2" /> Employees
+                </Button>
+              );
+            }}
+          </NavLink>
+        )}
+        <NavLink
+          to={`/${auth?.organization_name}/projects`}
+          className="flex items-center"
+        >
           {({ isActive }) => {
             return (
               <Button variant={isActive ? "secondary" : "ghost"}>
@@ -33,15 +58,34 @@ export function DesktopNav({ auth }: Props) {
             );
           }}
         </NavLink>
-        <NavLink to={`/${auth?.organization_name}/departments`} className="flex items-center">
-          {({ isActive }) => {
-            return (
-              <Button variant={isActive ? "secondary" : "ghost"}>
-                <GanttChartSquareIcon className="mr-2" /> Departments
-              </Button>
-            );
-          }}
-        </NavLink>
+        {user_roles?.includes("Organization Admin") && (
+          <NavLink
+            to={`/${auth?.organization_name}/departments`}
+            className="flex items-center"
+          >
+            {({ isActive }) => {
+              return (
+                <Button variant={isActive ? "secondary" : "ghost"}>
+                  <GanttChartSquareIcon className="mr-2" /> Departments
+                </Button>
+              );
+            }}
+          </NavLink>
+        )}
+        {user_roles?.includes("Department Manager") && (
+          <NavLink
+            to={`/${auth?.organization_name}/skills`}
+            className="flex items-center"
+          >
+            {({ isActive }) => {
+              return (
+                <Button variant={isActive ? "secondary" : "ghost"}>
+                  <AlbumIcon className="mr-2" /> Skills
+                </Button>
+              );
+            }}
+          </NavLink>
+        )}
       </ul>
     </>
   );

@@ -94,16 +94,19 @@ export function EmployeesDropdown({ user }: RoleDropdownProps) {
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
-                <DropdownMenuCheckboxItem
-                  checked={adminChecked}
-                  onSelect={(e) => e.preventDefault()}
-                  onCheckedChange={() => {
-                    setAdminChecked((prev) => !prev);
-                    handleCheckboxChange(adminChecked, "Organization Admin");
-                  }}
-                >
-                  Organizaton Admin
-                </DropdownMenuCheckboxItem>
+                {roles.includes("Employee") && (
+                  <DropdownMenuCheckboxItem
+                    checked={adminChecked}
+                    onSelect={(e) => e.preventDefault()}
+                    onCheckedChange={() => {
+                      setAdminChecked((prev) => !prev);
+                      handleCheckboxChange(adminChecked, "Organization Admin");
+                    }}
+                  >
+                    Organizaton Admin
+                  </DropdownMenuCheckboxItem>
+                )}
+
                 <DropdownMenuCheckboxItem
                   checked={departmentManagerChecked}
                   onSelect={(e) => e.preventDefault()}

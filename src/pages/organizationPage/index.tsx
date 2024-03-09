@@ -7,9 +7,8 @@ import { NotFoundPage } from "../homePage/components/NotFoundPage";
 export function OrganizationPage() {
   const auth: AuthUser | null = useAuthUser();
   const params = useParams();
-  const currentOrganization = params.organization_name;
   if (auth) {
-    if (currentOrganization !== auth.organization_name)
+    if (params.organization_name !== auth.organization_name)
       return <NotFoundPage errorMsg="This is not your organization" />;
   }
   return (

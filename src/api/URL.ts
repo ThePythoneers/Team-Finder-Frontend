@@ -26,3 +26,5 @@ export const REMOVE_PRIMARY_ROLE = `${BASE_URL}/roles/remove`;
 export const DELETE_GET_CREATE_DEPARTMENT = `${BASE_URL}/department/`;
 export const GET_DEPARTMENTS = `${BASE_URL}/departments`;
 export const DELETE_ASSIGN_DEPARTMENT_MANAGER = `${BASE_URL}/department/manager/`;
+export const GET_UNASSIGNED_EMPLOYEES = `${BASE_URL}/department/unassigned/`;
+export const ASSIGN_USER_TO_DEPARTMENT = `${BASE_URL}/department/user`;

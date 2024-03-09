@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import notFoundIMG from "@/assets/images/404.jpg";
 
 type NotFoundPageProps = {
   errorMsg?: string;
@@ -15,6 +16,11 @@ export function NotFoundPage({ errorMsg }: NotFoundPageProps) {
         <Button className="text-4xl py-6" asChild>
           <Link to="/">Go back to safety</Link>
         </Button>
+        <img
+          src={notFoundIMG}
+          alt="404 Not Found Image"
+          className="w-[50%] rounded-lg"
+        />
       </main>
     </>
   );

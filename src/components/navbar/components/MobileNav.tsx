@@ -13,6 +13,7 @@ import {
   UsersIcon,
   XIcon,
   FolderGit2Icon,
+  AlbumIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AuthUser } from "@/types";
@@ -33,7 +34,9 @@ export function MobileNav({ auth }: Props) {
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader className="flex justify-between items-center">
-            <DrawerTitle className="text-xl">ASSIST SOFTWARE</DrawerTitle>
+            <DrawerTitle className="text-xl">
+              {auth?.organization_name}
+            </DrawerTitle>
             <DrawerClose asChild>
               <Button variant="ghost" size="icon">
                 <XIcon />
@@ -83,6 +86,21 @@ export function MobileNav({ auth }: Props) {
                     className="w-full text-lg"
                   >
                     <GanttChartSquareIcon className="mr-2" /> Departments
+                  </Button>
+                );
+              }}
+            </NavLink>
+            <NavLink
+              to={`/${auth?.organization_name}/departments`}
+              className="text-center"
+            >
+              {({ isActive }) => {
+                return (
+                  <Button
+                    variant={isActive ? "secondary" : "ghost"}
+                    className="w-full text-lg"
+                  >
+                    <AlbumIcon className="mr-2" /> Skills
                   </Button>
                 );
               }}

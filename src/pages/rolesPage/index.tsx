@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-header";
 import { Badge } from "@/components/ui/badge";
-import { EmployeesDropdown } from "@/pages/employeesPage/components/data-table-employee-dropdown";
+import { EmployeesDropdown } from "@/pages/rolesPage/components/data-table-role-dropdown";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEmployeesData } from "@/api/organization";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
@@ -101,7 +101,7 @@ const columns: ColumnDef<User>[] = [
   },
 ];
 
-export function EmployeesPage() {
+export function RolesPage() {
   const token = useAuthHeader();
 
   const { data: EmployeesData, isLoading } = useQuery({

@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { SunIcon, MoonIcon, LogOutIcon } from "lucide-react";
+import { SunIcon, MoonIcon, LogOutIcon, SunMoonIcon } from "lucide-react";
 
 import { Separator } from "@/components/ui/separator";
 import {
@@ -13,15 +13,19 @@ import {
 } from "@/components/ui/sheet";
 import { useTheme } from "@/components/providers/themeProvider";
 import { Badge } from "@/components/ui/badge";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { AuthUser } from "@/types";
 import { Slider } from "@/components/ui/slider";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { useNavigate } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type Props = {
   auth: AuthUser | null;
@@ -64,7 +68,7 @@ export function Profile({ auth }: Props) {
                       {role}
                     </Badge>
                   );
-                if (role === "Department Manager")
+                else if (role === "Department Manager")
                   return (
                     <Badge
                       key={crypto.randomUUID()}
@@ -73,7 +77,7 @@ export function Profile({ auth }: Props) {
                       {role}
                     </Badge>
                   );
-                if (role === "Project Manager")
+                else if (role === "Project Manager")
                   return (
                     <Badge
                       variant="secondary"
@@ -83,7 +87,7 @@ export function Profile({ auth }: Props) {
                       {role}
                     </Badge>
                   );
-                if (role === "Employee")
+                else if (role === "Employee")
                   return (
                     <Badge
                       variant="outline"
@@ -98,37 +102,39 @@ export function Profile({ auth }: Props) {
             <Separator />
           </SheetHeader>
           <ul className="flex gap-2">
-            <Popover>
-              <PopoverTrigger asChild>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
                 <Button variant="secondary">
                   <SunIcon className="size-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                   <MoonIcon className="absolute size-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                 </Button>
-              </PopoverTrigger>
-              <PopoverContent className="max-w-36 p-2">
-                <Button
-                  variant={"ghost"}
-                  className="w-full"
-                  onClick={() => setTheme("light")}
-                >
-                  Light
-                </Button>
-                <Button
-                  variant={"ghost"}
-                  className="w-full"
-                  onClick={() => setTheme("dark")}
-                >
-                  Dark
-                </Button>
-                <Button
-                  variant={"ghost"}
-                  className="w-full"
-                  onClick={() => setTheme("system")}
-                >
-                  System
-                </Button>
-              </PopoverContent>
-            </Popover>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Theme</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    className="space-x-1"
+                    onClick={() => setTheme("light")}
+                  >
+                    <SunIcon /> <span>Light</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="space-x-1"
+                    onClick={() => setTheme("dark")}
+                  >
+                    <MoonIcon /> <span>Dark</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="space-x-1"
+                    onClick={() => setTheme("system")}
+                  >
+                    <SunMoonIcon /> <span>System</span>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <Button variant="destructive" className="ml-auto" onClick={logOut}>
               <LogOutIcon className="size-5" />
             </Button>

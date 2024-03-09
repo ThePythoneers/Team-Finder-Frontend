@@ -8,8 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Department } from "@/types";
 import { getDepartments } from "@/api/department";
 import { DepartmentsDropdown } from "@/pages/departmentsPage/components/data-table-department-dropdown";
-import { AssignDepartmentManager } from "./components/data-table-assign-dialog";
-import { DepartmentManagerCard } from "./components/data-table-manager-card";
+import { Button } from "@/components/ui/button";
 
 const columns: ColumnDef<Department>[] = [
   {
@@ -43,12 +42,6 @@ const columns: ColumnDef<Department>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Manager" />
     ),
-    cell: ({ row }) => {
-      const department = row.original;
-      if (department.department_manager === null)
-        return <AssignDepartmentManager department={department} />;
-      return <DepartmentManagerCard department={department} />;
-    },
   },
   {
     id: "Actions",
@@ -60,7 +53,7 @@ const columns: ColumnDef<Department>[] = [
   },
 ];
 
-export function DepartmentsPage() {
+export function SkillsPage() {
   const token = useAuthHeader();
 
   const { data: departmentsData, isLoading } = useQuery({
@@ -75,6 +68,10 @@ export function DepartmentsPage() {
           <Skeleton className="w-full h-[300px]  rounded-md" />
         ) : (
           <>
+            <section className="space-x-2 mb-2">
+              <Button variant="outline">Create new skill category</Button>
+              <Button variant="outline">Create new skill</Button>
+            </section>
             <DataTable
               columns={columns}
               data={departmentsData}

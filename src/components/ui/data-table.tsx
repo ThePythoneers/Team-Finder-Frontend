@@ -23,8 +23,8 @@ import { Input } from "@/components/ui/input";
 import React from "react";
 import { DataTablePagination } from "./data-table/data-table-pagination";
 import { DataTableViewOptions } from "./data-table/data-table-column";
-import { AddDepartmentPopover } from "../../pages/departmentsPage/components/data-table-create-department";
-import { InviteEmployeesPopover } from "../../pages/employeesPage/components/data-table-invite-employee";
+import { AddDepartmentPopover } from "@/pages/departmentsPage/components/data-table-create-department";
+import { InviteEmployeesPopover } from "@/pages/rolesPage/components/data-table-invite-employee";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -62,14 +62,32 @@ export function DataTable<TData, TValue>({
   return (
     <>
       <div className="flex items-center mb-4">
-        <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+        {type === "employee" && (
+          <Input
+            placeholder="Filter emails..."
+            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("email")?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+        )}
+        {type === "department" && (
+          <Input
+            placeholder="Filter departments..."
+            value={
+              (table
+                .getColumn("department_name")
+                ?.getFilterValue() as string) ?? ""
+            }
+            onChange={(event) =>
+              table
+                .getColumn("department_name")
+                ?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+        )}
         {type === "department" && <AddDepartmentPopover />}
         {type === "employee" && <InviteEmployeesPopover />}
         <DataTableViewOptions table={table} />
