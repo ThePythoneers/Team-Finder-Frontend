@@ -7,6 +7,8 @@ import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Skill } from "@/types";
 import { getSkills } from "@/api/skill";
+import { SkillsDropdown } from "./components/data-table-skill-dropdown";
+import { useDepartmentManagerRedirect } from "@/hooks/useDepartmentManagerRedirect";
 
 const columns: ColumnDef<Skill>[] = [
   {
@@ -47,17 +49,18 @@ const columns: ColumnDef<Skill>[] = [
       <DataTableColumnHeader column={column} title="Description" />
     ),
   },
-  // {
-  //   id: "Actions",
-  //   cell: ({ row }) => {
-  //     const department = row.original;
+  {
+    id: "Actions",
+    cell: ({ row }) => {
+      const skill = row.original;
 
-  //     return <DepartmentsDropdown department={department} />;
-  //   },
-  // },
+      return <SkillsDropdown skill={skill} />;
+    },
+  },
 ];
 
 export function SkillsPage() {
+  useDepartmentManagerRedirect();
   const token = useAuthHeader();
 
   const { data: skillsData, isLoading } = useQuery({
@@ -65,22 +68,19 @@ export function SkillsPage() {
     queryFn: () => getSkills(token),
   });
 
-
   // ! TODO: filter skills that are used in your department
   // ! TODO: filter skill categories
   // ! TODO: filter only created by me
-  // ! TODO: filter 
-  // ! TODO: filter 
-  // ! TODO: filter 
+  // ! TODO: filter
+  // ! TODO: filter
+  // ! TODO: filter
   return (
     <>
       <main className="container mx-auto py-4">
         {isLoading ? (
           <Skeleton className="w-full h-[300px]  rounded-md" />
         ) : (
-          <>
-            <DataTable columns={columns} data={skillsData} type="skill" />
-          </>
+          <DataTable columns={columns} data={skillsData} type="skill" />
         )}
       </main>
     </>

@@ -10,6 +10,7 @@ import { getDepartments } from "@/api/department";
 import { DepartmentsDropdown } from "@/pages/departmentsPage/components/data-table-department-dropdown";
 import { AssignDepartmentManager } from "./components/data-table-assign-dialog";
 import { DepartmentManagerCard } from "./components/data-table-manager-card";
+import { useAdminRedirect } from "@/hooks/useAdminRedirect";
 
 const columns: ColumnDef<Department>[] = [
   {
@@ -61,6 +62,7 @@ const columns: ColumnDef<Department>[] = [
 ];
 
 export function DepartmentsPage() {
+  useAdminRedirect();
   const token = useAuthHeader();
 
   const { data: departmentsData, isLoading } = useQuery({

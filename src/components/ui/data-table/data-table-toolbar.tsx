@@ -11,7 +11,7 @@ import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import { InviteEmployeesPopover } from "@/pages/rolesPage/components/data-table-invite-employee";
 import { CreateDepartmentPopover } from "@/pages/departmentsPage/components/data-table-create-department";
 import { CreateSkillCategoryPopover } from "@/pages/skillsPage/components/createSkillCategory";
-import { CreateSkillDialog } from "@/pages/skillsPage/components/createSkill";
+import { CreateSkillDialog } from "@/pages/skillsPage/components/data-table-createSkill";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;

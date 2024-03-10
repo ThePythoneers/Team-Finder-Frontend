@@ -9,6 +9,7 @@ import { getEmployees } from "@/api/organization";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { User } from "@/types";
+import { useAdminRedirect } from "@/hooks/useAdminRedirect";
 
 const columns: ColumnDef<User>[] = [
   {
@@ -102,6 +103,7 @@ const columns: ColumnDef<User>[] = [
 ];
 
 export function RolesPage() {
+  useAdminRedirect();
   const token = useAuthHeader();
 
   const { data: EmployeesData, isLoading } = useQuery({
