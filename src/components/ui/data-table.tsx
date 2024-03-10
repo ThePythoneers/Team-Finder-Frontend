@@ -1,13 +1,18 @@
 "use client";
 
+import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
+  SortingState,
   VisibilityState,
   flexRender,
   getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -19,113 +24,62 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
-import React from "react";
-import { DataTablePagination } from "./data-table/data-table-pagination";
-import { DataTableViewOptions } from "./data-table/data-table-column";
-import { AddDepartmentPopover } from "@/pages/departmentsPage/components/data-table-create-department";
-import { InviteEmployeesPopover } from "@/pages/rolesPage/components/data-table-invite-employee";
-import { CreateSkillCategoryPopover } from "@/pages/skillsPage/components/createSkillCategory";
+
+import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
+import { DataTableToolbar } from "@/components/ui/data-table/data-table-toolbar";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  type?: "department" | "employee" | "project" | "skill";
+  type?: "role" | "employee" | "department" | "skill";
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  type,
+  type
 }: DataTableProps<TData, TValue>) {
+  const [rowSelection, setRowSelection] = React.useState({});
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
     state: {
-      columnFilters,
+      sorting,
       columnVisibility,
       rowSelection,
+      columnFilters,
     },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
   return (
-    <>
-      <div className="flex items-center mb-4">
-        {type === "employee" && (
-          <>
-            <Input
-              placeholder="Filter emails..."
-              value={
-                (table.getColumn("email")?.getFilterValue() as string) ?? ""
-              }
-              onChange={(event) =>
-                table.getColumn("email")?.setFilterValue(event.target.value)
-              }
-              className="max-w-sm"
-            />
-            <InviteEmployeesPopover />
-          </>
-        )}
-        {type === "department" && (
-          <>
-            <Input
-              placeholder="Filter departments..."
-              value={
-                (table
-                  .getColumn("department_name")
-                  ?.getFilterValue() as string) ?? ""
-              }
-              onChange={(event) =>
-                table
-                  .getColumn("department_name")
-                  ?.setFilterValue(event.target.value)
-              }
-              className="max-w-sm"
-            />
-            <AddDepartmentPopover />
-          </>
-        )}
-        {type === "skill" && (
-          <>
-            <Input
-              placeholder="Filter skill name..."
-              value={
-                (table.getColumn("skill_name")?.getFilterValue() as string) ??
-                ""
-              }
-              onChange={(event) =>
-                table
-                  .getColumn("skill_name")
-                  ?.setFilterValue(event.target.value)
-              }
-              className="max-w-sm"
-            />
-            <CreateSkillCategoryPopover />
-          </>
-        )}
-        <DataTableViewOptions table={table} />
-      </div>
-
-      <section className="rounded-md border mb-4">
+    <div className="space-y-4">
+      <DataTableToolbar table={table} type={type} />
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -167,9 +121,8 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
-      </section>
-
+      </div>
       <DataTablePagination table={table} />
-    </>
+    </div>
   );
 }

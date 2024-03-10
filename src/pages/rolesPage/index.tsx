@@ -115,7 +115,7 @@ export function RolesPage() {
         {isLoading ? (
           <Skeleton className="w-full h-[300px]  rounded-md" />
         ) : (
-          <DataTable columns={columns} data={EmployeesData} type="employee" />
+          <DataTable columns={columns} data={EmployeesData} type="role" />
         )}
       </main>
     </>

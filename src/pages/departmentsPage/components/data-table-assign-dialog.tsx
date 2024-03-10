@@ -60,7 +60,7 @@ export function AssignDepartmentManager({ department }: Props) {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button>Assign Manager</Button>
+          <Button size="sm">Assign Manager</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>

@@ -5,12 +5,10 @@ import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-hea
 import { useQuery } from "@tanstack/react-query";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Department } from "@/types";
-import { getDepartments } from "@/api/department";
-import { DepartmentsDropdown } from "@/pages/departmentsPage/components/data-table-department-dropdown";
-import { Button } from "@/components/ui/button";
+import { Skill } from "@/types";
+import { getSkills } from "@/api/skill";
 
-const columns: ColumnDef<Department>[] = [
+const columns: ColumnDef<Skill>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -32,35 +30,48 @@ const columns: ColumnDef<Department>[] = [
     ),
   },
   {
-    accessorKey: "department_name",
+    accessorKey: "skill_name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Department" />
+      <DataTableColumnHeader column={column} title="Skill" />
     ),
   },
   {
-    accessorKey: "department_manager",
+    accessorKey: "skill_category",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Manager" />
+      <DataTableColumnHeader column={column} title="Skill categories" />
     ),
   },
   {
-    id: "Actions",
-    cell: ({ row }) => {
-      const department = row.original;
+    accessorKey: "skill_description",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Description" />
+    ),
+  },
+  // {
+  //   id: "Actions",
+  //   cell: ({ row }) => {
+  //     const department = row.original;
 
-      return <DepartmentsDropdown department={department} />;
-    },
-  },
+  //     return <DepartmentsDropdown department={department} />;
+  //   },
+  // },
 ];
 
 export function SkillsPage() {
   const token = useAuthHeader();
 
-  const { data: departmentsData, isLoading } = useQuery({
-    queryKey: ["departments", { token }],
-    queryFn: () => getDepartments(token),
+  const { data: skillsData, isLoading } = useQuery({
+    queryKey: ["skills", { token }],
+    queryFn: () => getSkills(token),
   });
 
+
+  // ! TODO: filter skills that are used in your department
+  // ! TODO: filter skill categories
+  // ! TODO: filter only created by me
+  // ! TODO: filter 
+  // ! TODO: filter 
+  // ! TODO: filter 
   return (
     <>
       <main className="container mx-auto py-4">
@@ -68,11 +79,7 @@ export function SkillsPage() {
           <Skeleton className="w-full h-[300px]  rounded-md" />
         ) : (
           <>
-            <DataTable
-              columns={columns}
-              data={departmentsData}
-              type="skill"
-            />
+            <DataTable columns={columns} data={skillsData} type="skill" />
           </>
         )}
       </main>

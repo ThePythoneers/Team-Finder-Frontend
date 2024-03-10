@@ -2,12 +2,13 @@ import { toast } from "sonner";
 import {
   GET_ORGANIZATION_BASED_REF,
   GET_USER,
-  GET_USER_INFO_BY_TOKEN,
-  LOGIN_URL,
-  REGISTER_URL_ADMIN,
-  REGISTER_URL_EMPLOYEE,
+  LOGIN_BY_TOKEN,
+  LOGIN,
+  REGISTER_ADMIN,
+  REGISTER_EMPLOYEE,
 } from "./URL";
 import { checkError } from "./utils";
+import { Token } from "@/types";
 
 type registerAdminBody = {
   username: string;
@@ -19,7 +20,7 @@ type registerAdminBody = {
 
 export const registerAdminUser = async (body: registerAdminBody) => {
   try {
-    const response = await fetch(REGISTER_URL_ADMIN, {
+    const response = await fetch(REGISTER_ADMIN, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -63,14 +64,11 @@ export const registerEmployee = async (values: registerEmployeeBody) => {
       email: values.email,
       password: values.password,
     };
-    const response = await fetch(
-      `${REGISTER_URL_EMPLOYEE}/${values.link_ref}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      }
-    );
+    const response = await fetch(`${REGISTER_EMPLOYEE}/${values.link_ref}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
     if (!response.ok) {
       const errMsg = await response.json();
       if (errMsg.detail) throw new Error(errMsg.detail);
@@ -90,7 +88,7 @@ type loginBody = {
 
 export const signInUser = async (body: loginBody) => {
   try {
-    const response = await fetch(LOGIN_URL, {
+    const response = await fetch(LOGIN, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: `grant_type=password&clientId=my-trusted-client&username=${body.email}&password=${body.password}&scope=user_info`,
@@ -108,7 +106,7 @@ export const signInUser = async (body: loginBody) => {
 };
 
 type getUserInfoParams = {
-  token: string | null;
+  token: Token;
   user: string | undefined;
 };
 
@@ -133,15 +131,12 @@ export const getUserInfo = async ({ token, user }: getUserInfoParams) => {
   }
 };
 
-export const getUserInfoByToken = async (token: string | null) => {
+export const getUserInfoByToken = async (token: Token) => {
   try {
-    const response = await fetch(
-      `${GET_USER_INFO_BY_TOKEN}/${token?.slice(7)}`,
-      {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    const response = await fetch(`${LOGIN_BY_TOKEN}/${token?.slice(7)}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
     if (!response.ok) {
       const errMsg = await response.json();
       if (errMsg.detail) throw new Error(errMsg.detail);

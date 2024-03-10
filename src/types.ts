@@ -23,3 +23,18 @@ export type Department = {
   organization_id: string;
   created_at: Date;
 };
+
+export type SkillCategory = {
+  id: string;
+  organization_id: string;
+  category_name: string;
+};
+
+export type Skill = {
+  id: string;
+  skill_name: string;
+  skill_category: string[];
+  organization_id: string;
+  author: string;
+  skill_description: string;
+};

@@ -12,7 +12,7 @@ import { useState } from "react";
 import { createDepartment } from "@/api/department";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
-export function AddDepartmentPopover() {
+export function CreateDepartmentPopover() {
   const authHeader = useAuthHeader();
   const [newDepartment, setNewDepartment] = useState("");
   const queryClient = useQueryClient();
