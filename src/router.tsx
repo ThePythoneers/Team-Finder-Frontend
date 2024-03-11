@@ -3,7 +3,6 @@ import { HomePage } from "./pages/homePage";
 import { ThemeProvider } from "./components/providers/themeProvider";
 import { RegisterEmployeePage } from "./pages/registerEmployee";
 import { OrganizationPage } from "./pages/organizationPage";
-import { RolesPage } from "./pages/rolesPage";
 import { Toaster } from "./components/ui/sonner";
 import { SignInPage } from "./pages/signInPage";
 import RequireAuth from "@auth-kit/react-router/RequireAuth";
@@ -35,8 +34,8 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "/:organization_name/roles",
-        element: <RolesPage />,
+        path: "/:organization_name/employees",
+        element: <EmployeesPage />,
       },
       {
         path: "/:organization_name/departments",
@@ -45,10 +44,6 @@ const router = createBrowserRouter([
       {
         path: "/:organization_name/skills",
         element: <SkillsPage />,
-      },
-      {
-        path: "/:organization_name/employees",
-        element: <EmployeesPage />,
       },
     ],
   },

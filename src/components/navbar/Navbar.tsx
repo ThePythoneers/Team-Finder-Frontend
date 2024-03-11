@@ -1,10 +1,11 @@
 import { AuthUser } from "@/types";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { NewProjectModal } from "./components/NewProjectModal";
+// import { NewProjectModal } from "./components/NewProjectModal";
 import { Profile } from "./components/Profile";
 import { MobileNav } from "./components/MobileNav";
 import { DesktopNav } from "./components/DesktopNav";
 import { Link } from "react-router-dom";
+import { InviteEmployeesPopover } from "@/components/navbar/components/invite-employee";
 
 type NavbarProps = {
   auth: AuthUser | null;
@@ -22,7 +23,10 @@ export function Navbar({ auth }: NavbarProps) {
           {isDesktop && <DesktopNav auth={auth} />}
         </div>
         <div className="flex gap-2 items-center">
-          <NewProjectModal />
+          {/* <NewProjectModal /> */}
+          {auth?.roles.includes("Organization Admin") && (
+            <InviteEmployeesPopover />
+          )}
           <Profile auth={auth} />
 
           {!isDesktop && <MobileNav auth={auth} />}

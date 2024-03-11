@@ -1,4 +1,4 @@
-import { AuthUser, User } from "@/types";
+import { AuthUser, Employee } from "@/types";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,10 +13,10 @@ import {
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
 import {
+  MilestoneIcon,
   MoreHorizontalIcon,
   NotebookTabsIcon,
   Trash2Icon,
-  UserIcon,
 } from "lucide-react";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Button } from "@/components/ui/button";
@@ -35,9 +35,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { ViewEmployeeDialog } from "./viewEmployee";
+import { assignUserToDepartment } from "@/api/department";
 
 type RoleDropdownProps = {
-  user: User;
+  user: Employee;
 };
 
 export function EmployeesDropdown({ user }: RoleDropdownProps) {
@@ -62,6 +64,9 @@ export function EmployeesDropdown({ user }: RoleDropdownProps) {
     onSuccess: () => {
       if (user_id === auth?.id)
         queryClient.invalidateQueries({ queryKey: ["connectedUser"] });
+      queryClient.invalidateQueries({
+        queryKey: ["unassignedEmployees"],
+      });
       queryClient.invalidateQueries({ queryKey: ["employees"] });
     },
   });
@@ -70,7 +75,23 @@ export function EmployeesDropdown({ user }: RoleDropdownProps) {
     onSuccess: () => {
       if (user_id === auth?.id)
         queryClient.invalidateQueries({ queryKey: ["connectedUser"] });
+      queryClient.invalidateQueries({
+        queryKey: ["unassignedEmployees"],
+      });
       queryClient.invalidateQueries({ queryKey: ["employees"] });
+    },
+  });
+
+  const { mutateAsync: assignUserToDepartmentMutation } = useMutation({
+    mutationFn: assignUserToDepartment,
+    onSuccess: () => {
+      if (user_id === auth?.id)
+        queryClient.invalidateQueries({ queryKey: ["connectedUser"] });
+      queryClient.invalidateQueries({
+        queryKey: ["unassignedEmployees"],
+      });
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+      queryClient.invalidateQueries({ queryKey: ["assignedEmployees"] });
     },
   });
 
@@ -86,6 +107,10 @@ export function EmployeesDropdown({ user }: RoleDropdownProps) {
     }
   };
 
+  const handleAssign = async () => {
+    await assignUserToDepartmentMutation({ token, user_id });
+  };
+
   return (
     <>
       <DropdownMenu>
@@ -97,9 +122,13 @@ export function EmployeesDropdown({ user }: RoleDropdownProps) {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <UserIcon className="size-5 mr-1" /> Employee
-          </DropdownMenuItem>
+          <ViewEmployeeDialog user={user} />
+          {auth?.roles.includes("Department Manager") && (
+            <DropdownMenuItem onClick={handleAssign}>
+              <MilestoneIcon className="size-5 mr-1" />
+              Assign employee
+            </DropdownMenuItem>
+          )}
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
               <NotebookTabsIcon className="size-5 mr-1" /> Roles

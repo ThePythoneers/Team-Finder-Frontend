@@ -1,5 +1,6 @@
 import { Token } from "@/types";
 import {
+  REMOVE_ASSIGN_USER_TO_DEPARTMENT,
   DELETE_ASSIGN_DEPARTMENT_MANAGER,
   DELETE_GET_CREATE_DEPARTMENT,
   GET_ASSIGNED_EMPLOYEES,
@@ -160,23 +161,62 @@ export const getUnassignedEmployees = async (token: string | null) => {
     checkError(error);
   }
 };
+export const getAssignedEmployees = async (token: string | null) => {
+  try {
+    const headers = getAuthHeaders(token);
+    const response = await fetch(`${GET_ASSIGNED_EMPLOYEES}`, {
+      method: "GET",
+      headers: headers,
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
 
 type assignUserToDepartmentParams = {
-  token: string | null;
-  department_id: string;
+  token: Token;
   user_id: string;
 };
 
 export const assignUserToDepartment = async ({
   token,
-  department_id,
   user_id,
 }: assignUserToDepartmentParams) => {
   try {
-    const body = { department_id, user_id };
+    const body = { user_id };
     const headers = getAuthHeaders(token);
-    const response = await fetch(`${GET_UNASSIGNED_EMPLOYEES}`, {
+    const response = await fetch(`${REMOVE_ASSIGN_USER_TO_DEPARTMENT}`, {
       method: "POST",
+      headers: headers,
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You assigned a user to a department with success!!!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+export const removeUserFromDepartment = async ({
+  token,
+  user_id,
+}: assignUserToDepartmentParams) => {
+  try {
+    const body = { user_id };
+    const headers = getAuthHeaders(token);
+    const response = await fetch(`${REMOVE_ASSIGN_USER_TO_DEPARTMENT}`, {
+      method: "DELETE",
       headers: headers,
       body: JSON.stringify(body),
     });
@@ -207,6 +247,30 @@ export const getDepartmentEmployees = async ({
       method: "GET",
       headers: headers,
     });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+export const getDepartmentInfo = async ({
+  token,
+  department_id,
+}: getDepartmentEmployeesParams) => {
+  try {
+    const headers = getAuthHeaders(token);
+    const response = await fetch(
+      `${DELETE_GET_CREATE_DEPARTMENT}?_id=${department_id}`,
+      {
+        method: "GET",
+        headers: headers,
+      }
+    );
     if (!response.ok) {
       const errMsg = await response.json();
       if (errMsg.detail) throw new Error(errMsg.detail);

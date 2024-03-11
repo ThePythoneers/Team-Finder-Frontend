@@ -6,8 +6,9 @@ import {
   LOGIN,
   REGISTER_ADMIN,
   REGISTER_EMPLOYEE,
+  GET_POST_DELETE_ASSIGN_SKILL_USER,
 } from "./URL";
-import { checkError } from "./utils";
+import { checkError, getAuthHeaders } from "./utils";
 import { Token } from "@/types";
 
 type registerAdminBody = {
@@ -125,6 +126,41 @@ export const getUserInfo = async ({ token, user }: getUserInfoParams) => {
       if (errMsg.detail) throw new Error(errMsg.detail);
       throw new Error(errMsg);
     }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+type assignSkillMeParams = {
+  token: Token;
+  user_id: string | undefined;
+  skill_id: string;
+  level: number;
+  experience: number;
+};
+
+export const assignSkillMe = async ({
+  token,
+  user_id,
+  skill_id,
+  level,
+  experience,
+}: assignSkillMeParams) => {
+  try {
+    const body = { user_id, skill_id, level, experience };
+    const headers = getAuthHeaders(token);
+    const response = await fetch(`${GET_POST_DELETE_ASSIGN_SKILL_USER}`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You assigned a new skill to yourself with success!!!");
     return await response.json();
   } catch (error) {
     checkError(error);

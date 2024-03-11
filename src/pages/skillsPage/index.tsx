@@ -9,6 +9,8 @@ import { Skill } from "@/types";
 import { getSkills } from "@/api/skill";
 import { SkillsDropdown } from "./components/data-table-skill-dropdown";
 import { useDepartmentManagerRedirect } from "@/hooks/useDepartmentManagerRedirect";
+import { SkillCategoriesBadge } from "./components/data-table-skillCategoriesBadge";
+import { AuthorCard } from "./components/data-table-authorCard";
 
 const columns: ColumnDef<Skill>[] = [
   {
@@ -42,12 +44,26 @@ const columns: ColumnDef<Skill>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Skill categories" />
     ),
+    cell: ({ row }) => {
+      const skill = row.original;
+      return <SkillCategoriesBadge skill={skill} />;
+    },
   },
   {
     accessorKey: "skill_description",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Description" />
     ),
+  },
+  {
+    accessorKey: "author",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Author" />
+    ),
+    cell: ({ row }) => {
+      const skill = row.original;
+      return <AuthorCard skill={skill} />;
+    },
   },
   {
     id: "Actions",

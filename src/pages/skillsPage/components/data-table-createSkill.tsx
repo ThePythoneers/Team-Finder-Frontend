@@ -40,6 +40,7 @@ export function CreateSkillDialog() {
   const auth: AuthUser | null = useAuthUser();
   const token = useAuthHeader();
   const queryClient = useQueryClient();
+  
   const [skillCategories, setSkillCategories] = useState<SkillCategory[]>([]);
   const [selectedDepartments, setSelectedDepartments] = useState<Department[]>(
     []

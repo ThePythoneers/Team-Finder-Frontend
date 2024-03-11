@@ -3,6 +3,7 @@ import {
   CREATE_NEW_SKILL_CATEGORY,
   GET_CREATE_SKILLS,
   GET_SKILL_CATEGORIES,
+  GET_SKILL_CATEGORY,
 } from "./URL";
 import { checkError, getAuthHeaders } from "./utils";
 import { Token } from "@/types";
@@ -107,6 +108,34 @@ export const getSkills = async (token: Token) => {
   try {
     const headers = getAuthHeaders(token);
     const response = await fetch(`${GET_CREATE_SKILLS}`, {
+      method: "GET",
+      headers: headers,
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+type getSkillCategoryParams = {
+  token: Token;
+  category_id: string;
+};
+
+export const getSkillCategory = async ({
+  token,
+  category_id,
+}: getSkillCategoryParams) => {
+  try {
+    const headers = getAuthHeaders(token);
+    const response = await fetch(`${GET_SKILL_CATEGORY}/${category_id}`, {
       method: "GET",
       headers: headers,
     });

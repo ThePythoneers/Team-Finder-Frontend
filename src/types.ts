@@ -7,9 +7,10 @@ export type AuthUser = {
   organization_id: string;
   organization_name: string;
   roles: string[];
+  department_id: string;
 };
 
-export type User = {
+export type Employee = {
   id: string;
   username: string;
   email: string;
@@ -20,8 +21,8 @@ export type Department = {
   id: string;
   department_name: string;
   department_manager?: string;
-  organization_id: string;
-  created_at: Date;
+  manager_email?: string;
+  department_users?: string[];
 };
 
 export type SkillCategory = {

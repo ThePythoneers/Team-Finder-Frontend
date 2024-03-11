@@ -4,7 +4,6 @@ import {
   AlbumIcon,
   FolderGit2Icon,
   GanttChartSquareIcon,
-  NotebookIcon,
   UsersIcon,
 } from "lucide-react";
 import { AuthUser } from "@/types";
@@ -19,20 +18,6 @@ export function DesktopNav({ auth }: Props) {
     <>
       <ul className="flex gap-2">
         {user_roles?.includes("Organization Admin") && (
-          <NavLink
-            to={`/${auth?.organization_name}/roles`}
-            className="flex items-center"
-          >
-            {({ isActive }) => {
-              return (
-                <Button variant={isActive ? "secondary" : "ghost"}>
-                  <NotebookIcon className="mr-2" /> Roles
-                </Button>
-              );
-            }}
-          </NavLink>
-        )}
-        {user_roles?.includes("Department Manager") && (
           <NavLink
             to={`/${auth?.organization_name}/employees`}
             className="flex items-center"

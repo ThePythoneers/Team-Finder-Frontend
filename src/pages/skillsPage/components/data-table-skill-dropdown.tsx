@@ -19,9 +19,10 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { AuthUser, Skill } from "@/types";
-import { MoreHorizontalIcon, Trash2Icon } from "lucide-react";
+import { LinkIcon, MoreHorizontalIcon, Trash2Icon } from "lucide-react";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { ViewSkill } from "./viewSkill";
+import { AssignSkill } from "./assignSkill";
 
 type Props = {
   skill: Skill;
@@ -29,7 +30,6 @@ type Props = {
 
 export function SkillsDropdown({ skill }: Props) {
   const auth: AuthUser | null = useAuthUser();
-  skill;
   return (
     <>
       <DropdownMenu>
@@ -41,9 +41,13 @@ export function SkillsDropdown({ skill }: Props) {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
+          <ViewSkill skill={skill} />
+          <AssignSkill skill={skill} />
           {auth?.roles?.includes("Department Manager") && (
             <>
-              <ViewSkill skill={skill} />
+              <DropdownMenuItem onClick={() => {}}>
+                <LinkIcon className="size-5 mr-2" /> Link skill
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
 
               <AlertDialog>

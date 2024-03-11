@@ -1,17 +1,17 @@
-import { Button } from "../../../components/ui/button";
+import { Button } from "../../ui/button";
 import { CopyIcon, Loader2Icon, PlusIcon } from "lucide-react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "../../../components/ui/popover";
+} from "../../ui/popover";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { Input } from "../../../components/ui/input";
+import { Input } from "../../ui/input";
 import { getOrganization, refreshInviteLink } from "@/api/organization";
-import { Skeleton } from "../../../components/ui/skeleton";
+import { Skeleton } from "../../ui/skeleton";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { AuthUser } from "@/types";
 

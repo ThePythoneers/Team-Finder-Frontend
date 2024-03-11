@@ -22,7 +22,7 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-import { Department, User } from "@/types";
+import { Department, Employee } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { useState } from "react";
@@ -98,10 +98,10 @@ export function AssignDepartmentManager({ department }: Props) {
                   ) : (
                     <CommandGroup>
                       {employees
-                        .filter((employee: User) =>
+                        .filter((employee: Employee) =>
                           employee.primary_roles.includes("Department Manager")
                         )
-                        .map((employee: User) => (
+                        .map((employee: Employee) => (
                           <CommandItem
                             key={employee.id}
                             value={employee.email}

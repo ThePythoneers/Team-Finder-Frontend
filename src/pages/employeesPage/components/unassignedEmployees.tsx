@@ -1,17 +1,16 @@
-import { DataTable } from "@/components/ui/data-table";
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-header";
+import { getUnassignedEmployees } from "@/api/department";
 import { Badge } from "@/components/ui/badge";
-import { EmployeesDropdown } from "@/pages/rolesPage/components/data-table-role-dropdown";
-import { useQuery } from "@tanstack/react-query";
-import { getEmployees } from "@/api/organization";
-import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DataTable } from "@/components/ui/data-table";
+import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-header";
 import { Skeleton } from "@/components/ui/skeleton";
-import { User } from "@/types";
-import { useAdminRedirect } from "@/hooks/useAdminRedirect";
+import { Employee } from "@/types";
+import { useQuery } from "@tanstack/react-query";
+import { ColumnDef } from "@tanstack/react-table";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { EmployeesDropdown } from "./data-table-employee-dropdown";
 
-const columns: ColumnDef<User>[] = [
+const columns: ColumnDef<Employee>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -46,12 +45,13 @@ const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: "primary_roles",
+    id: "Roles",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Roles" />
     ),
     cell: ({ row }) => {
-      const data: string[] = row.original.primary_roles;
-      const roles = data.map((role: string) => {
+      const data = row.original.primary_roles;
+      const roles = data.map((role) => {
         if (role === "Organization Admin")
           return (
             <Badge
@@ -95,31 +95,33 @@ const columns: ColumnDef<User>[] = [
   {
     id: "Actions",
     cell: ({ row }) => {
-      const user: User = row.original;
+      const user: Employee = row.original;
 
       return <EmployeesDropdown user={user} />;
     },
   },
 ];
 
-export function RolesPage() {
-  useAdminRedirect();
+export function UnassignedEmployeesPage() {
   const token = useAuthHeader();
 
-  const { data: EmployeesData, isLoading } = useQuery({
-    queryKey: ["employees", { token }],
-    queryFn: () => getEmployees(token),
+  const { data: unassignedEmployeesData, isLoading } = useQuery({
+    queryKey: ["unassignedEmployees", { token }],
+    queryFn: () => getUnassignedEmployees(token),
   });
 
+  // ! TODO: backend change the primary roles type
   return (
     <>
-      <main className="container mx-auto py-4">
-        {isLoading ? (
-          <Skeleton className="w-full h-[300px]  rounded-md" />
-        ) : (
-          <DataTable columns={columns} data={EmployeesData} type="role" />
-        )}
-      </main>
+      {isLoading ? (
+        <Skeleton className="w-full h-[300px]  rounded-md" />
+      ) : (
+        <DataTable
+          columns={columns}
+          data={unassignedEmployeesData}
+          type="employee"
+        />
+      )}
     </>
   );
 }

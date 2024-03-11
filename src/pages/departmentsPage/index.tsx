@@ -9,7 +9,6 @@ import { Department } from "@/types";
 import { getDepartments } from "@/api/department";
 import { DepartmentsDropdown } from "@/pages/departmentsPage/components/data-table-department-dropdown";
 import { AssignDepartmentManager } from "./components/data-table-assign-dialog";
-import { DepartmentManagerCard } from "./components/data-table-manager-card";
 import { useAdminRedirect } from "@/hooks/useAdminRedirect";
 
 const columns: ColumnDef<Department>[] = [
@@ -40,15 +39,16 @@ const columns: ColumnDef<Department>[] = [
     ),
   },
   {
-    accessorKey: "department_manager",
+    accessorKey: "manager_email",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Manager" />
     ),
     cell: ({ row }) => {
       const department = row.original;
+      const manager_email = department.manager_email;
       if (department.department_manager === null)
         return <AssignDepartmentManager department={department} />;
-      return <DepartmentManagerCard department={department} />;
+      return <span>{manager_email}</span>;
     },
   },
   {

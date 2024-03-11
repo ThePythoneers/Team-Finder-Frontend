@@ -24,6 +24,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { ViewDepartmentDialog } from "./viewDepartment";
 
 type RoleDropdownProps = {
   department: Department;
@@ -66,7 +67,7 @@ export function DepartmentsDropdown({ department }: RoleDropdownProps) {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Copy user ID</DropdownMenuItem>
+          <ViewDepartmentDialog department={department} />
 
           {user_roles?.includes("Organization Admin") &&
             department.department_manager && (
