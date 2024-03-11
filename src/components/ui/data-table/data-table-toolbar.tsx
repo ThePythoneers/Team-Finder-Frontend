@@ -1,6 +1,6 @@
 "use client";
 
-import { XIcon } from "lucide-react";
+import { BadgePlusIcon, ShieldIcon, XIcon } from "lucide-react";
 import { Table } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
@@ -11,36 +11,35 @@ import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import { CreateDepartmentPopover } from "@/pages/departmentsPage/components/data-table-create-department";
 import { CreateSkillCategoryPopover } from "@/pages/skillsPage/components/createSkillCategory";
 import { CreateSkillDialog } from "@/pages/skillsPage/components/data-table-createSkill";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { AuthUser, SkillCategory } from "@/types";
+import { useQuery } from "@tanstack/react-query";
+import { getSkillCategories } from "@/api/skill";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { Skeleton } from "../skeleton";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   type?: "employee" | "department" | "skill";
 }
 
-const test = [
-  {
-    label: "8c305e02-f2ea-44c1-8ccd-52da913d25ad",
-    value: "8c305e02-f2ea-44c1-8ccd-52da913d25ad",
-  },
-  {
-    label: "Department Manager",
-    value: "Department Manager",
-  },
-  {
-    label: "Project Manager",
-    value: "Project Manager",
-  },
-  {
-    label: "Employee",
-    value: "Employee",
-  },
-];
-
 export function DataTableToolbar<TData>({
   table,
   type,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
+
+  const auth: AuthUser | null = useAuthUser();
+  const token = useAuthHeader();
+
+  const { data: skillCategories, isLoading } = useQuery({
+    queryKey: ["skillCateories"],
+    queryFn: () => getSkillCategories(token),
+  });
+
+  const skillsOptions = [
+    { label: "Created by me", value: auth?.id, icon: BadgePlusIcon },
+  ];
   return (
     <div className="flex items-center justify-between">
       {type === "employee" && (
@@ -106,12 +105,27 @@ export function DataTableToolbar<TData>({
             }
             className="h-8 w-[150px] lg:w-[250px]"
           />
-          {table.getColumn("skill_category") && (
-            <DataTableFacetedFilter
-              column={table.getColumn("skill_category")}
-              title="Filter"
-              options={test}
-            />
+          {isLoading ? (
+            <Skeleton className="h-[50px] w-full" />
+          ) : (
+            <>
+              {table.getColumn("Skill category") && (
+                <DataTableFacetedFilter
+                  column={table.getColumn("Skill category")}
+                  title="Filter"
+                  options={[
+                    ...skillCategories.map((category: SkillCategory) => {
+                      const obj = {
+                        label: category.category_name,
+                        value: category.id,
+                        icon: ShieldIcon,
+                      };
+                      return obj;
+                    }),
+                  ]}
+                />
+              )}
+            </>
           )}
           <CreateSkillCategoryPopover />
           <CreateSkillDialog />

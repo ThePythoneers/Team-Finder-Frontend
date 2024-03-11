@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +9,7 @@ import {
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Employee } from "@/types";
 import { UserIcon } from "lucide-react";
+import { RoleBadges } from "./roleBadges";
 
 type Props = {
   user: Employee;
@@ -29,15 +29,7 @@ export function ViewEmployeeDialog({ user }: Props) {
             <DialogTitle className="text-2xl">{user.username}</DialogTitle>
             <DialogDescription>{user.email}</DialogDescription>
           </DialogHeader>
-          {user.primary_roles.length > 0 && (
-            <div className="flex flex-wrap gap-1 items-center py-2 px-4 mb-2 rounded-md border border-border border-dashed">
-              {user.primary_roles.map((role) => (
-                <Badge key={crypto.randomUUID()} variant="secondary">
-                  {role}
-                </Badge>
-              ))}
-            </div>
-          )}
+          <RoleBadges roles={user.primary_roles} />
         </DialogContent>
       </Dialog>
     </>

@@ -1,10 +1,6 @@
 import { Button } from "../../ui/button";
 import { CopyIcon, Loader2Icon, PlusIcon } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -44,9 +40,9 @@ export function InviteEmployeesPopover() {
       <Popover>
         <PopoverTrigger asChild>
           <Button
-            className="ml-2"
             variant="ghost"
             size="icon"
+            className="size-8"
             onClick={() =>
               setInviteLink(
                 `${window.location.origin}/invite/${organizationData.link_ref}`

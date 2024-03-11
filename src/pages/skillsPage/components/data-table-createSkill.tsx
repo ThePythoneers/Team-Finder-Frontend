@@ -40,7 +40,7 @@ export function CreateSkillDialog() {
   const auth: AuthUser | null = useAuthUser();
   const token = useAuthHeader();
   const queryClient = useQueryClient();
-  
+
   const [skillCategories, setSkillCategories] = useState<SkillCategory[]>([]);
   const [selectedDepartments, setSelectedDepartments] = useState<Department[]>(
     []
@@ -84,78 +84,193 @@ export function CreateSkillDialog() {
 
   return (
     <>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-8 space-x-2"
-            onClick={handleReset}
-          >
-            <PlusIcon /> <span>Create skill</span>
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Skill</DialogTitle>
-            <DialogDescription>
-              Create a new skill for your organization.
-            </DialogDescription>
-          </DialogHeader>
-          <form className="space-y-2" onSubmit={(e) => handleSubmit(e)}>
-            <section>
-              {skillCategories.length > 0 && (
-                <div className="flex flex-wrap gap-1 items-center py-2 px-4 mb-2 rounded-md border border-border border-dashed">
-                  {skillCategories.map((category) => (
-                    <Badge key={category.id} variant="secondary">
-                      {category.category_name}
-                    </Badge>
-                  ))}
-                </div>
-              )}
-              <Popover modal>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={`justify-between w-full mx-auto ${
-                      skillCategories.length < 1 && "text-muted-foreground"
-                    }`}
-                  >
-                    {skillCategories.length > 0
-                      ? `${skillCategories.length} Selected`
-                      : "Select a category"}
-                    <ChevronsUpDownIcon />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <Command>
-                    <CommandInput placeholder="Search by name" />
-                    <CommandList>
-                      {categoriesLoading ? (
-                        <Skeleton className="w-full h-[40px]" />
-                      ) : (
+      {auth?.roles.includes("Department Manager") && (
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 space-x-2"
+              onClick={handleReset}
+            >
+              <PlusIcon /> <span>Create skill</span>
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Skill</DialogTitle>
+              <DialogDescription>
+                Create a new skill for your organization.
+              </DialogDescription>
+            </DialogHeader>
+            <form className="space-y-2" onSubmit={(e) => handleSubmit(e)}>
+              <section>
+                {skillCategories.length > 0 && (
+                  <div className="flex flex-wrap gap-1 items-center py-2 px-4 mb-2 rounded-md border border-border border-dashed">
+                    {skillCategories.map((category) => (
+                      <Badge key={category.id} variant="secondary">
+                        {category.category_name}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+                <Popover modal>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={`justify-between w-full mx-auto ${
+                        skillCategories.length < 1 && "text-muted-foreground"
+                      }`}
+                    >
+                      {skillCategories.length > 0
+                        ? `${skillCategories.length} Selected`
+                        : "Select a category"}
+                      <ChevronsUpDownIcon />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <Command>
+                      <CommandInput placeholder="Search by name" />
+                      <CommandList>
+                        {categoriesLoading ? (
+                          <Skeleton className="w-full h-[40px]" />
+                        ) : (
+                          <>
+                            <CommandEmpty>
+                              Skill category not found.
+                            </CommandEmpty>
+                            <CommandGroup>
+                              {skillCategoriesData.map(
+                                (category: SkillCategory) => {
+                                  const isSelected =
+                                    skillCategories.includes(category);
+
+                                  return (
+                                    <CommandItem
+                                      key={category.id}
+                                      onSelect={() => {
+                                        if (isSelected) {
+                                          setSkillCategories((current) =>
+                                            current.filter(
+                                              (categ) => categ !== category
+                                            )
+                                          );
+                                        } else {
+                                          setSkillCategories((current) => [
+                                            ...current,
+                                            category,
+                                          ]);
+                                        }
+                                      }}
+                                    >
+                                      <Checkbox
+                                        checked={isSelected}
+                                        className={`mr-2 ${
+                                          isSelected
+                                            ? "bg-primary text-primary-foreground"
+                                            : "opacity-50"
+                                        }`}
+                                      />
+                                      {category.category_name}
+                                    </CommandItem>
+                                  );
+                                }
+                              )}
+                            </CommandGroup>
+                          </>
+                        )}
+                      </CommandList>
+                      {skillCategories.length > 0 && (
                         <>
-                          <CommandEmpty>Skill category not found.</CommandEmpty>
-                          <CommandGroup>
-                            {skillCategoriesData.map(
-                              (category: SkillCategory) => {
+                          <CommandSeparator className="my-1" />
+                          <Button
+                            size="sm"
+                            className="h-8"
+                            variant="secondary"
+                            onClick={() => setSkillCategories([])}
+                          >
+                            Reset
+                          </Button>
+                        </>
+                      )}
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </section>
+              <div className="space-y-2">
+                <Label htmlFor="skillName">Skill Name</Label>
+                <Input
+                  id="skillName"
+                  type="text"
+                  placeholder="example"
+                  value={skillName}
+                  onChange={(e) => setSkillName(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Skill Description</Label>
+                <Textarea
+                  placeholder="example"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </div>
+
+              <section>
+                {selectedDepartments.length > 0 && (
+                  <div className="flex flex-wrap gap-1 items-center py-2 px-4 mb-2 rounded-md border border-border border-dashed">
+                    {selectedDepartments.map((department) => (
+                      <Badge key={department.id} variant="secondary">
+                        {department.department_name}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+                <Popover modal>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={`justify-between w-full mx-auto ${
+                        selectedDepartments.length < 1 &&
+                        "text-muted-foreground"
+                      }`}
+                    >
+                      {selectedDepartments.length > 0
+                        ? `${selectedDepartments.length} Selected`
+                        : "Select some departments"}
+                      <ChevronsUpDownIcon />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <Command>
+                      <CommandInput placeholder="Search by name" />
+                      <CommandList>
+                        {departmentsLoading ? (
+                          <Skeleton className="w-full h-[40px]" />
+                        ) : (
+                          <>
+                            <CommandEmpty>
+                              Skill category not found.
+                            </CommandEmpty>
+                            <CommandGroup>
+                              {departmentsData.map((department: Department) => {
                                 const isSelected =
-                                  skillCategories.includes(category);
+                                  selectedDepartments.includes(department);
 
                                 return (
                                   <CommandItem
-                                    key={category.id}
+                                    key={department.id}
                                     onSelect={() => {
                                       if (isSelected) {
-                                        setSkillCategories((current) =>
+                                        setSelectedDepartments((current) =>
                                           current.filter(
-                                            (categ) => categ !== category
+                                            (depart) => depart !== department
                                           )
                                         );
                                       } else {
-                                        setSkillCategories((current) => [
+                                        setSelectedDepartments((current) => [
                                           ...current,
-                                          category,
+                                          department,
                                         ]);
                                       }
                                     }}
@@ -168,149 +283,41 @@ export function CreateSkillDialog() {
                                           : "opacity-50"
                                       }`}
                                     />
-                                    {category.category_name}
+                                    {department.department_name}
                                   </CommandItem>
                                 );
-                              }
-                            )}
-                          </CommandGroup>
-                        </>
-                      )}
-                    </CommandList>
-                    {skillCategories.length > 0 && (
-                      <>
-                        <CommandSeparator className="my-1" />
-                        <Button
-                          size="sm"
-                          className="h-8"
-                          variant="secondary"
-                          onClick={() => setSkillCategories([])}
-                        >
-                          Reset
-                        </Button>
-                      </>
-                    )}
-                  </Command>
-                </PopoverContent>
-              </Popover>
-            </section>
-            <div className="space-y-2">
-              <Label htmlFor="skillName">Skill Name</Label>
-              <Input
-                id="skillName"
-                type="text"
-                placeholder="example"
-                value={skillName}
-                onChange={(e) => setSkillName(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Skill Description</Label>
-              <Textarea
-                placeholder="example"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </div>
-
-            <section>
-              {selectedDepartments.length > 0 && (
-                <div className="flex flex-wrap gap-1 items-center py-2 px-4 mb-2 rounded-md border border-border border-dashed">
-                  {selectedDepartments.map((department) => (
-                    <Badge key={department.id} variant="secondary">
-                      {department.department_name}
-                    </Badge>
-                  ))}
-                </div>
-              )}
-              <Popover modal>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={`justify-between w-full mx-auto ${
-                      selectedDepartments.length < 1 && "text-muted-foreground"
-                    }`}
-                  >
-                    {selectedDepartments.length > 0
-                      ? `${selectedDepartments.length} Selected`
-                      : "Select some departments"}
-                    <ChevronsUpDownIcon />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <Command>
-                    <CommandInput placeholder="Search by name" />
-                    <CommandList>
-                      {departmentsLoading ? (
-                        <Skeleton className="w-full h-[40px]" />
-                      ) : (
+                              })}
+                            </CommandGroup>
+                          </>
+                        )}
+                      </CommandList>
+                      {selectedDepartments.length > 0 && (
                         <>
-                          <CommandEmpty>Skill category not found.</CommandEmpty>
-                          <CommandGroup>
-                            {departmentsData.map((department: Department) => {
-                              const isSelected =
-                                selectedDepartments.includes(department);
-
-                              return (
-                                <CommandItem
-                                  key={department.id}
-                                  onSelect={() => {
-                                    if (isSelected) {
-                                      setSelectedDepartments((current) =>
-                                        current.filter(
-                                          (depart) => depart !== department
-                                        )
-                                      );
-                                    } else {
-                                      setSelectedDepartments((current) => [
-                                        ...current,
-                                        department,
-                                      ]);
-                                    }
-                                  }}
-                                >
-                                  <Checkbox
-                                    checked={isSelected}
-                                    className={`mr-2 ${
-                                      isSelected
-                                        ? "bg-primary text-primary-foreground"
-                                        : "opacity-50"
-                                    }`}
-                                  />
-                                  {department.department_name}
-                                </CommandItem>
-                              );
-                            })}
-                          </CommandGroup>
+                          <CommandSeparator className="my-1" />
+                          <Button
+                            size="sm"
+                            className="h-8"
+                            variant="secondary"
+                            onClick={() => setSelectedDepartments([])}
+                          >
+                            Reset
+                          </Button>
                         </>
                       )}
-                    </CommandList>
-                    {selectedDepartments.length > 0 && (
-                      <>
-                        <CommandSeparator className="my-1" />
-                        <Button
-                          size="sm"
-                          className="h-8"
-                          variant="secondary"
-                          onClick={() => setSelectedDepartments([])}
-                        >
-                          Reset
-                        </Button>
-                      </>
-                    )}
-                  </Command>
-                </PopoverContent>
-              </Popover>
-            </section>
-            <Button type="submit">
-              {isPending && (
-                <Loader2Icon className="mr-2 size-4 animate-spin" />
-              )}
-              Submit
-            </Button>
-          </form>
-        </DialogContent>
-      </Dialog>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </section>
+              <Button type="submit">
+                {isPending && (
+                  <Loader2Icon className="mr-2 size-4 animate-spin" />
+                )}
+                Submit
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 }

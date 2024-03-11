@@ -8,7 +8,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Skill } from "@/types";
 import { getSkills } from "@/api/skill";
 import { SkillsDropdown } from "./components/data-table-skill-dropdown";
-import { useDepartmentManagerRedirect } from "@/hooks/useDepartmentManagerRedirect";
 import { SkillCategoriesBadge } from "./components/data-table-skillCategoriesBadge";
 import { AuthorCard } from "./components/data-table-authorCard";
 
@@ -41,12 +40,20 @@ const columns: ColumnDef<Skill>[] = [
   },
   {
     accessorKey: "skill_category",
+    id: "Skill category",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Skill categories" />
     ),
+
     cell: ({ row }) => {
       const skill = row.original;
       return <SkillCategoriesBadge skill={skill} />;
+    },
+    filterFn: (row, id, value) => {
+      id;
+      return value.some(
+        (val: string) => row.original.skill_category.indexOf(val) !== -1
+      );
     },
   },
   {
@@ -64,6 +71,9 @@ const columns: ColumnDef<Skill>[] = [
       const skill = row.original;
       return <AuthorCard skill={skill} />;
     },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     id: "Actions",
@@ -76,20 +86,15 @@ const columns: ColumnDef<Skill>[] = [
 ];
 
 export function SkillsPage() {
-  useDepartmentManagerRedirect();
   const token = useAuthHeader();
 
   const { data: skillsData, isLoading } = useQuery({
     queryKey: ["skills", { token }],
     queryFn: () => getSkills(token),
   });
-
   // ! TODO: filter skills that are used in your department
   // ! TODO: filter skill categories
   // ! TODO: filter only created by me
-  // ! TODO: filter
-  // ! TODO: filter
-  // ! TODO: filter
   return (
     <>
       <main className="container mx-auto py-4">

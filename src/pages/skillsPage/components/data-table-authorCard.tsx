@@ -13,7 +13,7 @@ export function AuthorCard({ skill }: Props) {
   const user = skill.author;
 
   const { data: authorData, isLoading } = useQuery({
-    queryKey: ["author", { token }],
+    queryKey: ["author", { user }],
     queryFn: () => getUserInfo({ token, user }),
   });
   return (

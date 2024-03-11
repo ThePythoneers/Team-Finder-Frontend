@@ -12,7 +12,6 @@ import {
   MenuIcon,
   UsersIcon,
   XIcon,
-  FolderGit2Icon,
   AlbumIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -45,60 +44,53 @@ export function MobileNav({ auth }: Props) {
           </DrawerHeader>
           <Separator className="mb-4" />
           <ul className="flex flex-col gap-2 w-full max-w-[75%] mx-auto">
+            {auth?.roles?.includes("Organization Admin") && (
+              <>
+                <NavLink
+                  to={`/${auth?.organization_name}/employees`}
+                  className="flex items-center"
+                >
+                  {({ isActive }) => {
+                    return (
+                      <Button
+                        variant={isActive ? "secondary" : "ghost"}
+                        className="w-full text-lg"
+                        size="lg"
+                      >
+                        <UsersIcon className="mr-2" /> Employees
+                      </Button>
+                    );
+                  }}
+                </NavLink>
+                <NavLink
+                  to={`/${auth?.organization_name}/departments`}
+                  className="flex items-center"
+                >
+                  {({ isActive }) => {
+                    return (
+                      <Button
+                        variant={isActive ? "secondary" : "ghost"}
+                        className="w-full text-lg"
+                        size="lg"
+                      >
+                        <GanttChartSquareIcon className="mr-2" /> Departments
+                      </Button>
+                    );
+                  }}
+                </NavLink>
+              </>
+            )}
+
             <NavLink
-              to={`/${auth?.organization_name}/employees`}
-              className="text-center"
+              to={`/${auth?.organization_name}/skills`}
+              className="flex items-center"
             >
               {({ isActive }) => {
                 return (
                   <Button
                     variant={isActive ? "secondary" : "ghost"}
                     className="w-full text-lg"
-                  >
-                    <UsersIcon className="mr-2" /> Employees
-                  </Button>
-                );
-              }}
-            </NavLink>
-            <NavLink
-              to={`/${auth?.organization_name}/projects`}
-              className="w-full text-center"
-            >
-              {({ isActive }) => {
-                return (
-                  <Button
-                    variant={isActive ? "secondary" : "ghost"}
-                    className="w-full text-lg"
-                  >
-                    <FolderGit2Icon className="mr-2" /> Projects
-                  </Button>
-                );
-              }}
-            </NavLink>
-            <NavLink
-              to={`/${auth?.organization_name}/departments`}
-              className="text-center"
-            >
-              {({ isActive }) => {
-                return (
-                  <Button
-                    variant={isActive ? "secondary" : "ghost"}
-                    className="w-full text-lg"
-                  >
-                    <GanttChartSquareIcon className="mr-2" /> Departments
-                  </Button>
-                );
-              }}
-            </NavLink>
-            <NavLink
-              to={`/${auth?.organization_name}/departments`}
-              className="text-center"
-            >
-              {({ isActive }) => {
-                return (
-                  <Button
-                    variant={isActive ? "secondary" : "ghost"}
-                    className="w-full text-lg"
+                    size="lg"
                   >
                     <AlbumIcon className="mr-2" /> Skills
                   </Button>

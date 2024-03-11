@@ -1,5 +1,4 @@
 import { getSkillCategories } from "@/api/skill";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -28,7 +27,7 @@ import {
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import { Department, Skill, SkillCategory } from "@/types";
+import { AuthUser, Skill, SkillCategory } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import {
   ChevronsUpDownIcon,
@@ -38,6 +37,9 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { SkillCategoriesBadge } from "./data-table-skillCategoriesBadge";
+import { AuthorCard } from "./data-table-authorCard";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 type Props = {
   skill: Skill;
@@ -45,11 +47,9 @@ type Props = {
 
 export function ViewSkill({ skill }: Props) {
   const token = useAuthHeader();
+  const auth: AuthUser | null = useAuthUser();
   const [isEdit, setIsEdit] = useState(false);
   const [skillCategories, setSkillCategories] = useState<SkillCategory[]>([]);
-  const [selectedDepartments, setSelectedDepartments] = useState<Department[]>(
-    []
-  );
 
   const [description, setDescription] = useState<string>(
     skill.skill_description
@@ -70,17 +70,15 @@ export function ViewSkill({ skill }: Props) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="text-2xl">{skill.skill_name}</DialogTitle>
-            <DialogDescription>Author: {skill.author}</DialogDescription>
+            <DialogDescription>
+              Author: <AuthorCard skill={skill} />
+            </DialogDescription>
           </DialogHeader>
 
           <section>
             {skill.skill_category.length > 0 && (
               <div className="flex flex-wrap gap-1 items-center py-2 px-4 mb-2 rounded-md border border-border border-dashed">
-                {skill.skill_category.map((category) => (
-                  <Badge key={category} variant="secondary">
-                    {category}
-                  </Badge>
-                ))}
+                <SkillCategoriesBadge skill={skill} />
               </div>
             )}
             {isEdit && (
@@ -168,26 +166,36 @@ export function ViewSkill({ skill }: Props) {
             <Label htmlFor="description" className="text-lg">
               Skill Description
             </Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              readOnly={!isEdit}
-              className="mt-2"
-            />
-            {!isEdit ? (
-              <Button
-                variant="secondary"
+            {isEdit ? (
+              <Textarea
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                readOnly={!isEdit}
                 className="mt-2"
-                onClick={() => setIsEdit(!isEdit)}
-              >
-                <Edit2Icon className="mr-2 size-5" />
-                Edit
-              </Button>
+              />
             ) : (
-              <Button className="mt-2" onClick={() => setIsEdit(!isEdit)}>
-                <SaveIcon className="mr-2 size-5" /> Save
-              </Button>
+              <p className="rounded-md border border-border py-2 px-4">
+                {description}
+              </p>
+            )}
+            {skill.author === auth?.id && (
+              <>
+                {!isEdit ? (
+                  <Button
+                    variant="secondary"
+                    className="mt-2"
+                    onClick={() => setIsEdit(!isEdit)}
+                  >
+                    <Edit2Icon className="mr-2 size-5" />
+                    Edit
+                  </Button>
+                ) : (
+                  <Button className="mt-2" onClick={() => setIsEdit(!isEdit)}>
+                    <SaveIcon className="mr-2 size-5" /> Save
+                  </Button>
+                )}
+              </>
             )}
           </section>
         </DialogContent>

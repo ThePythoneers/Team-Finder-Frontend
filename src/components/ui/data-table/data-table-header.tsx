@@ -69,14 +69,3 @@ export function DataTableColumnHeader<TData, TValue>({
     </div>
   );
 }
-
-
-// export const columns = [
-//     {
-//       accessorKey: "email",
-//       header: ({ column }) => (
-//         <DataTableColumnHeader column={column} title="Email" />
-//       ),
-//     },
-//   ]
-  

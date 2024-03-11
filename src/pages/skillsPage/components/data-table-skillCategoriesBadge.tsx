@@ -33,9 +33,13 @@ export function SkillCategoriesBadge({ skill }: Props) {
         <Skeleton className="h-[50px] w-full" />
       ) : (
         <>
-          {results.data.map((category) => (
-            <Badge key={category.id} variant="secondary">{category.category_name} </Badge>
-          ))}
+          <div className="flex gap-1">
+            {results.data.map((category) => (
+              <Badge key={category.id} variant="secondary">
+                {category.category_name}
+              </Badge>
+            ))}
+          </div>
         </>
       )}
     </>
