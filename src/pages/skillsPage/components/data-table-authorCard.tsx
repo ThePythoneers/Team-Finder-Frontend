@@ -1,4 +1,4 @@
-import { getUserInfo } from "@/api/auth";
+import { getUserInfo } from "@/api/user";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Skill } from "@/types";
 import { useQuery } from "@tanstack/react-query";

@@ -23,7 +23,6 @@ export function Navbar({ auth }: NavbarProps) {
           {isDesktop && <DesktopNav auth={auth} />}
         </div>
         <div className="flex gap-2 items-center">
-          {/* <NewProjectModal /> */}
           {auth?.roles.includes("Organization Admin") && (
             <InviteEmployeesPopover />
           )}

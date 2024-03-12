@@ -14,7 +14,7 @@ export const checkError = (error: unknown) => {
 export const getAuthHeaders = (token: Token) => {
   return {
     "Content-Type": "application/json",
-    "Authorization": `${token}`,
+    Authorization: `${token}`,
   };
 };
 

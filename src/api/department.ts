@@ -12,10 +12,9 @@ import { toast } from "sonner";
 
 export const getDepartments = async (token: Token) => {
   try {
-    const headers = getAuthHeaders(token);
     const response = await fetch(`${GET_DEPARTMENTS}`, {
       method: "GET",
-      headers: headers,
+      headers: getAuthHeaders(token),
     });
     if (!response.ok) {
       const errMsg = await response.json();
@@ -38,13 +37,12 @@ export const createDepartment = async ({
   token,
 }: createDepartmentParams) => {
   try {
-    const headers = getAuthHeaders(token);
     const body = {
       department_name: newDepartment,
     };
     const response = await fetch(`${DELETE_GET_CREATE_DEPARTMENT}`, {
       method: "POST",
-      headers: headers,
+      headers: getAuthHeaders(token),
       body: JSON.stringify(body),
     });
     if (!response.ok) {
@@ -68,11 +66,10 @@ export const deleteDepartment = async ({
   department_id,
 }: deleteDepartmentParams) => {
   try {
-    const headers = getAuthHeaders(token);
     const body = { department_id };
     const response = await fetch(`${DELETE_GET_CREATE_DEPARTMENT}`, {
       method: "DELETE",
-      headers: headers,
+      headers: getAuthHeaders(token),
       body: JSON.stringify(body),
     });
     if (!response.ok) {
@@ -98,11 +95,10 @@ export const assignDepartmentManager = async ({
   manager_id,
 }: assignDepartmentManagerParams) => {
   try {
-    const headers = getAuthHeaders(token);
     const body = { department_id, manager_id };
     const response = await fetch(`${DELETE_ASSIGN_DEPARTMENT_MANAGER}`, {
       method: "POST",
-      headers: headers,
+      headers: getAuthHeaders(token),
       body: JSON.stringify(body),
     });
     if (!response.ok) {
@@ -126,11 +122,10 @@ export const removeDepartmentManager = async ({
   department_id,
 }: removeDepartmentManagerParams) => {
   try {
-    const headers = getAuthHeaders(token);
     const body = { department_id };
     const response = await fetch(`${DELETE_ASSIGN_DEPARTMENT_MANAGER}`, {
       method: "DELETE",
-      headers: headers,
+      headers: getAuthHeaders(token),
       body: JSON.stringify(body),
     });
     if (!response.ok) {
@@ -146,10 +141,9 @@ export const removeDepartmentManager = async ({
 
 export const getUnassignedEmployees = async (token: string | null) => {
   try {
-    const headers = getAuthHeaders(token);
     const response = await fetch(`${GET_UNASSIGNED_EMPLOYEES}`, {
       method: "GET",
-      headers: headers,
+      headers: getAuthHeaders(token),
     });
     if (!response.ok) {
       const errMsg = await response.json();
@@ -163,10 +157,9 @@ export const getUnassignedEmployees = async (token: string | null) => {
 };
 export const getAssignedEmployees = async (token: string | null) => {
   try {
-    const headers = getAuthHeaders(token);
     const response = await fetch(`${GET_ASSIGNED_EMPLOYEES}`, {
       method: "GET",
-      headers: headers,
+      headers: getAuthHeaders(token),
     });
     if (!response.ok) {
       const errMsg = await response.json();
@@ -190,10 +183,9 @@ export const assignUserToDepartment = async ({
 }: assignUserToDepartmentParams) => {
   try {
     const body = { user_id };
-    const headers = getAuthHeaders(token);
     const response = await fetch(`${REMOVE_ASSIGN_USER_TO_DEPARTMENT}`, {
       method: "POST",
-      headers: headers,
+      headers: getAuthHeaders(token),
       body: JSON.stringify(body),
     });
     if (!response.ok) {
@@ -214,10 +206,9 @@ export const removeUserFromDepartment = async ({
 }: assignUserToDepartmentParams) => {
   try {
     const body = { user_id };
-    const headers = getAuthHeaders(token);
     const response = await fetch(`${REMOVE_ASSIGN_USER_TO_DEPARTMENT}`, {
       method: "DELETE",
-      headers: headers,
+      headers: getAuthHeaders(token),
       body: JSON.stringify(body),
     });
     if (!response.ok) {
@@ -242,10 +233,9 @@ export const getDepartmentEmployees = async ({
   department_id,
 }: getDepartmentEmployeesParams) => {
   try {
-    const headers = getAuthHeaders(token);
     const response = await fetch(`${GET_ASSIGNED_EMPLOYEES}/${department_id}`, {
       method: "GET",
-      headers: headers,
+      headers: getAuthHeaders(token),
     });
     if (!response.ok) {
       const errMsg = await response.json();
@@ -263,12 +253,11 @@ export const getDepartmentInfo = async ({
   department_id,
 }: getDepartmentEmployeesParams) => {
   try {
-    const headers = getAuthHeaders(token);
     const response = await fetch(
       `${DELETE_GET_CREATE_DEPARTMENT}?_id=${department_id}`,
       {
         method: "GET",
-        headers: headers,
+        headers: getAuthHeaders(token),
       }
     );
     if (!response.ok) {

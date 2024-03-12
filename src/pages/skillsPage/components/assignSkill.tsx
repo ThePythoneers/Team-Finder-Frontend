@@ -1,5 +1,5 @@
-import { assignSkillMe, getUserInfo } from "@/api/auth";
 import { getSkillCategory } from "@/api/skill";
+import { assignSkillMe, getUserInfo } from "@/api/user";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {

@@ -2,20 +2,36 @@ import { Token } from "@/types";
 import {
   ASSIGN_PRIMARY_ROLE,
   GET_ORGANIZATION_BASED_ID,
+  GET_ORGANIZATION_BASED_REF,
   GET_ORGANIZATION_EMPLOYEES,
   REFRESH_ORGANIZATION_INVITE_LINK,
   REMOVE_PRIMARY_ROLE,
 } from "./URL";
-import { checkError, getAuthHeaders } from "./utils";
+import { checkError, getAuthHeaders, getHeaders } from "./utils";
 import { toast } from "sonner";
+
+export const checkOrganizationInvite = async (link_ref: string | undefined) => {
+  try {
+    const response = await fetch(`${GET_ORGANIZATION_BASED_REF}/${link_ref}`, {
+      method: "GET",
+      headers: getHeaders(),
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
 
 export const getEmployees = async (token: Token) => {
   try {
-    const headers = getAuthHeaders(token);
-
     const response = await fetch(`${GET_ORGANIZATION_EMPLOYEES}`, {
       method: "GET",
-      headers: headers,
+      headers: getAuthHeaders(token),
     });
     if (!response.ok) {
       const errMsg = await response.json();
@@ -30,10 +46,9 @@ export const getEmployees = async (token: Token) => {
 
 export const refreshInviteLink = async (token: Token) => {
   try {
-    const headers = getAuthHeaders(token);
     const response = await fetch(`${REFRESH_ORGANIZATION_INVITE_LINK}`, {
       method: "PUT",
-      headers: headers,
+      headers: getAuthHeaders(token),
     });
     if (!response.ok) {
       const errMsg = await response.json();
@@ -57,12 +72,11 @@ export const getOrganization = async ({
   organization_id,
 }: getOrganizationParams) => {
   try {
-    const headers = getAuthHeaders(token);
     const response = await fetch(
       `${GET_ORGANIZATION_BASED_ID}?org=${organization_id}`,
       {
         method: "GET",
-        headers: headers,
+        headers: getAuthHeaders(token),
       }
     );
     if (!response.ok) {
@@ -82,21 +96,12 @@ type primaryRoleParams = {
   role_name: string;
 };
 
-export const addPrimaryRole = async ({
-  token,
-  user_id,
-  role_name,
-}: primaryRoleParams) => {
+export const addPrimaryRole = async (values: primaryRoleParams) => {
   try {
-    const body = {
-      user_id,
-      role_name,
-    };
-    const headers = getAuthHeaders(token);
-
+    const { token, ...body } = values;
     const response = await fetch(`${ASSIGN_PRIMARY_ROLE}`, {
       method: "POST",
-      headers: headers,
+      headers: getAuthHeaders(token),
       body: JSON.stringify(body),
     });
     if (!response.ok) {
@@ -111,21 +116,12 @@ export const addPrimaryRole = async ({
   }
 };
 
-export const removePrimaryRole = async ({
-  token,
-  user_id,
-  role_name,
-}: primaryRoleParams) => {
+export const removePrimaryRole = async (values: primaryRoleParams) => {
   try {
-    const body = {
-      user_id,
-      role_name,
-    };
-    const headers = getAuthHeaders(token);
-
+    const { token, ...body } = values;
     const response = await fetch(`${REMOVE_PRIMARY_ROLE}`, {
       method: "PUT",
-      headers: headers,
+      headers: getAuthHeaders(token),
       body: JSON.stringify(body),
     });
     if (!response.ok) {

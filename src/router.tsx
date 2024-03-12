@@ -10,6 +10,7 @@ import { NotFoundPage } from "./pages/homePage/components/NotFoundPage";
 import { DepartmentsPage } from "./pages/departmentsPage";
 import { SkillsPage } from "./pages/skillsPage";
 import { EmployeesPage } from "./pages/employeesPage/index";
+import { ProjectsPage } from "./pages/projectsPage";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: "/:organization_name/skills",
         element: <SkillsPage />,
+      },
+      {
+        path: "/:organization_name/projects",
+        element: <ProjectsPage />,
       },
     ],
   },

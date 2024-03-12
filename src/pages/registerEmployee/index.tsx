@@ -15,9 +15,10 @@ import { EyeOffIcon, EyeIcon, Loader2Icon, MapPinIcon } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { checkOrganizationInvite, registerEmployee } from "@/api/auth";
+import { registerEmployee } from "@/api/auth";
 import { Skeleton } from "@/components/ui/skeleton";
 import { NotFoundPage } from "../homePage/components/NotFoundPage";
+import { checkOrganizationInvite } from "@/api/organization";
 
 const registerSchema = z.object({
   username: z
@@ -64,8 +65,8 @@ export function RegisterEmployeePage() {
     isLoading,
     error,
   } = useQuery({
-    queryFn: () => checkOrganizationInvite(link_ref),
     queryKey: ["organization", { link_ref }],
+    queryFn: () => checkOrganizationInvite(link_ref),
   });
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);

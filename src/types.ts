@@ -39,3 +39,16 @@ export type Skill = {
   author: string;
   skill_description: string;
 };
+
+export type Project = {
+  id: string;
+  project_name: string;
+  project_period: string;
+  start_date: string;
+  deadline_date: string;
+  project_status: string;
+  description: string;
+  users: {id: string; username: string}[];
+  project_roles: string[];
+  technology_stack: string[]
+}

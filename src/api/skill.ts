@@ -18,12 +18,11 @@ export const createSkillCategory = async ({
   newSkillCategory,
 }: createSkillCategoryParams) => {
   try {
-    const headers = getAuthHeaders(token);
     const response = await fetch(
       `${CREATE_NEW_SKILL_CATEGORY}/${newSkillCategory}`,
       {
         method: "POST",
-        headers: headers,
+        headers: getAuthHeaders(token),
       }
     );
 
@@ -49,26 +48,12 @@ type createSkillParams = {
   departments: string[];
 };
 
-export const createSkill = async ({
-  token,
-  skill_category,
-  skill_name,
-  description,
-  author,
-  departments,
-}: createSkillParams) => {
+export const createSkill = async (values: createSkillParams) => {
   try {
-    const body = {
-      skill_category,
-      skill_name,
-      description,
-      author,
-      departments,
-    };
-    const headers = getAuthHeaders(token);
+    const { token, ...body } = values;
     const response = await fetch(`${GET_CREATE_DELETE_SKILLS}`, {
       method: "POST",
-      headers: headers,
+      headers: getAuthHeaders(token),
       body: JSON.stringify(body),
     });
 
@@ -91,12 +76,11 @@ type deleteSkillParams = {
 
 export const deleteSkill = async ({ token, skill_id }: deleteSkillParams) => {
   try {
-    const headers = getAuthHeaders(token);
     const response = await fetch(
       `${GET_CREATE_DELETE_SKILLS}/?_id=${skill_id}`,
       {
         method: "DELETE",
-        headers: headers,
+        headers: getAuthHeaders(token),
       }
     );
 
@@ -114,10 +98,9 @@ export const deleteSkill = async ({ token, skill_id }: deleteSkillParams) => {
 
 export const getSkillCategories = async (token: Token) => {
   try {
-    const headers = getAuthHeaders(token);
     const response = await fetch(`${GET_SKILL_CATEGORIES}`, {
       method: "GET",
-      headers: headers,
+      headers: getAuthHeaders(token),
     });
 
     if (!response.ok) {
@@ -134,10 +117,9 @@ export const getSkillCategories = async (token: Token) => {
 
 export const getSkills = async (token: Token) => {
   try {
-    const headers = getAuthHeaders(token);
     const response = await fetch(`${GET_CREATE_DELETE_SKILLS}`, {
       method: "GET",
-      headers: headers,
+      headers: getAuthHeaders(token),
     });
 
     if (!response.ok) {
@@ -162,10 +144,9 @@ export const getSkillCategory = async ({
   category_id,
 }: getSkillCategoryParams) => {
   try {
-    const headers = getAuthHeaders(token);
     const response = await fetch(`${GET_SKILL_CATEGORY}/${category_id}`, {
       method: "GET",
-      headers: headers,
+      headers: getAuthHeaders(token),
     });
 
     if (!response.ok) {

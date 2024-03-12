@@ -1,6 +1,11 @@
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { AlbumIcon, GanttChartSquareIcon, UsersIcon } from "lucide-react";
+import {
+  AlbumIcon,
+  FolderGit2Icon,
+  GanttChartSquareIcon,
+  UsersIcon,
+} from "lucide-react";
 import { AuthUser } from "@/types";
 
 type Props = {
@@ -49,6 +54,18 @@ export function DesktopNav({ auth }: Props) {
             return (
               <Button variant={isActive ? "secondary" : "ghost"} size="sm">
                 <AlbumIcon className="mr-2" /> Skills
+              </Button>
+            );
+          }}
+        </NavLink>
+        <NavLink
+          to={`/${auth?.organization_name}/projects`}
+          className="flex items-center"
+        >
+          {({ isActive }) => {
+            return (
+              <Button variant={isActive ? "secondary" : "ghost"} size="sm">
+                <FolderGit2Icon className="mr-2" /> Projects
               </Button>
             );
           }}
