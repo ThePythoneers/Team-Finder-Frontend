@@ -53,6 +53,12 @@ const columns: ColumnDef<Employee>[] = [
       const data = row.original.primary_roles;
       return <RoleBadges roles={data} />;
     },
+    filterFn: (row, id, value) => {
+      id;
+      return value.some(
+        (val: string) => row.original.primary_roles.indexOf(val) !== -1
+      );
+    },
   },
   {
     id: "Actions",
@@ -71,8 +77,6 @@ export function AssignedEmployeesPage() {
     queryKey: ["assignedEmployees", { token }],
     queryFn: () => getAssignedEmployees(token),
   });
-
-  // ! TODO: backend change the primary roles type
   return (
     <>
       {isLoading ? (

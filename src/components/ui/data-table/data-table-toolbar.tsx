@@ -37,8 +37,32 @@ export function DataTableToolbar<TData>({
     queryFn: () => getSkillCategories(token),
   });
 
+  const rolesOptions = [
+    {
+      label: "Organization Admin",
+      value: "Organization Admin",
+      icon: BadgePlusIcon,
+    },
+    {
+      label: "Department Manager",
+      value: "Department Manager",
+      icon: BadgePlusIcon,
+    },
+    {
+      label: "Project Manager",
+      value: "Project Manager",
+      icon: BadgePlusIcon,
+    },
+    {
+      label: "Employee",
+      value: "Employee",
+      icon: BadgePlusIcon,
+    },
+  ];
+
+  if (!auth) return;
   const skillsOptions = [
-    { label: "Created by me", value: auth?.id, icon: BadgePlusIcon },
+    { label: "Created by me", value: auth.id, icon: BadgePlusIcon },
   ];
   return (
     <div className="flex items-center justify-between">
@@ -52,6 +76,20 @@ export function DataTableToolbar<TData>({
             }
             className="h-8 w-[150px] lg:w-[250px]"
           />
+
+          {isLoading ? (
+            <Skeleton className="h-50px w-full" />
+          ) : (
+            <>
+              {table.getColumn("Roles") && (
+                <DataTableFacetedFilter
+                  column={table.getColumn("Roles")}
+                  title="Filter"
+                  options={rolesOptions}
+                />
+              )}
+            </>
+          )}
           {isFiltered && (
             <Button
               variant="ghost"
@@ -125,10 +163,16 @@ export function DataTableToolbar<TData>({
                   ]}
                 />
               )}
+              {table.getColumn("author") && (
+                <DataTableFacetedFilter
+                  column={table.getColumn("author")}
+                  title="Author"
+                  options={skillsOptions}
+                />
+              )}
             </>
           )}
-          <CreateSkillCategoryPopover />
-          <CreateSkillDialog />
+
           {isFiltered && (
             <Button
               variant="ghost"
@@ -140,6 +184,12 @@ export function DataTableToolbar<TData>({
             </Button>
           )}
         </div>
+      )}
+      {type === "skill" && (
+        <section className="flex gap-1 mr-1">
+          <CreateSkillCategoryPopover />
+          <CreateSkillDialog />
+        </section>
       )}
       <DataTableViewOptions table={table} />
     </div>

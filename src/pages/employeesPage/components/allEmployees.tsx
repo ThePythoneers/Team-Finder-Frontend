@@ -54,7 +54,10 @@ const columns: ColumnDef<Employee>[] = [
       return <RoleBadges roles={data} />;
     },
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
+      id;
+      return value.some(
+        (val: string) => row.original.primary_roles.indexOf(val) !== -1
+      );
     },
   },
   {

@@ -39,7 +39,7 @@ export function CreateDepartmentPopover() {
     <>
       <Popover>
         <PopoverTrigger asChild>
-          <Button className="ml-2" variant="ghost" size="icon">
+          <Button className="ml-2 size-8" variant="ghost" size="icon">
             <PlusIcon />
           </Button>
         </PopoverTrigger>
