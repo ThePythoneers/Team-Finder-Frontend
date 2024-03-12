@@ -60,6 +60,8 @@ export function CreateSkillDialog() {
   });
 
   const handleReset = () => {
+    setSkillName("");
+    setDescription("");
     setSkillCategories([]);
     setSelectedDepartments([]);
   };
@@ -80,6 +82,7 @@ export function CreateSkillDialog() {
       departments: selectedDepartments.map((department) => department.id),
     };
     await createSkillMutation(params);
+    handleReset();
   };
 
   return (

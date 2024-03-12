@@ -7,7 +7,7 @@ export type AuthUser = {
   organization_id: string;
   organization_name: string;
   roles: string[];
-  department_id: string;
+  department_id?: string;
 };
 
 export type Employee = {

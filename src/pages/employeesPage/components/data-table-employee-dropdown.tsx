@@ -129,80 +129,90 @@ export function EmployeesDropdown({ user }: RoleDropdownProps) {
               Assign employee
             </DropdownMenuItem>
           )}
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <NotebookTabsIcon className="size-5 mr-1" /> Roles
-            </DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                {roles.includes("Employee") && (
-                  <DropdownMenuCheckboxItem
-                    checked={adminChecked}
-                    onSelect={(e) => e.preventDefault()}
-                    onCheckedChange={() => {
-                      setAdminChecked((prev) => !prev);
-                      handleCheckboxChange(adminChecked, "Organization Admin");
-                    }}
-                  >
-                    Organizaton Admin
-                  </DropdownMenuCheckboxItem>
-                )}
+          {auth?.roles.includes("Organization Admin") && (
+            <>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <NotebookTabsIcon className="size-5 mr-1" /> Roles
+                </DropdownMenuSubTrigger>
+                <DropdownMenuPortal>
+                  <DropdownMenuSubContent>
+                    {roles.includes("Employee") && (
+                      <DropdownMenuCheckboxItem
+                        checked={adminChecked}
+                        onSelect={(e) => e.preventDefault()}
+                        onCheckedChange={() => {
+                          setAdminChecked((prev) => !prev);
+                          handleCheckboxChange(
+                            adminChecked,
+                            "Organization Admin"
+                          );
+                        }}
+                      >
+                        Organizaton Admin
+                      </DropdownMenuCheckboxItem>
+                    )}
 
-                <DropdownMenuCheckboxItem
-                  checked={departmentManagerChecked}
-                  onSelect={(e) => e.preventDefault()}
-                  onCheckedChange={() => {
-                    setDepartmentManagerChecked((prev) => !prev);
-                    handleCheckboxChange(
-                      departmentManagerChecked,
-                      "Department Manager"
-                    );
-                  }}
-                >
-                  Department Manager
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={projectManagerChecked}
-                  onSelect={(e) => e.preventDefault()}
-                  onCheckedChange={() => {
-                    setProjectManagerChecked((prev) => !prev);
-                    handleCheckboxChange(
-                      projectManagerChecked,
-                      "Project Manager"
-                    );
-                  }}
-                >
-                  Project Manager
-                </DropdownMenuCheckboxItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-          </DropdownMenuSub>
-          <DropdownMenuSeparator />
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <DropdownMenuItem
-                className="bg-destructive"
-                onSelect={(e) => e.preventDefault()}
-              >
-                <Trash2Icon className="size-5 mr-2" /> Kick
-              </DropdownMenuItem>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete the
-                  employee from our servers.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={() => {}}>
-                  Continue
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+                    <DropdownMenuCheckboxItem
+                      checked={departmentManagerChecked}
+                      onSelect={(e) => e.preventDefault()}
+                      onCheckedChange={() => {
+                        setDepartmentManagerChecked((prev) => !prev);
+                        handleCheckboxChange(
+                          departmentManagerChecked,
+                          "Department Manager"
+                        );
+                      }}
+                    >
+                      Department Manager
+                    </DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem
+                      checked={projectManagerChecked}
+                      onSelect={(e) => e.preventDefault()}
+                      onCheckedChange={() => {
+                        setProjectManagerChecked((prev) => !prev);
+                        handleCheckboxChange(
+                          projectManagerChecked,
+                          "Project Manager"
+                        );
+                      }}
+                    >
+                      Project Manager
+                    </DropdownMenuCheckboxItem>
+                  </DropdownMenuSubContent>
+                </DropdownMenuPortal>
+              </DropdownMenuSub>
+
+              <DropdownMenuSeparator />
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <DropdownMenuItem
+                    className="bg-destructive"
+                    onSelect={(e) => e.preventDefault()}
+                  >
+                    <Trash2Icon className="size-5 mr-2" /> Kick
+                  </DropdownMenuItem>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      the employee from our servers.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => {}}>
+                      Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

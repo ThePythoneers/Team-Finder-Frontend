@@ -93,8 +93,6 @@ export function SkillsPage() {
     queryFn: () => getSkills(token),
   });
   // ! TODO: filter skills that are used in your department
-  // ! TODO: filter skill categories
-  // ! TODO: filter only created by me
   return (
     <>
       <main className="container mx-auto py-4">

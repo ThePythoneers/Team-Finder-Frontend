@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import {
   CREATE_NEW_SKILL_CATEGORY,
-  GET_CREATE_SKILLS,
+  GET_CREATE_DELETE_SKILLS,
   GET_SKILL_CATEGORIES,
   GET_SKILL_CATEGORY,
 } from "./URL";
@@ -66,7 +66,7 @@ export const createSkill = async ({
       departments,
     };
     const headers = getAuthHeaders(token);
-    const response = await fetch(`${GET_CREATE_SKILLS}`, {
+    const response = await fetch(`${GET_CREATE_DELETE_SKILLS}`, {
       method: "POST",
       headers: headers,
       body: JSON.stringify(body),
@@ -78,6 +78,34 @@ export const createSkill = async ({
       throw new Error(errMsg);
     }
     toast.success("You created a new skill with success!!!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+type deleteSkillParams = {
+  token: Token;
+  skill_id: string;
+};
+
+export const deleteSkill = async ({ token, skill_id }: deleteSkillParams) => {
+  try {
+    const headers = getAuthHeaders(token);
+    const response = await fetch(
+      `${GET_CREATE_DELETE_SKILLS}/?_id=${skill_id}`,
+      {
+        method: "DELETE",
+        headers: headers,
+      }
+    );
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You deleted a skill with success!!!");
     return await response.json();
   } catch (error) {
     checkError(error);
@@ -107,7 +135,7 @@ export const getSkillCategories = async (token: Token) => {
 export const getSkills = async (token: Token) => {
   try {
     const headers = getAuthHeaders(token);
-    const response = await fetch(`${GET_CREATE_SKILLS}`, {
+    const response = await fetch(`${GET_CREATE_DELETE_SKILLS}`, {
       method: "GET",
       headers: headers,
     });

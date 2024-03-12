@@ -23,13 +23,25 @@ import { LinkIcon, MoreHorizontalIcon, Trash2Icon } from "lucide-react";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { ViewSkill } from "./viewSkill";
 import { AssignSkill } from "./assignSkill";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteSkill } from "@/api/skill";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 type Props = {
   skill: Skill;
 };
 
 export function SkillsDropdown({ skill }: Props) {
+  const token = useAuthHeader();
   const auth: AuthUser | null = useAuthUser();
+  const queryClient = useQueryClient();
+  const skill_id = skill.id;
+
+  const { mutateAsync: deleteSkillMutation } = useMutation({
+    mutationFn: deleteSkill,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["skills"] }),
+  });
+
   return (
     <>
       <DropdownMenu>
@@ -48,35 +60,43 @@ export function SkillsDropdown({ skill }: Props) {
               <DropdownMenuItem onClick={() => {}}>
                 <LinkIcon className="size-5 mr-2" /> Link skill
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
+              {auth.id === skill.author && (
+                <>
+                  <DropdownMenuSeparator />
 
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <DropdownMenuItem
-                    className="bg-destructive"
-                    onSelect={(e) => e.preventDefault()}
-                  >
-                    <Trash2Icon className="size-5 mr-2" /> Delete Skill
-                  </DropdownMenuItem>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      the skill from our servers.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => {}}>
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <DropdownMenuItem
+                        className="bg-destructive"
+                        onSelect={(e) => e.preventDefault()}
+                      >
+                        <Trash2Icon className="size-5 mr-2" /> Delete Skill
+                      </DropdownMenuItem>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently
+                          delete the skill from our servers.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={async () =>
+                            await deleteSkillMutation({ token, skill_id })
+                          }
+                        >
+                          Continue
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </>
+              )}
             </>
           )}
         </DropdownMenuContent>
