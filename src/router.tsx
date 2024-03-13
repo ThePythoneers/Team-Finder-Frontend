@@ -14,6 +14,7 @@ import { ProjectsPage } from "./pages/projectsPage";
 import { AllEmployeesPage } from "./pages/employeesPage/components/allEmployees";
 import { UnassignedEmployeesPage } from "./pages/employeesPage/components/unassignedEmployees";
 import { AssignedEmployeesPage } from "./pages/employeesPage/components/assignedEmployees";
+import { ProfilePage } from "./pages/profilePage";
 
 const router = createBrowserRouter([
   {
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
       {
         path: "/:organization_name/projects",
         element: <ProjectsPage />,
+      },
+      {
+        path: "/:organization_name/profile",
+        element: <ProfilePage />,
       },
     ],
   },

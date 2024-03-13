@@ -7,7 +7,7 @@ type Props = {
 export function RoleBadges({ roles }: Props) {
   return (
     <>
-      <div className="flex gap-1">
+      <div className="flex gap-1 flex-wrap">
         {roles.map((role, index) => {
           if (role === "Organization Admin")
             return (

@@ -225,7 +225,7 @@ export const removeUserFromDepartment = async ({
 
 type getDepartmentEmployeesParams = {
   token: string | null;
-  department_id: string;
+  department_id: string | undefined;
 };
 
 export const getDepartmentEmployees = async ({
