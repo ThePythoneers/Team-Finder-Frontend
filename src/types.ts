@@ -48,7 +48,13 @@ export type Project = {
   deadline_date: string;
   project_status: string;
   description: string;
-  users: {id: string; username: string}[];
+  users: { id: string; username: string }[];
   project_roles: string[];
-  technology_stack: string[]
-}
+  technology_stack: string[];
+};
+
+export type teamRole = {
+  id: string;
+  organization_id: string;
+  custom_role_name: string;
+};

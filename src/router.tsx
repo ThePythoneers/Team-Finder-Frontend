@@ -15,6 +15,7 @@ import { AllEmployeesPage } from "./pages/employeesPage/components/allEmployees"
 import { UnassignedEmployeesPage } from "./pages/employeesPage/components/unassignedEmployees";
 import { AssignedEmployeesPage } from "./pages/employeesPage/components/assignedEmployees";
 import { ProfilePage } from "./pages/profilePage";
+import { TeamRolesPage } from "./pages/teamRolesPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
           {
             path: "/:organization_name/employees/assigned",
             element: <AssignedEmployeesPage />,
+          },
+          {
+            path: "/:organization_name/employees/teamroles",
+            element: <TeamRolesPage />,
           },
         ],
       },

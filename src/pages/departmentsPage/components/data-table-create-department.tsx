@@ -39,8 +39,8 @@ export function CreateDepartmentPopover() {
     <>
       <Popover>
         <PopoverTrigger asChild>
-          <Button className="ml-2 size-8" variant="ghost" size="icon">
-            <PlusIcon />
+          <Button className="ml-2 h-8" variant="ghost" size="sm">
+            <PlusIcon /> Create a new department
           </Button>
         </PopoverTrigger>
         <PopoverContent>

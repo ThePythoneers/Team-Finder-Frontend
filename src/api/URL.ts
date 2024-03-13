@@ -20,6 +20,9 @@ export const REFRESH_ORGANIZATION_INVITE_LINK = `${BASE_URL}/organization/ref/re
 export const ASSIGN_PRIMARY_ROLE = `${BASE_URL}/roles/assign`;
 export const REMOVE_PRIMARY_ROLE = `${BASE_URL}/roles/remove`;
 
+// CUSTOM ROLES
+export const CREATE_GET_ALL_CUSTOM_ROLES = `${BASE_URL}/roles/custom`;
+
 // DEPARTMENT
 export const DELETE_GET_CREATE_DEPARTMENT = `${BASE_URL}/department/`;
 export const GET_DEPARTMENTS = `${BASE_URL}/departments`;

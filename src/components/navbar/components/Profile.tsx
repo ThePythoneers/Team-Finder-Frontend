@@ -10,7 +10,7 @@ import {
 import { useTheme } from "@/components/providers/themeProvider";
 import { AuthUser } from "@/types";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -52,11 +52,11 @@ export function AvatarNav({ auth }: Props) {
           <DropdownMenuLabel>{auth?.username}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <Link to={`/${auth?.organization_name}/profile`} className="flex">
-                <UserIcon className="mr-2 size-4" />
-                <span>View Profile</span>
-              </Link>
+            <DropdownMenuItem
+              onClick={() => navigate(`/${auth?.organization_name}/profile`)}
+            >
+              <UserIcon className="mr-2 size-4" />
+              <span>View Profile</span>
             </DropdownMenuItem>
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>

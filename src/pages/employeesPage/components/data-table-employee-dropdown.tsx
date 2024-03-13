@@ -16,7 +16,6 @@ import {
   MilestoneIcon,
   MoreHorizontalIcon,
   NotebookTabsIcon,
-  Trash2Icon,
 } from "lucide-react";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Button } from "@/components/ui/button";
@@ -24,17 +23,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addPrimaryRole, removePrimaryRole } from "@/api/organization";
 import { useState } from "react";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { ViewEmployeeDialog } from "./viewEmployee";
 import { assignUserToDepartment } from "@/api/department";
 
@@ -182,35 +170,6 @@ export function EmployeesDropdown({ user }: RoleDropdownProps) {
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>
               </DropdownMenuSub>
-
-              <DropdownMenuSeparator />
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <DropdownMenuItem
-                    className="bg-destructive"
-                    onSelect={(e) => e.preventDefault()}
-                  >
-                    <Trash2Icon className="size-5 mr-2" /> Kick
-                  </DropdownMenuItem>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      the employee from our servers.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => {}}>
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
             </>
           )}
         </DropdownMenuContent>

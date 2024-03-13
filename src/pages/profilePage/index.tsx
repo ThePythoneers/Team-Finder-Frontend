@@ -21,8 +21,10 @@ export function ProfilePage() {
 
   const { data: userDepartmentInfo, isLoading } = useQuery({
     queryKey: ["userDepartment"],
-    queryFn: () =>
-      getDepartmentInfo({ token, department_id: auth?.department_id }),
+    queryFn: () => {
+      if (!auth?.department_id) return { department_name: "No department" };
+      return getDepartmentInfo({ token, department_id: auth?.department_id });
+    },
   });
 
   if (!auth) return;
@@ -49,9 +51,13 @@ export function ProfilePage() {
               {isLoading ? (
                 <Skeleton className="h-4 w-[250px]" />
               ) : (
-                <Badge variant="secondary">
-                  {userDepartmentInfo.department_name}
-                </Badge>
+                <>
+                  {userDepartmentInfo?.department_name && (
+                    <Badge variant="secondary">
+                      {userDepartmentInfo?.department_name}
+                    </Badge>
+                  )}
+                </>
               )}
             </aside>
             <section className="overflow-auto h-[calc(100vh-20vh)]">

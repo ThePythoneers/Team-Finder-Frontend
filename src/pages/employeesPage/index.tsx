@@ -2,7 +2,12 @@ import { AuthUser } from "@/types";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { Button } from "@/components/ui/button";
 import { NavLink, Outlet } from "react-router-dom";
-import { Contact2Icon, UserCogIcon, UserPlusIcon } from "lucide-react";
+import {
+  BookmarkIcon,
+  Contact2Icon,
+  UserCogIcon,
+  UserPlusIcon,
+} from "lucide-react";
 import { useEmployeesPageRedirect } from "@/hooks/useEmployeesPageRedirect";
 
 export function EmployeesPage() {
@@ -11,9 +16,9 @@ export function EmployeesPage() {
 
   return (
     <>
-      <main className="flex gap-10 mt-10">
-        <aside className="mt-10 pl-5 hidden lg:block">
-          <ul className="flex flex-col gap-2 w-full">
+      <main className="flex gap-10 lg:mt-10 flex-col lg:flex-row">
+        <aside className="mt-5 pl-5 lg:block">
+          <ul className="flex lg:flex-col flex-wrap gap-2 w-full">
             {auth?.roles?.includes("Organization Admin") && (
               <>
                 <NavLink
@@ -33,7 +38,7 @@ export function EmployeesPage() {
                   }}
                 </NavLink>
                 <NavLink
-                  to={`/${auth?.organization_name}/employees/roles`}
+                  to={`/${auth?.organization_name}/employees/teamroles`}
                   className="flex items-center"
                 >
                   {({ isActive }) => {
@@ -43,7 +48,7 @@ export function EmployeesPage() {
                         className="w-full text-lg"
                         size="lg"
                       >
-                        <Contact2Icon className="mr-2" /> Roles
+                        <BookmarkIcon className="mr-2" /> Team Roles
                       </Button>
                     );
                   }}
@@ -88,13 +93,9 @@ export function EmployeesPage() {
             )}
           </ul>
         </aside>
-        <section className="sm:container lg:w-[69%] lg:mx-0 lg:p-0">
+
+        <section className="container lg:w-[69%] lg:mx-0 lg:p-0 mb-2">
           <Outlet />
-          {/* <AllEmployeesPage />
-
-          <UnassignedEmployeesPage /> */}
-
-          {/* <AssignedEmployeesPage /> */}
         </section>
       </main>
     </>

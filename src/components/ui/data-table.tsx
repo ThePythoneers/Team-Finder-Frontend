@@ -31,13 +31,13 @@ import { DataTableToolbar } from "@/components/ui/data-table/data-table-toolbar"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  type?: "employee" | "department" | "skill" | "project";
+  type?: "employee" | "department" | "skill" | "project" | "roles";
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  type
+  type,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
