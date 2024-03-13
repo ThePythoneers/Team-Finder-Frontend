@@ -1,35 +1,25 @@
-import { AuthUser } from "@/types";
+import { Token, userSkill } from "@/types";
 import { SkillCard } from "./skillCard";
 import { useQuery } from "@tanstack/react-query";
+import { getAuthUserSkills } from "@/api/skill";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {
-  auth: AuthUser;
+  token: Token;
 };
-export function UserSkills({ auth }: Props) {
-  const { data: isLoading } = useQuery({
-    queryKey: ["userSkills"],
-    queryFn: () => {},
+export function UserSkills({ token }: Props) {
+  const { data, isLoading } = useQuery({
+    queryKey: ["authUserSkills"],
+    queryFn: () => getAuthUserSkills(token),
   });
   return (
     <>
       <section className="flex flex-col gap-2">
-        <SkillCard />
-        <SkillCard />
-        <SkillCard />
-        <SkillCard />
-        <SkillCard />
-        <SkillCard />
-        <SkillCard />
-        <SkillCard />
-        <SkillCard />
-        <SkillCard />
-        <SkillCard />
-        <SkillCard />
-        <SkillCard />
-        <SkillCard />
-        <SkillCard />
-        <SkillCard />
-        <SkillCard />
+        {isLoading ? (
+          <Skeleton className="h-[500px] w-full" />
+        ) : (
+          data.map((skill: userSkill) => <SkillCard skill={skill} />)
+        )}
       </section>
     </>
   );

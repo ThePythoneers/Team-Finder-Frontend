@@ -40,6 +40,17 @@ export type Skill = {
   skill_description: string;
 };
 
+export type userSkill = {
+  skill_id: string;
+  skill_name: string;
+  skill_category: string[];
+  skill_level: number;
+  skill_experience: number;
+  training_title?: string;
+  training_description?: string;
+  project_link?: string;
+};
+
 export type Project = {
   id: string;
   project_name: string;

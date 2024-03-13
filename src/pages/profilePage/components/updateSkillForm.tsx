@@ -19,15 +19,23 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
-import { Check, ChevronsUpDownIcon, Loader2Icon, SaveIcon } from "lucide-react";
+import {
+  Check,
+  ChevronsUpDownIcon,
+  Loader2Icon,
+  SaveIcon,
+  Trash2Icon,
+  XIcon,
+} from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { assignSkillMe } from "@/api/user";
-import { useMutation } from "@tanstack/react-query";
-import { AuthUser, Skill } from "@/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AuthUser, userSkill } from "@/types";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { removeUserSkill } from "@/api/skill";
 
 const level = [
   { label: "1 - Learns", value: 1 },
@@ -56,15 +64,27 @@ const FormSchema = z.object({
 });
 
 type Props = {
-  skill: Skill;
+  skill: userSkill;
   isEdit: boolean;
   setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export function UpdateMeSkillForm({ skill, isEdit, setIsEdit }: Props) {
+  const queryClient = useQueryClient();
+  const defaultValues = {
+    level: skill.skill_level,
+    experience: skill.skill_experience,
+  };
   const token = useAuthHeader();
   const auth: AuthUser | null = useAuthUser();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues,
+  });
+
+  const { mutateAsync: removeSkillMutation } = useMutation({
+    mutationFn: removeUserSkill,
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["authUserSkills"] }),
   });
 
   const { mutateAsync: assignSkillMutation, isPending } = useMutation({
@@ -76,11 +96,19 @@ export function UpdateMeSkillForm({ skill, isEdit, setIsEdit }: Props) {
     await assignSkillMutation({
       token,
       user_id,
-      skill_id: skill.id,
+      skill_id: skill.skill_id,
       level: values.level,
       experience: values.experience,
     });
     setIsEdit(false);
+  };
+  if (!auth) return;
+  const handleRemoveSkill = async () => {
+    await removeSkillMutation({
+      token,
+      user_id: auth.id,
+      skill_id: skill.skill_id,
+    });
   };
   return (
     <>
@@ -95,11 +123,15 @@ export function UpdateMeSkillForm({ skill, isEdit, setIsEdit }: Props) {
               name="level"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="lg:text-xl">Level</FormLabel>
+                  <FormLabel className="lg:text-xl">
+                    <span>Level </span>
+                    {level[field.value - 1].label}
+                  </FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
+                          disabled={!isEdit}
                           variant="outline"
                           role="combobox"
                           className={`
@@ -155,11 +187,15 @@ export function UpdateMeSkillForm({ skill, isEdit, setIsEdit }: Props) {
               name="experience"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="lg:text-xl">Experience</FormLabel>
+                  <FormLabel className="lg:text-xl">
+                    <span>Experience</span>
+                    {experience[field.value - 1].label}
+                  </FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
+                          disabled={!isEdit}
                           variant="outline"
                           role="combobox"
                           className={`
@@ -213,16 +249,36 @@ export function UpdateMeSkillForm({ skill, isEdit, setIsEdit }: Props) {
           </div>
 
           {isEdit && (
-            <Button
-              type="submit"
-              size="icon"
-              className="absolute top-[-115px] right-0"
-            >
-              {isPending && (
-                <Loader2Icon className="mr-2 size-4 animate-spin" />
-              )}
-              <SaveIcon />
-            </Button>
+            <div className="flex justify-between w-full">
+              <Button
+                size="sm"
+                type="button"
+                variant="destructive"
+                className="h-8 space-x-1"
+                onClick={handleRemoveSkill}
+              >
+                <Trash2Icon /> <span>Delete</span>
+              </Button>
+              <div className="flex gap-4">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-8"
+                  onClick={() => {
+                    form.reset(defaultValues);
+                    setIsEdit(false);
+                  }}
+                >
+                  <XIcon /> <span>Cancel</span>
+                </Button>
+                <Button type="submit" size="sm" className="h-8 space-x-1">
+                  {isPending && (
+                    <Loader2Icon className="mr-2 size-4 animate-spin" />
+                  )}
+                  <SaveIcon /> <span>Save</span>
+                </Button>
+              </div>
+            </div>
           )}
         </form>
       </Form>

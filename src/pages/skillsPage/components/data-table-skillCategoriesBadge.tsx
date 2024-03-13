@@ -1,12 +1,12 @@
 import { getSkillCategory } from "@/api/skill";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Skill } from "@/types";
+import { Skill, userSkill } from "@/types";
 import { useQueries } from "@tanstack/react-query";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 type Props = {
-  skill: Skill;
+  skill: Skill | userSkill;
 };
 
 export function SkillCategoriesBadge({ skill }: Props) {
@@ -33,7 +33,7 @@ export function SkillCategoriesBadge({ skill }: Props) {
         <Skeleton className="h-[50px] w-full" />
       ) : (
         <>
-          <div className="flex gap-1">
+          <div className="flex gap-1 flex-wrap">
             {results.data.map((category) => (
               <Badge key={category.id} variant="secondary">
                 {category.category_name}

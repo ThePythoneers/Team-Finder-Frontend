@@ -36,7 +36,7 @@ export function ProfilePage() {
             <aside className="space-y-4">
               <section className="flex items-center space-x-4">
                 <Avatar className="size-16">
-                  <AvatarFallback>
+                  <AvatarFallback className="text-2xl">
                     {auth?.username.at(0)?.toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
@@ -61,7 +61,7 @@ export function ProfilePage() {
               )}
             </aside>
             <section className="overflow-auto h-[calc(100vh-20vh)]">
-              <UserSkills auth={auth} />
+              <UserSkills token={token} />
             </section>
           </CardContent>
         </Card>
