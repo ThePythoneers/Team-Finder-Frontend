@@ -56,6 +56,7 @@ export function SignInCard() {
   const navigate = useNavigate();
   const signIn = useSignIn();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: signInDefaultValues,

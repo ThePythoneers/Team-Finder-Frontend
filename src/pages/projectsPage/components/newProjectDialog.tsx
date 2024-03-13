@@ -43,36 +43,23 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 
-// export enum ProjectPeriod {
-//   Fixed = "Fixed",
-//   Ongoing = "Ongoing",
-// }
-
-// export enum ProjectStatus {
-//   NotStarted = "Not Started",
-//   Starting = "Starting",
-// }
-
-// export enum Technologies {
-//   React = "React",
-//   Angular = "Angular",
-//   FastAPI = "FastAPI",
-//   Django = "Django",
-// }
-
 const ProjectPeriod = ["Fixed", "Ongoing"] as const;
 const ProjectStatus = ["Not Started", "Starting"] as const;
 const technologies = ["React", "Angular", "FastAPI", "Django"] as const;
 
+const allTeamRoles = ["Frontend", "Backend", "teste", "murimChat"];
+
 const newProjectSchema = z.object({
-  project_name: z.string(),
+  project_name: z
+    .string()
+    .min(4, { message: "The project name has to be at least 4 characters" }),
   project_period: z.enum(["Fixed", "Ongoing"]),
   start_date: z.date(),
   deadline_date: z.date().optional(),
   project_status: z.enum(["Not Started", "Starting"]),
   general_description: z.string(),
   technologies: z.array(z.string()),
-  // team_roles: z.array(z.string()),
+  team_roles: z.array(z.string()),
 });
 
 const defaultValues = {
@@ -83,7 +70,7 @@ const defaultValues = {
   project_status: undefined,
   general_description: undefined,
   technologies: [],
-  // team_roles: undefined,
+  team_roles: undefined,
 };
 
 export function NewProjectDialog() {
@@ -92,6 +79,10 @@ export function NewProjectDialog() {
     "Django",
     "React",
     "Angular",
+  ]);
+  const [teamRoles, setTeamRoles] = useState<string[]>([
+    "Frontend",
+    "Backend",
   ]);
   const form = useForm<z.infer<typeof newProjectSchema>>({
     resolver: zodResolver(newProjectSchema),
@@ -464,6 +455,93 @@ export function NewProjectDialog() {
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="technologies"
+                render={({ field }) => (
+                  <FormItem className="mb-2">
+                    <FormLabel className="lg:text-lg mr-2">
+                      Project Technologies
+                    </FormLabel>
+                    <section>
+                      {teamRoles.length > 0 && (
+                        <div className="flex flex-wrap gap-1 items-center py-2 px-4 mb-2 rounded-md border border-border border-dashed">
+                          {teamRoles.map((role, index) => (
+                            <Badge key={index} variant="secondary">
+                              {role}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                    </section>
+                    <div>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              className={`
+                                w-[50%] justify-between
+                                ${!field.value && "text-muted-foreground"}
+                              `}
+                            >
+                              {teamRoles.length > 0
+                                ? `${teamRoles.length} Selected`
+                                : "Select a technology"}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-0">
+                          <Command>
+                            <CommandInput placeholder="Search a technology" />
+                            <CommandList>
+                              <CommandEmpty>No technology found.</CommandEmpty>
+                              <CommandGroup>
+                                {allTeamRoles.map((role, index) => {
+                                  const isSelected = teamRoles.includes(role);
+                                  return (
+                                    <CommandItem
+                                      key={index}
+                                      value={role}
+                                      onSelect={() => {
+                                        if (isSelected) {
+                                          setTeamRoles((current) =>
+                                            current.filter(
+                                              (teamRole) => role !== teamRole
+                                            )
+                                          );
+                                        } else {
+                                          setTeamRoles((current) => [
+                                            ...current,
+                                            role,
+                                          ]);
+                                        }
+                                        form.setValue("team_roles", teamRoles);
+                                      }}
+                                    >
+                                      <Checkbox
+                                        checked={isSelected}
+                                        className={`mr-2 ${
+                                          isSelected
+                                            ? "bg-primary text-primary-foreground"
+                                            : "opacity-50"
+                                        }`}
+                                      />
+                                      {role}
+                                    </CommandItem>
+                                  );
+                                })}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}

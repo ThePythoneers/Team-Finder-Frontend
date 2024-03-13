@@ -131,7 +131,7 @@ export function CreateSkillDialog() {
                       <ChevronsUpDownIcon />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent>
+                  <PopoverContent className="p-0">
                     <Command>
                       <CommandInput placeholder="Search by name" />
                       <CommandList>
@@ -240,11 +240,11 @@ export function CreateSkillDialog() {
                     >
                       {selectedDepartments.length > 0
                         ? `${selectedDepartments.length} Selected`
-                        : "Select some departments"}
+                        : "Select your department"}
                       <ChevronsUpDownIcon />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent>
+                  <PopoverContent className="p-0">
                     <Command>
                       <CommandInput placeholder="Search by name" />
                       <CommandList>
@@ -256,40 +256,44 @@ export function CreateSkillDialog() {
                               Skill category not found.
                             </CommandEmpty>
                             <CommandGroup>
-                              {departmentsData.map((department: Department) => {
-                                const isSelected =
-                                  selectedDepartments.includes(department);
-
-                                return (
-                                  <CommandItem
-                                    key={department.id}
-                                    onSelect={() => {
-                                      if (isSelected) {
-                                        setSelectedDepartments((current) =>
-                                          current.filter(
-                                            (depart) => depart !== department
-                                          )
-                                        );
-                                      } else {
-                                        setSelectedDepartments((current) => [
-                                          ...current,
-                                          department,
-                                        ]);
-                                      }
-                                    }}
-                                  >
-                                    <Checkbox
-                                      checked={isSelected}
-                                      className={`mr-2 ${
-                                        isSelected
-                                          ? "bg-primary text-primary-foreground"
-                                          : "opacity-50"
-                                      }`}
-                                    />
-                                    {department.department_name}
-                                  </CommandItem>
-                                );
-                              })}
+                              {departmentsData
+                                .filter(
+                                  (department: Department) =>
+                                    department.id === auth.department_id
+                                )
+                                .map((department: Department) => {
+                                  const isSelected =
+                                    selectedDepartments.includes(department);
+                                  return (
+                                    <CommandItem
+                                      key={department.id}
+                                      onSelect={() => {
+                                        if (isSelected) {
+                                          setSelectedDepartments((current) =>
+                                            current.filter(
+                                              (depart) => depart !== department
+                                            )
+                                          );
+                                        } else {
+                                          setSelectedDepartments((current) => [
+                                            ...current,
+                                            department,
+                                          ]);
+                                        }
+                                      }}
+                                    >
+                                      <Checkbox
+                                        checked={isSelected}
+                                        className={`mr-2 ${
+                                          isSelected
+                                            ? "bg-primary text-primary-foreground"
+                                            : "opacity-50"
+                                        }`}
+                                      />
+                                      {department.department_name}
+                                    </CommandItem>
+                                  );
+                                })}
                             </CommandGroup>
                           </>
                         )}

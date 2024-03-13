@@ -11,6 +11,9 @@ import { DepartmentsPage } from "./pages/departmentsPage";
 import { SkillsPage } from "./pages/skillsPage";
 import { EmployeesPage } from "./pages/employeesPage/index";
 import { ProjectsPage } from "./pages/projectsPage";
+import { AllEmployeesPage } from "./pages/employeesPage/components/allEmployees";
+import { UnassignedEmployeesPage } from "./pages/employeesPage/components/unassignedEmployees";
+import { AssignedEmployeesPage } from "./pages/employeesPage/components/assignedEmployees";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +40,20 @@ const router = createBrowserRouter([
       {
         path: "/:organization_name/employees",
         element: <EmployeesPage />,
+        children: [
+          {
+            path: "/:organization_name/employees/all",
+            element: <AllEmployeesPage />,
+          },
+          {
+            path: "/:organization_name/employees/unassigned",
+            element: <UnassignedEmployeesPage />,
+          },
+          {
+            path: "/:organization_name/employees/assigned",
+            element: <AssignedEmployeesPage />,
+          },
+        ],
       },
       {
         path: "/:organization_name/departments",

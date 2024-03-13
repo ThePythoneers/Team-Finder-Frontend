@@ -10,6 +10,5 @@ export function useAdminRedirect() {
     if (!auth?.roles.includes("Organization Admin")) {
       navigate(`/${auth?.organization_name}`);
     }
-  });
-  return;
+  }, []);
 }

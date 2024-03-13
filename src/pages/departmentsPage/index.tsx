@@ -69,7 +69,9 @@ export function DepartmentsPage() {
     queryKey: ["departments", { token }],
     queryFn: () => getDepartments(token),
   });
+  
 
+  console.log("🚀 ~ DepartmentsPage ~ departmentsData:", departmentsData)
   return (
     <>
       <main className="container mx-auto py-4">

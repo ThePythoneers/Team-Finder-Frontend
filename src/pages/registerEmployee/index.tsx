@@ -78,14 +78,16 @@ export function RegisterEmployeePage() {
   const { mutateAsync: registerMutation, isPending: registerIsPending } =
     useMutation({
       mutationFn: registerEmployee,
+      onSuccess: () => {
+        form.reset(registerDefaultValues);
+        navigate("/authentication/signIn");
+      },
     });
 
   const onSubmit = async (values: z.infer<typeof registerSchema>) => {
-    const body = { ...values, link_ref: link_ref };
+    const body = { ...values, link_ref };
 
     await registerMutation(body);
-    form.reset(registerDefaultValues);
-    navigate("/authentication/signIn");
   };
   if (isLoading)
     return (

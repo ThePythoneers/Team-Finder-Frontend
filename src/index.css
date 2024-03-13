@@ -83,6 +83,7 @@ html {
 ::-webkit-scrollbar {
   z-index: 1000;
   width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-button {

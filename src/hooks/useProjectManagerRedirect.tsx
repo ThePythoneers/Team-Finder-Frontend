@@ -10,6 +10,5 @@ export function useProjectManagerRedirect() {
     if (!auth?.roles.includes("Project Manager")) {
       navigate(`/${auth?.organization_name}`);
     }
-  });
-  return;
+  }, []);
 }

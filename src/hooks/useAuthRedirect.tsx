@@ -10,6 +10,5 @@ export function useAuthRedirect() {
     if (auth) {
       navigate(`/${auth?.organization_name}`);
     }
-  });
-  return;
+  }, []);
 }

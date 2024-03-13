@@ -3,12 +3,15 @@ import { Input } from "@/components/ui/input";
 import { Table } from "@tanstack/react-table";
 import { XIcon } from "lucide-react";
 import { NewProjectDialog } from "./newProjectDialog";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { AuthUser } from "@/types";
 
 interface Props<TData> {
   table: Table<TData>;
 }
 
 export function ProjectsToolbar<TData>({ table }: Props<TData>) {
+  const auth: AuthUser | null = useAuthUser();
   const isFiltered = table.getState().columnFilters.length > 0;
 
   return (
@@ -38,7 +41,7 @@ export function ProjectsToolbar<TData>({ table }: Props<TData>) {
           </Button>
         )}
       </div>
-      <NewProjectDialog />
+      {auth?.roles.includes("Project Manager") && <NewProjectDialog />}
     </>
   );
 }

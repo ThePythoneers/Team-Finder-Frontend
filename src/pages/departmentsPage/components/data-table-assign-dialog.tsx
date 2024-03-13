@@ -52,6 +52,7 @@ export function AssignDepartmentManager({ department }: Props) {
   const handleAssignManager = async () => {
     const manager_id = newDepartmentManagerID;
     const department_id = department.id;
+    console.log("🚀 ~ handleAssignManager ~ department_id:", department_id)
 
     await assignManagerMutation({ token, department_id, manager_id });
   };
