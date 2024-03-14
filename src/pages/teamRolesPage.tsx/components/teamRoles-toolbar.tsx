@@ -20,12 +20,12 @@ export function TeamRolesToolbar<TData>({ table }: Props<TData>) {
         <Input
           placeholder="Filter roles..."
           value={
-            (table.getColumn("custom_role_name")?.getFilterValue() as string) ??
+            (table.getColumn("Team Role")?.getFilterValue() as string) ??
             ""
           }
           onChange={(event) =>
             table
-              .getColumn("custom_role_name")
+              .getColumn("Team Role")
               ?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px]"

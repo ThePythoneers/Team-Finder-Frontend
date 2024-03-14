@@ -117,7 +117,7 @@ export function UpdateMeSkillForm({ skill, isEdit, setIsEdit }: Props) {
           onSubmit={form.handleSubmit(handleSubmit)}
           className="space-y-6 relative"
         >
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="level"

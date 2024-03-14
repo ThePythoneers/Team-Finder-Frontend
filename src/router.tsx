@@ -16,6 +16,7 @@ import { UnassignedEmployeesPage } from "./pages/employeesPage/components/unassi
 import { AssignedEmployeesPage } from "./pages/employeesPage/components/assignedEmployees";
 import { ProfilePage } from "./pages/profilePage";
 import { TeamRolesPage } from "./pages/teamRolesPage.tsx";
+import { TechnologiesPage } from "./pages/technologiesPage/index.tsx";
 
 const router = createBrowserRouter([
   {
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
           {
             path: "/:organization_name/employees/teamroles",
             element: <TeamRolesPage />,
+          },
+          {
+            path: "/:organization_name/employees/technologies",
+            element: <TechnologiesPage />,
           },
         ],
       },

@@ -33,14 +33,15 @@ const columns: ColumnDef<Skill>[] = [
     ),
   },
   {
+    id: "Skill",
     accessorKey: "skill_name",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Skill" />
     ),
   },
   {
+    id: "Skill categories",
     accessorKey: "skill_category",
-    id: "Skill category",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Skill categories" />
     ),
@@ -57,6 +58,7 @@ const columns: ColumnDef<Skill>[] = [
     },
   },
   {
+    id: "Skill Description",
     accessorKey: "skill_description",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Description" />

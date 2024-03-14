@@ -3,6 +3,7 @@ import {
   CREATE_NEW_SKILL_CATEGORY,
   GET_CREATE_DELETE_SKILLS,
   GET_POST_DELETE_ASSIGN_SKILL_USER,
+  GET_SKILLS_ANY_USER,
   GET_SKILL_CATEGORIES,
   GET_SKILL_CATEGORY,
 } from "./URL";
@@ -201,6 +202,24 @@ export const removeUserSkill = async (values: removeUserSkillParams) => {
       throw new Error(errMsg);
     }
     toast.success("You removed a skill with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+export const getAnyUserSkills = async (token: Token, _id: string) => {
+  try {
+    const response = await fetch(`${GET_SKILLS_ANY_USER}?_id=${_id}`, {
+      method: "GET",
+      headers: getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
     return await response.json();
   } catch (error) {
     checkError(error);

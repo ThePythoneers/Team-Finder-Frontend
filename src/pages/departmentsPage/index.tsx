@@ -33,12 +33,14 @@ const columns: ColumnDef<Department>[] = [
     ),
   },
   {
+    id: "Department",
     accessorKey: "department_name",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Department" />
     ),
   },
   {
+    id: "Manager",
     accessorKey: "manager_email",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Manager" />
@@ -69,9 +71,7 @@ export function DepartmentsPage() {
     queryKey: ["departments", { token }],
     queryFn: () => getDepartments(token),
   });
-  
 
-  console.log("🚀 ~ DepartmentsPage ~ departmentsData:", departmentsData)
   return (
     <>
       <main className="container mx-auto py-4">

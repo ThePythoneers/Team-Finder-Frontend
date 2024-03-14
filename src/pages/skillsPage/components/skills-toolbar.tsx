@@ -37,11 +37,9 @@ export function SkillsToolbar<TData>({ table }: Props<TData>) {
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder="Filter skill..."
-          value={
-            (table.getColumn("skill_name")?.getFilterValue() as string) ?? ""
-          }
+          value={(table.getColumn("Skill")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("skill_name")?.setFilterValue(event.target.value)
+            table.getColumn("Skill")?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
@@ -49,9 +47,9 @@ export function SkillsToolbar<TData>({ table }: Props<TData>) {
           <Skeleton className="h-[50px] w-full" />
         ) : (
           <>
-            {table.getColumn("Skill category") && (
+            {table.getColumn("Skill categories") && (
               <DataTableFacetedFilter
-                column={table.getColumn("Skill category")}
+                column={table.getColumn("Skill categories")}
                 title="Filter"
                 options={[
                   ...skillCategories.map((category: SkillCategory) => {

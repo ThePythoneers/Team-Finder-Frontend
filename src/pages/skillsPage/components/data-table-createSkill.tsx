@@ -35,6 +35,7 @@ import { ChevronsUpDownIcon, Loader2Icon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { toast } from "sonner";
 
 export function CreateSkillDialog() {
   const auth: AuthUser | null = useAuthUser();
@@ -73,6 +74,14 @@ export function CreateSkillDialog() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (skillName.length < 4)
+      return toast.error(
+        "The skill name has to be at least 4 characters long!"
+      );
+    if (skillCategories.length < 1)
+      return toast.error("You have to select at least one skill category!");
+    if (!description)
+      return toast.error("You have to specify a description for this skill!");
     const params = {
       token,
       skill_category: skillCategories.map((category) => category.id),
@@ -101,8 +110,8 @@ export function CreateSkillDialog() {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Skill</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className="text-3xl">Create a skill</DialogTitle>
+              <DialogDescription className="text-lg">
                 Create a new skill for your organization.
               </DialogDescription>
             </DialogHeader>
@@ -201,7 +210,9 @@ export function CreateSkillDialog() {
                 </Popover>
               </section>
               <div className="space-y-2">
-                <Label htmlFor="skillName">Skill Name</Label>
+                <Label htmlFor="skillName" className="text-lg">
+                  Skill Name
+                </Label>
                 <Input
                   id="skillName"
                   type="text"
@@ -211,8 +222,11 @@ export function CreateSkillDialog() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Skill Description</Label>
+                <Label htmlFor="textarea" className="text-lg">
+                  Skill Description
+                </Label>
                 <Textarea
+                  id="textarea"
                   placeholder="example"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -252,9 +266,7 @@ export function CreateSkillDialog() {
                           <Skeleton className="w-full h-[40px]" />
                         ) : (
                           <>
-                            <CommandEmpty>
-                              Skill category not found.
-                            </CommandEmpty>
+                            <CommandEmpty>Department not found.</CommandEmpty>
                             <CommandGroup>
                               {departmentsData
                                 .filter(

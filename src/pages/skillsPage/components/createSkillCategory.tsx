@@ -12,6 +12,7 @@ import { Loader2Icon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { toast } from "sonner";
 
 export function CreateSkillCategoryPopover() {
   const token = useAuthHeader();
@@ -27,6 +28,10 @@ export function CreateSkillCategoryPopover() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (newSkillCategory.length < 4)
+      return toast.error(
+        "The skill category name has to be at least 4 characters long!"
+      );
     await createSkillCategoryMutation({ token, newSkillCategory });
     setNewSkillCategory("");
   };

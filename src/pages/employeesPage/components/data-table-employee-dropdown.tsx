@@ -1,4 +1,4 @@
-import { AuthUser, Employee } from "@/types";
+import { AuthUser } from "@/types";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,23 +27,22 @@ import { ViewEmployeeDialog } from "./viewEmployee";
 import { assignUserToDepartment } from "@/api/department";
 
 type RoleDropdownProps = {
-  user: Employee;
+  user: AuthUser;
 };
 
 export function EmployeesDropdown({ user }: RoleDropdownProps) {
   const token = useAuthHeader();
   const auth: AuthUser | null = useAuthUser();
-  const roles = user.primary_roles;
   const user_id = user.id;
 
   const [adminChecked, setAdminChecked] = useState(
-    roles.includes("Organization Admin")
+    user.roles.includes("Organization Admin")
   );
   const [departmentManagerChecked, setDepartmentManagerChecked] = useState(
-    roles.includes("Department Manager")
+    user.roles.includes("Department Manager")
   );
   const [projectManagerChecked, setProjectManagerChecked] = useState(
-    roles.includes("Project Manager")
+    user.roles.includes("Project Manager")
   );
 
   const queryClient = useQueryClient();
@@ -111,7 +110,7 @@ export function EmployeesDropdown({ user }: RoleDropdownProps) {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <ViewEmployeeDialog user={user} />
-          {auth?.roles.includes("Department Manager") && (
+          {auth?.roles.includes("Department Manager") && auth.department_id && (
             <DropdownMenuItem onClick={handleAssign}>
               <MilestoneIcon className="size-5 mr-1" />
               Assign employee
@@ -125,7 +124,7 @@ export function EmployeesDropdown({ user }: RoleDropdownProps) {
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
-                    {roles.includes("Employee") && (
+                    {user.roles.includes("Employee") && (
                       <DropdownMenuCheckboxItem
                         checked={adminChecked}
                         onSelect={(e) => e.preventDefault()}

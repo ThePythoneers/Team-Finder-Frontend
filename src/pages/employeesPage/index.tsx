@@ -5,6 +5,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import {
   BookmarkIcon,
   Contact2Icon,
+  CpuIcon,
   UserCogIcon,
   UserPlusIcon,
 } from "lucide-react";
@@ -53,12 +54,8 @@ export function EmployeesPage() {
                     );
                   }}
                 </NavLink>
-              </>
-            )}
-            {auth?.department_id && (
-              <>
                 <NavLink
-                  to={`/${auth?.organization_name}/employees/unassigned`}
+                  to={`/${auth?.organization_name}/employees/technologies`}
                   className="flex items-center"
                 >
                   {({ isActive }) => {
@@ -68,29 +65,50 @@ export function EmployeesPage() {
                         className="w-full text-lg"
                         size="lg"
                       >
-                        <UserPlusIcon className="mr-2" /> Assign Employees
-                      </Button>
-                    );
-                  }}
-                </NavLink>
-                <NavLink
-                  to={`/${auth?.organization_name}/employees/assigned`}
-                  className="flex items-center"
-                >
-                  {({ isActive }) => {
-                    return (
-                      <Button
-                        variant={isActive ? "outline" : "ghost"}
-                        className="w-full text-lg"
-                        size="lg"
-                      >
-                        <UserCogIcon className="mr-2" /> Current Members
+                        <CpuIcon className="mr-2" /> Technologies
                       </Button>
                     );
                   }}
                 </NavLink>
               </>
             )}
+            {auth?.department_id &&
+              auth.roles.includes("Department Manager") && (
+                <>
+                  <NavLink
+                    to={`/${auth?.organization_name}/employees/unassigned`}
+                    className="flex items-center"
+                  >
+                    {({ isActive }) => {
+                      return (
+                        <Button
+                          variant={isActive ? "outline" : "ghost"}
+                          className="w-full text-lg"
+                          size="lg"
+                        >
+                          <UserPlusIcon className="mr-2" /> Assign Employees
+                        </Button>
+                      );
+                    }}
+                  </NavLink>
+                  <NavLink
+                    to={`/${auth?.organization_name}/employees/assigned`}
+                    className="flex items-center"
+                  >
+                    {({ isActive }) => {
+                      return (
+                        <Button
+                          variant={isActive ? "outline" : "ghost"}
+                          className="w-full text-lg"
+                          size="lg"
+                        >
+                          <UserCogIcon className="mr-2" /> Current Members
+                        </Button>
+                      );
+                    }}
+                  </NavLink>
+                </>
+              )}
           </ul>
         </aside>
 

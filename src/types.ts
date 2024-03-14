@@ -10,19 +10,13 @@ export type AuthUser = {
   department_id?: string;
 };
 
-export type Employee = {
-  id: string;
-  username: string;
-  email: string;
-  primary_roles: string[];
-};
-
 export type Department = {
   id: string;
   department_name: string;
-  department_manager?: string;
-  manager_email?: string;
-  department_users?: string[];
+  department_manager: string;
+  manager_email: string;
+  department_users: string[];
+  skills: string[];
 };
 
 export type SkillCategory = {

@@ -18,7 +18,11 @@ export function UserSkills({ token }: Props) {
         {isLoading ? (
           <Skeleton className="h-[500px] w-full" />
         ) : (
-          data.map((skill: userSkill) => <SkillCard skill={skill} />)
+          data &&
+          data.map &&
+          data.map((skill: userSkill) => (
+            <SkillCard key={skill.skill_id} skill={skill} />
+          ))
         )}
       </section>
     </>

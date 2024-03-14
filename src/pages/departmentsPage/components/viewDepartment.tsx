@@ -1,4 +1,3 @@
-import { getDepartmentInfo } from "@/api/department";
 import {
   Dialog,
   DialogContent,
@@ -8,25 +7,23 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Department } from "@/types";
-import { useQuery } from "@tanstack/react-query";
-import { MessageCircleCodeIcon } from "lucide-react";
-import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import {
+  BadgePlusIcon,
+  Code2Icon,
+  MessageCircleCodeIcon,
+  UsersIcon,
+} from "lucide-react";
+import { UsersCard } from "./usersCard";
+import { SkillsCard } from "./skillsCard";
 
 type Props = {
   department: Department;
 };
 
 export function ViewDepartmentDialog({ department }: Props) {
-  const token = useAuthHeader();
-  const department_id = department.id;
-
-  const { data: departmentInfoData, isLoading } = useQuery({
-    queryKey: ["departmentInfo", { token }],
-    queryFn: () => getDepartmentInfo({ token, department_id }),
-  });
-  console.log("🚀 ~ ViewDepartmentDialog ~ departmentInfoData:", departmentInfoData)
+  if (!department) return;
   return (
     <>
       <Dialog>
@@ -35,18 +32,33 @@ export function ViewDepartmentDialog({ department }: Props) {
             <MessageCircleCodeIcon className="size-5 mr-1" /> View Department
           </DropdownMenuItem>
         </DialogTrigger>
-        {isLoading ? (
-          <Skeleton className=" w-full h-100px" />
-        ) : (
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle className="text-2xl">
-                {department.department_name}
-              </DialogTitle>
-              <DialogDescription>{department.manager_email}</DialogDescription>
-            </DialogHeader>
-          </DialogContent>
-        )}
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-2xl flex items-center gap-2">
+              <Code2Icon />
+              {department.department_name}
+            </DialogTitle>
+            <DialogDescription>
+              Manager: {department.manager_email}
+            </DialogDescription>
+          </DialogHeader>
+          <Tabs defaultValue="users">
+            <TabsList>
+              <TabsTrigger value="users" className="space-x-2">
+                <UsersIcon /> <span>Users</span>
+              </TabsTrigger>
+              <TabsTrigger value="skills" className="space-x-2">
+                <BadgePlusIcon /> <span>Skills</span>
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="users">
+              <UsersCard department={department} />
+            </TabsContent>
+            <TabsContent value="skills">
+              <SkillsCard department={department} />
+            </TabsContent>
+          </Tabs>
+        </DialogContent>
       </Dialog>
     </>
   );

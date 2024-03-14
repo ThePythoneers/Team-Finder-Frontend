@@ -22,11 +22,13 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-import { Department, Employee } from "@/types";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AuthUser, Department } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { useState } from "react";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 type Props = {
   department: Department;
@@ -37,6 +39,8 @@ export function AssignDepartmentManager({ department }: Props) {
   const [newDepartmentManager, setNewDepartmentManager] = useState("");
   const [newDepartmentManagerID, setNewDepartmentManagerID] = useState("");
   const token = useAuthHeader();
+  const auth: AuthUser | null = useAuthUser();
+  const manager_id = newDepartmentManagerID;
 
   const { data: employees, isLoading } = useQuery({
     queryKey: ["employees", { token }],
@@ -45,16 +49,19 @@ export function AssignDepartmentManager({ department }: Props) {
 
   const { mutateAsync: assignManagerMutation } = useMutation({
     mutationFn: assignDepartmentManager,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["departments"] }),
+    onSuccess: () => {
+      if (manager_id === auth?.id)
+        queryClient.invalidateQueries({ queryKey: ["connectedUser"] });
+      queryClient.invalidateQueries({ queryKey: ["departments"] });
+    },
   });
 
   const handleAssignManager = async () => {
-    const manager_id = newDepartmentManagerID;
-    const department_id = department.id;
-    console.log("🚀 ~ handleAssignManager ~ department_id:", department_id)
-
-    await assignManagerMutation({ token, department_id, manager_id });
+    await assignManagerMutation({
+      token,
+      department_id: department.id,
+      manager_id,
+    });
   };
 
   return (
@@ -95,14 +102,14 @@ export function AssignDepartmentManager({ department }: Props) {
                   <CommandInput placeholder="Search by email" />
                   <CommandEmpty>No user found.</CommandEmpty>
                   {isLoading ? (
-                    <div>dsadawdwa</div>
+                    <Skeleton className="size-[100px]" />
                   ) : (
                     <CommandGroup>
                       {employees
-                        .filter((employee: Employee) =>
-                          employee.primary_roles.includes("Department Manager")
+                        .filter((employee: AuthUser) =>
+                          employee.roles.includes("Department Manager")
                         )
-                        .map((employee: Employee) => (
+                        .map((employee: AuthUser) => (
                           <CommandItem
                             key={employee.id}
                             value={employee.email}

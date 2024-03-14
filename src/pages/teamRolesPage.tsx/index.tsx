@@ -31,6 +31,7 @@ const columns: ColumnDef<teamRole>[] = [
     ),
   },
   {
+    id: "Team Role",
     accessorKey: "custom_role_name",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Team Role" />
@@ -56,13 +57,13 @@ export function TeamRolesPage() {
   });
   return (
     <>
-      <main className="container mx-auto py-4">
+      {/* <main className="container mx-auto py-4"> */}
         {isLoading ? (
           <Skeleton className="w-full h-[300px]  rounded-md" />
         ) : (
           <DataTable columns={columns} data={teamRolesData} type="roles" />
         )}
-      </main>
+      {/* </main> */}
     </>
   );
 }

@@ -11,6 +11,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { createDepartment } from "@/api/department";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { toast } from "sonner";
 
 export function CreateDepartmentPopover() {
   const authHeader = useAuthHeader();
@@ -27,7 +28,10 @@ export function CreateDepartmentPopover() {
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (newDepartment.length < 4) return;
+    if (newDepartment.length < 4)
+      return toast.error(
+        "The Department name has to be at least 4 characters long!"
+      );
     const params = {
       newDepartment: newDepartment,
       token: authHeader,
@@ -39,7 +43,7 @@ export function CreateDepartmentPopover() {
     <>
       <Popover>
         <PopoverTrigger asChild>
-          <Button className="ml-2 h-8" variant="ghost" size="sm">
+          <Button className="mr-2 h-8" variant="outline" size="sm">
             <PlusIcon /> Create a new department
           </Button>
         </PopoverTrigger>

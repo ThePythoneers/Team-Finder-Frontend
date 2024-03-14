@@ -45,9 +45,15 @@ export function DepartmentsDropdown({ department }: RoleDropdownProps) {
 
   const { mutateAsync: deleteManagerMutation } = useMutation({
     mutationFn: removeDepartmentManager,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["departments"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["departments"] });
+      queryClient.invalidateQueries({ queryKey: ["connectedUser"] });
+    },
   });
+
+  // technologies
+// optional
+// 
 
   const handleDeleteDepartment = async () => {
     await deleteDepartmentMutation({ token, department_id });
