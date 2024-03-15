@@ -12,6 +12,7 @@ export function UserSkills({ token }: Props) {
     queryKey: ["authUserSkills"],
     queryFn: () => getAuthUserSkills(token),
   });
+
   return (
     <>
       <section className="flex flex-col gap-2">

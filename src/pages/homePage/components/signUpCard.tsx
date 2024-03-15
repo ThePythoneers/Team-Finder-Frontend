@@ -23,7 +23,6 @@ import { EyeOffIcon, EyeIcon, Loader2Icon } from "lucide-react";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { registerAdminUser } from "@/api/auth";
-import { useNavigate } from "react-router-dom";
 
 const registerSchema = z.object({
   username: z
@@ -69,7 +68,6 @@ const registerDefaultValues = {
 };
 
 export function SignUpCard() {
-  const navigate = useNavigate();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -78,12 +76,11 @@ export function SignUpCard() {
   const { mutateAsync: registerMutation, isPending: registerIsPending } =
     useMutation({
       mutationFn: registerAdminUser,
+      onSuccess: () => form.reset(registerDefaultValues),
     });
 
   const onSubmit = async (values: z.infer<typeof registerSchema>) => {
     await registerMutation(values);
-    form.reset(registerDefaultValues);
-    navigate("/authentication/signIn");
   };
 
   return (

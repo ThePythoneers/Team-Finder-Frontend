@@ -21,7 +21,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "../../../components/ui/input";
-// import { ProjectPeriod, ProjectStatus, Technologies } from "@/enums";
 import {
   Popover,
   PopoverContent,
@@ -42,12 +41,17 @@ import { Textarea } from "../../../components/ui/textarea";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useQuery } from "@tanstack/react-query";
+import { getAllTeamRoles } from "@/api/teamRoles";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { Skeleton } from "@/components/ui/skeleton";
+import { teamRole } from "@/types";
 
 const ProjectPeriod = ["Fixed", "Ongoing"] as const;
 const ProjectStatus = ["Not Started", "Starting"] as const;
 const technologies = ["React", "Angular", "FastAPI", "Django"] as const;
 
-const allTeamRoles = ["Frontend", "Backend", "teste", "murimChat"];
+// const allTeamRolesData = ["Frontend", "Backend", "teste", "murimChat"];
 
 const newProjectSchema = z.object({
   project_name: z
@@ -69,21 +73,24 @@ const defaultValues = {
   deadline_date: undefined,
   project_status: undefined,
   general_description: undefined,
-  technologies: [],
+  technologies: undefined,
   team_roles: undefined,
 };
 
 export function NewProjectDialog() {
+  const token = useAuthHeader();
   const [isFixed, setIsFixed] = useState(false);
   const [technologiesStack, setTechnologiesStack] = useState<string[]>([
     "Django",
     "React",
     "Angular",
   ]);
-  const [teamRoles, setTeamRoles] = useState<string[]>([
-    "Frontend",
-    "Backend",
-  ]);
+  const [teamRoles, setTeamRoles] = useState<teamRole[]>([]);
+  const [teamRolesID, setTeamRolesID] = useState<string[]>([]);
+  const { data: allTeamRolesData, isLoading: teamRolesLoading } = useQuery({
+    queryKey: ["allTeamRoles"],
+    queryFn: () => getAllTeamRoles(token),
+  });
   const form = useForm<z.infer<typeof newProjectSchema>>({
     resolver: zodResolver(newProjectSchema),
     defaultValues: defaultValues,
@@ -91,6 +98,12 @@ export function NewProjectDialog() {
 
   const onSubmit = (values: z.infer<typeof newProjectSchema>) => {
     console.log(values);
+  };
+
+  const handleReset = () => {
+    form.reset(defaultValues);
+    setTeamRoles([]);
+    setTeamRolesID([]);
   };
 
   return (
@@ -101,7 +114,7 @@ export function NewProjectDialog() {
             size="sm"
             variant="outline"
             className="h-8 space-x-2 mr-2"
-            onClick={() => form.reset(defaultValues)}
+            onClick={handleReset}
           >
             <PlusIcon /> <span>Create project</span>
           </Button>
@@ -462,85 +475,109 @@ export function NewProjectDialog() {
               <FormField
                 control={form.control}
                 name="technologies"
-                render={({ field }) => (
+                render={() => (
                   <FormItem className="mb-2">
                     <FormLabel className="lg:text-lg mr-2">
-                      Project Technologies
+                      Team Roles
                     </FormLabel>
                     <section>
                       {teamRoles.length > 0 && (
                         <div className="flex flex-wrap gap-1 items-center py-2 px-4 mb-2 rounded-md border border-border border-dashed">
                           {teamRoles.map((role, index) => (
                             <Badge key={index} variant="secondary">
-                              {role}
+                              {role.custom_role_name}
                             </Badge>
                           ))}
                         </div>
                       )}
                     </section>
                     <div>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              className={`
+                      {teamRolesLoading ? (
+                        <Skeleton className="size-[100px]" />
+                      ) : (
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant="outline"
+                                className={`
                                 w-[50%] justify-between
-                                ${!field.value && "text-muted-foreground"}
+                                ${
+                                  teamRolesID.length < 1 &&
+                                  "text-muted-foreground"
+                                }
                               `}
-                            >
-                              {teamRoles.length > 0
-                                ? `${teamRoles.length} Selected`
-                                : "Select a technology"}
-                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[200px] p-0">
-                          <Command>
-                            <CommandInput placeholder="Search a technology" />
-                            <CommandList>
-                              <CommandEmpty>No technology found.</CommandEmpty>
-                              <CommandGroup>
-                                {allTeamRoles.map((role, index) => {
-                                  const isSelected = teamRoles.includes(role);
-                                  return (
-                                    <CommandItem
-                                      key={index}
-                                      value={role}
-                                      onSelect={() => {
-                                        if (isSelected) {
-                                          setTeamRoles((current) =>
-                                            current.filter(
-                                              (teamRole) => role !== teamRole
-                                            )
-                                          );
-                                        } else {
-                                          setTeamRoles((current) => [
-                                            ...current,
-                                            role,
-                                          ]);
-                                        }
-                                        form.setValue("team_roles", teamRoles);
-                                      }}
-                                    >
-                                      <Checkbox
-                                        checked={isSelected}
-                                        className={`mr-2 ${
-                                          isSelected
-                                            ? "bg-primary text-primary-foreground"
-                                            : "opacity-50"
-                                        }`}
-                                      />
-                                      {role}
-                                    </CommandItem>
-                                  );
-                                })}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
+                              >
+                                {teamRolesID.length > 0
+                                  ? `${teamRolesID.length} Selected`
+                                  : "Select a team role"}
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-[200px] p-0">
+                            <Command>
+                              <CommandInput placeholder="Search a team role" />
+                              <CommandList>
+                                <CommandEmpty>No team role found.</CommandEmpty>
+                                <CommandGroup>
+                                  {allTeamRolesData.map(
+                                    (role: teamRole, index: number) => {
+                                      const isSelected =
+                                        teamRoles.includes(role);
+                                      return (
+                                        <CommandItem
+                                          key={index}
+                                          value={role.custom_role_name}
+                                          onSelect={() => {
+                                            if (isSelected) {
+                                              setTeamRoles((current) =>
+                                                current.filter(
+                                                  (teamRole) =>
+                                                    role !== teamRole
+                                                )
+                                              );
+                                              setTeamRolesID((current) =>
+                                                current.filter(
+                                                  (teamRole) =>
+                                                    role.id !== teamRole
+                                                )
+                                              );
+                                            } else {
+                                              setTeamRoles((current) => [
+                                                ...current,
+                                                role,
+                                              ]);
+                                              setTeamRolesID((current) => [
+                                                ...current,
+                                                role.id,
+                                              ]);
+                                            }
+                                            form.setValue(
+                                              "team_roles",
+                                              teamRolesID
+                                            );
+                                          }}
+                                        >
+                                          <Checkbox
+                                            checked={isSelected}
+                                            className={`mr-2 ${
+                                              isSelected
+                                                ? "bg-primary text-primary-foreground"
+                                                : "opacity-50"
+                                            }`}
+                                          />
+                                          {role.custom_role_name}
+                                        </CommandItem>
+                                      );
+                                    }
+                                  )}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      )}
                     </div>
                     <FormMessage />
                   </FormItem>
@@ -554,7 +591,7 @@ export function NewProjectDialog() {
                     variant="ghost"
                     type="button"
                     className="lg:text-lg h-8"
-                    onClick={() => form.reset(defaultValues)}
+                    onClick={handleReset}
                   >
                     Cancel
                   </Button>

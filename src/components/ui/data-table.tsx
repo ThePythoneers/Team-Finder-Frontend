@@ -31,7 +31,7 @@ import { DataTableToolbar } from "@/components/ui/data-table/data-table-toolbar"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  type?: "employee" | "department" | "skill" | "project" | "roles";
+  type?: "employee" | "department" | "skill" | "project" | "roles" | "tech";
 }
 
 export function DataTable<TData, TValue>({

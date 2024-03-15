@@ -84,7 +84,7 @@ export function SignInCard() {
         <CardHeader>
           <CardTitle className="lg:text-3xl">Sign In</CardTitle>
           <CardDescription className="lg:text-lg">
-            Put your credidentials to authenticate you
+            Don't miss out on what awaits you!
           </CardDescription>
         </CardHeader>
         <CardContent>

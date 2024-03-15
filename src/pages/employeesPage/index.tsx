@@ -19,7 +19,7 @@ export function EmployeesPage() {
     <>
       <main className="flex gap-10 lg:mt-10 flex-col lg:flex-row">
         <aside className="mt-5 pl-5 lg:block">
-          <ul className="flex lg:flex-col flex-wrap gap-2 w-full">
+          <ul className="flex lg:flex-col flex-wrap gap-2 w-full sticky top-[100px]">
             {auth?.roles?.includes("Organization Admin") && (
               <>
                 <NavLink
@@ -112,7 +112,7 @@ export function EmployeesPage() {
           </ul>
         </aside>
 
-        <section className="container lg:w-[69%] lg:mx-0 lg:p-0 mb-2">
+        <section className="container lg:w-[70%] lg:mx-0 lg:p-0 mb-2">
           <Outlet />
         </section>
       </main>

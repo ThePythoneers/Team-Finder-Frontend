@@ -37,3 +37,6 @@ export const CREATE_NEW_SKILL_CATEGORY = `${BASE_URL}/skill/category`;
 export const GET_SKILL_CATEGORIES = `${BASE_URL}/skill/categories/`;
 export const GET_CREATE_DELETE_SKILLS = `${BASE_URL}/skill/`;
 export const GET_SKILL_CATEGORY = `${BASE_URL}/skill/category`;
+
+// TECH
+export const GET_UPDATE_ALL_TECH = `${BASE_URL}/technology/`;

@@ -8,6 +8,7 @@ export type AuthUser = {
   organization_name: string;
   roles: string[];
   department_id?: string;
+  skills?: string;
 };
 
 export type Department = {
@@ -62,4 +63,8 @@ export type teamRole = {
   id: string;
   organization_id: string;
   custom_role_name: string;
+};
+export type Tech = {
+  id: string;
+  technology_name: string;
 };
