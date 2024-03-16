@@ -9,17 +9,18 @@ import { Switch } from "@/components/ui/switch";
 
 type Props = {
   skill: userSkill;
+  edit?: boolean
 };
 
-export function SkillCard({ skill }: Props) {
+export function SkillCard({ skill, edit }: Props) {
   const [isEdit, setIsEdit] = useState(false);
   return (
     <Card className="group">
       <CardHeader>
-        <section className="flex items-center justify-between">
+        <section className="flex items-center justify-between mb-1">
           <div className="flex gap-2">
             <CardTitle>{skill.skill_name}</CardTitle>
-            {!isEdit && (
+            {!isEdit && edit && (
               <Button
                 size="icon"
                 variant="ghost"
@@ -41,6 +42,7 @@ export function SkillCard({ skill }: Props) {
           skill={skill}
           isEdit={isEdit}
           setIsEdit={setIsEdit}
+          edit={edit}
         />
       </CardContent>
     </Card>

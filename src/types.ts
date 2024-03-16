@@ -47,6 +47,7 @@ export type userSkill = {
 };
 
 export type Project = {
+  project_id?: string;
   id: string;
   project_name: string;
   project_period: string;
@@ -54,7 +55,7 @@ export type Project = {
   deadline_date: string;
   project_status: string;
   description: string;
-  users: { id: string; username: string }[];
+  users: { id: string; username: string; email: string }[];
   project_roles: { id: string; custom_role_name: string }[];
   technology_stack: { id: string; technology_name: string }[];
 };
@@ -67,4 +68,13 @@ export type teamRole = {
 export type Tech = {
   id: string;
   technology_name: string;
+};
+
+export type Employee = {
+  id: string;
+  department_id?: string;
+  username: string;
+  email: string;
+  organization_id: string;
+  work_hours: number;
 };

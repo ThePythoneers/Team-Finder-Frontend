@@ -91,7 +91,7 @@ export function SkillsPage() {
   const token = useAuthHeader();
 
   const { data: skillsData, isLoading } = useQuery({
-    queryKey: ["skills", { token }],
+    queryKey: ["skills"],
     queryFn: () => getSkills(token),
   });
   // ! TODO: filter skills that are used in your department

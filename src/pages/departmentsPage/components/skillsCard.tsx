@@ -33,7 +33,6 @@ export function SkillsCard({ department }: Props) {
       };
     },
   });
-  console.log(results.data);
   return (
     <>
       <Card>

@@ -1,9 +1,9 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ProposeDialog } from "./proposeDialog";
-import { Project } from "@/types";
+import { AuthUser, Project } from "@/types";
 
 type Props = {
-  responseData: object[];
+  responseData: AuthUser[];
   project: Project;
 };
 
@@ -22,9 +22,9 @@ export function TeamFinderResult({ responseData, project }: Props) {
                 <AvatarFallback>C</AvatarFallback>
               </Avatar>
               <div>
-                <h4 className="text-lg">Crintea Sebastian</h4>
+                <h4 className="text-lg">{employee.username}</h4>
                 <p className="text-sm text-muted-foreground">
-                  seby.danyel@gmail.com
+                  {employee.email}
                 </p>
               </div>
             </div>

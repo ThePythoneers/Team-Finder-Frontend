@@ -2,34 +2,37 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Project } from "@/types";
+import { DeallocateDialog } from "./deallocateDialog";
 
 type Props = {
   project: Project;
 };
 
-export function MembersList({ project }) {
+export function MembersList({ project }: Props) {
   return (
     <>
       <Card>
         <CardContent className="py-2 space-y-4">
-          <div className="flex items-center gap-2 hover:bg-secondary/60 transition-all rounded p-1">
-            <Avatar className="size-12">
-              <AvatarFallback>C</AvatarFallback>
-            </Avatar>
-            <div>
-              <h4 className="text-lg">seby.danyel@gmail.com</h4>
-              <Badge variant="outline">UI/UX Design</Badge>
+          {project.users.map((user, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-between hover:bg-secondary/60 transition-all rounded p-1"
+            >
+              <div className="flex items-center gap-2">
+                <Avatar className="size-12">
+                  <AvatarFallback>
+                    {user?.username.at(0)?.toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <h4 className="text-lg">{user.username}</h4>
+                  <p className="text-sm text-muted-foreground">{user.email}</p>
+                </div>
+                <Badge variant="outline">UI/UX Design</Badge>
+              </div>
+              <DeallocateDialog user={user} project={project} />
             </div>
-          </div>
-          <div className="flex items-center gap-2 hover:bg-secondary/60 transition-all rounded p-1">
-            <Avatar className="size-12">
-              <AvatarFallback>C</AvatarFallback>
-            </Avatar>
-            <div>
-              <h4 className="text-lg">seby.danyel@gmail.com</h4>
-              <Badge variant="outline">UI/UX Design</Badge>
-            </div>
-          </div>
+          ))}
         </CardContent>
       </Card>
     </>

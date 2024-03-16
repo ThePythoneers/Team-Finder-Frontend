@@ -1,3 +1,6 @@
+import { getDepartmentInfo } from "@/api/department";
+import { createAllocationProposal } from "@/api/proposals";
+import { getAnyUserSkills } from "@/api/skill";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,6 +15,7 @@ import {
 } from "@/components/ui/command";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogTitle,
@@ -30,12 +34,22 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import { Project } from "@/types";
+import { SkillCard } from "@/pages/profilePage/components/skillCard";
+import { Employee, Project, userSkill } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ChevronsUpDownIcon, HeartHandshakeIcon, Loader2Icon } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  Check,
+  ChevronsUpDownIcon,
+  HeartHandshakeIcon,
+  Loader2Icon,
+} from "lucide-react";
 import { useState } from "react";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const formSchema = z.object({
@@ -45,13 +59,13 @@ const formSchema = z.object({
 });
 
 const defaultValues = {
-  work_hours: 0,
+  work_hours: undefined,
   team_roles: undefined,
-  comments: "",
+  comments: undefined,
 };
 
 type Props = {
-  employee: any;
+  employee: Employee;
   project: Project;
 };
 
@@ -67,9 +81,27 @@ const hours = [
 ] as const;
 
 export function ProposeDialog({ employee, project }: Props) {
+  const token = useAuthHeader();
+  const _id = employee.id;
+
+  const { data: userSkillsData, isLoading } = useQuery({
+    queryKey: ["userSkills"],
+    queryFn: () => getAnyUserSkills(token, _id),
+  });
+  const { data: departmentData, isLoading: departmentLoading } = useQuery({
+    queryKey: ["userDepartment"],
+    queryFn: () =>
+      getDepartmentInfo({ token, department_id: employee.department_id }),
+    enabled: !!employee.department_id,
+  });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues,
+  });
+
+  const { mutateAsync: createAllocationMutation, isPending } = useMutation({
+    mutationFn: createAllocationProposal,
   });
 
   const [userTeamRoles, setUserTeamRoles] = useState<
@@ -77,38 +109,60 @@ export function ProposeDialog({ employee, project }: Props) {
   >([]);
   const [userTeamRolesID, setUserTeamRolesID] = useState<string[]>([]);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
-
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    values.team_roles = userTeamRolesID;
+    if (employee.work_hours + values.work_hours > 8)
+      return toast.error("The user can't have more than 8 work hours!");
+    const body = {
+      token,
+      ...values,
+      user_id: _id,
+      project_id_allocation: project.id,
+    };
+    await createAllocationMutation(body);
+  };
   return (
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button>
+          <Button onClick={() => form.reset(defaultValues)}>
             <HeartHandshakeIcon />
             Propose
           </Button>
         </DialogTrigger>
-        <DialogContent className="grid xl:grid-cols-2 lg:max-w-[50%]">
+        <DialogContent className="grid xl:grid-cols-2 lg:max-w-[60%]">
           <section className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Avatar className="size-12">
-                <AvatarFallback>C</AvatarFallback>
-              </Avatar>
-              <div>
-                <DialogTitle className="text-2xl">
-                  Crintea Sebastian
-                </DialogTitle>
-                <DialogDescription>seby.danyel@gmail.com</DialogDescription>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Avatar className="size-12">
+                  <AvatarFallback>C</AvatarFallback>
+                </Avatar>
+                <div>
+                  <DialogTitle className="text-2xl">
+                    {employee.username}
+                  </DialogTitle>
+                  <DialogDescription>{employee.email}</DialogDescription>
+                </div>
               </div>
+              <Badge variant="outline">Work Hours: {employee.work_hours}</Badge>
             </div>
-            <Badge variant="secondary">No Department</Badge>
-            <ul className="flex flex-warp gap-2">
-              <Badge variant="secondary">React</Badge>
-              <Badge variant="secondary">Django</Badge>
-              <Badge variant="secondary">FastAPi</Badge>
-              <Badge variant="secondary">Cypress</Badge>
+            {departmentLoading ? (
+              <Skeleton className="size-[100px]" />
+            ) : (
+              <Badge variant="secondary">
+                {departmentData
+                  ? departmentData.department_name
+                  : "No Department"}
+              </Badge>
+            )}
+
+            <ul className="flex flex-col gap-2 overflow-auto max-h-[500px]">
+              {isLoading && <Skeleton className="size-[100px]" />}
+              {userSkillsData &&
+                userSkillsData.map &&
+                userSkillsData.map((skill: userSkill) => (
+                  <SkillCard key={skill.skill_id} skill={skill} />
+                ))}
             </ul>
           </section>
           <section>
@@ -304,9 +358,13 @@ export function ProposeDialog({ employee, project }: Props) {
                   )}
                 />
                 <div className="flex justify-between">
-                  <Button variant="outline">Cancel</Button>
+                  <DialogClose asChild>
+                    <Button variant="outline" type="button">
+                      Cancel
+                    </Button>
+                  </DialogClose>
                   <Button>
-                    {true && (
+                    {isPending && (
                       <Loader2Icon className="mr-2 size-4 animate-spin" />
                     )}
                     Submit

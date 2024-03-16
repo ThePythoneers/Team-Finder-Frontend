@@ -67,8 +67,9 @@ type Props = {
   skill: userSkill;
   isEdit: boolean;
   setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
+  edit?: boolean;
 };
-export function UpdateMeSkillForm({ skill, isEdit, setIsEdit }: Props) {
+export function UpdateMeSkillForm({ skill, isEdit, setIsEdit, edit }: Props) {
   const queryClient = useQueryClient();
   const defaultValues = {
     level: skill.skill_level,
@@ -127,41 +128,43 @@ export function UpdateMeSkillForm({ skill, isEdit, setIsEdit }: Props) {
                     <span>Level </span>
                     {level[field.value - 1].label}
                   </FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          disabled={!isEdit}
-                          variant="outline"
-                          role="combobox"
-                          className={`
+                  {edit && (
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            disabled={!isEdit}
+                            variant="outline"
+                            role="combobox"
+                            className={`
                                 w-full justify-between
                                 ${!field.value && "text-muted-foreground"}
                               `}
-                        >
-                          {field.value
-                            ? level.find((level) => level.value === field.value)
-                                ?.label
-                            : "Select level"}
-                          <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Command>
-                        <CommandInput placeholder="Search level..." />
-                        <CommandEmpty>No level found.</CommandEmpty>
-                        <CommandGroup>
-                          {level.map((level) => (
-                            <CommandItem
-                              value={level.label}
-                              key={level.value}
-                              onSelect={() => {
-                                form.setValue("level", level.value);
-                              }}
-                            >
-                              <Check
-                                className={`f
+                          >
+                            {field.value
+                              ? level.find(
+                                  (level) => level.value === field.value
+                                )?.label
+                              : "Select level"}
+                            <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Command>
+                          <CommandInput placeholder="Search level..." />
+                          <CommandEmpty>No level found.</CommandEmpty>
+                          <CommandGroup>
+                            {level.map((level) => (
+                              <CommandItem
+                                value={level.label}
+                                key={level.value}
+                                onSelect={() => {
+                                  form.setValue("level", level.value);
+                                }}
+                              >
+                                <Check
+                                  className={`f
                                       mr-2 h-4 w-4
                                       ${
                                         level.value === field.value
@@ -169,14 +172,16 @@ export function UpdateMeSkillForm({ skill, isEdit, setIsEdit }: Props) {
                                           : "opacity-0"
                                       }
                                     `}
-                              />
-                              {level.label}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+                                />
+                                {level.label}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  )}
+
                   <FormMessage />
                 </FormItem>
               )}
@@ -191,42 +196,43 @@ export function UpdateMeSkillForm({ skill, isEdit, setIsEdit }: Props) {
                     <span>Experience</span>
                     {experience[field.value - 1].label}
                   </FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          disabled={!isEdit}
-                          variant="outline"
-                          role="combobox"
-                          className={`
+                  {edit && (
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            disabled={!isEdit}
+                            variant="outline"
+                            role="combobox"
+                            className={`
                                 w-full justify-between
                                 ${!field.value && "text-muted-foreground"}
                               `}
-                        >
-                          {field.value
-                            ? experience.find(
-                                (level) => level.value === field.value
-                              )?.label
-                            : "Select experience level"}
-                          <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Command>
-                        <CommandInput placeholder="Search level..." />
-                        <CommandEmpty>No level found.</CommandEmpty>
-                        <CommandGroup>
-                          {experience.map((level) => (
-                            <CommandItem
-                              value={level.label}
-                              key={level.value}
-                              onSelect={() => {
-                                form.setValue("experience", level.value);
-                              }}
-                            >
-                              <Check
-                                className={`f
+                          >
+                            {field.value
+                              ? experience.find(
+                                  (level) => level.value === field.value
+                                )?.label
+                              : "Select experience level"}
+                            <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Command>
+                          <CommandInput placeholder="Search level..." />
+                          <CommandEmpty>No level found.</CommandEmpty>
+                          <CommandGroup>
+                            {experience.map((level) => (
+                              <CommandItem
+                                value={level.label}
+                                key={level.value}
+                                onSelect={() => {
+                                  form.setValue("experience", level.value);
+                                }}
+                              >
+                                <Check
+                                  className={`f
                                       mr-2 h-4 w-4
                                       ${
                                         level.value === field.value
@@ -234,14 +240,16 @@ export function UpdateMeSkillForm({ skill, isEdit, setIsEdit }: Props) {
                                           : "opacity-0"
                                       }
                                     `}
-                              />
-                              {level.label}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+                                />
+                                {level.label}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  )}
+
                   <FormMessage />
                 </FormItem>
               )}

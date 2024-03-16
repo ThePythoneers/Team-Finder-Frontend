@@ -12,6 +12,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Project } from "@/types";
 import { FolderGit2Icon } from "lucide-react";
 import { MembersList } from "./membersList";
+import { TeamRolesList } from "./teamRolesList";
+import { TechnologiesList } from "./technologiesList";
 
 type Props = {
   project: Project;
@@ -66,6 +68,15 @@ export function ViewProjectDialog({ project }: Props) {
             </TabsList>
             <TabsContent value="members">
               <MembersList project={project} />
+            </TabsContent>
+            <TabsContent value="pastMembers">
+              <MembersList project={project} />
+            </TabsContent>
+            <TabsContent value="teamRoles">
+              <TeamRolesList project={project} />
+            </TabsContent>
+            <TabsContent value="technologies">
+              <TechnologiesList project={project} />
             </TabsContent>
           </Tabs>
         </DialogContent>

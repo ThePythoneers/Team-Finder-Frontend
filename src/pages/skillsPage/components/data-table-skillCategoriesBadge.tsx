@@ -12,7 +12,6 @@ type Props = {
 export function SkillCategoriesBadge({ skill }: Props) {
   const token = useAuthHeader();
   const skill_categories = skill.skill_category;
-
   const results = useQueries({
     queries: skill_categories.map((category_id) => ({
       queryKey: ["category", category_id],
@@ -34,11 +33,13 @@ export function SkillCategoriesBadge({ skill }: Props) {
       ) : (
         <>
           <div className="flex gap-1 flex-wrap">
-            {results.data.map((category) => (
-              <Badge key={category.id} variant="secondary">
-                {category.category_name}
-              </Badge>
-            ))}
+            {results &&
+              results.data &&
+              results.data.map((category) => (
+                <Badge key={category.id} variant="secondary">
+                  {category.category_name}
+                </Badge>
+              ))}
           </div>
         </>
       )}

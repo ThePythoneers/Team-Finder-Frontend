@@ -7,7 +7,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { Project } from "@/types";
+import { AuthUser, Project } from "@/types";
 import { UsersIcon } from "lucide-react";
 import { TeamFinderForm } from "./teamFinderForm";
 import { useState } from "react";
@@ -21,7 +21,7 @@ export function TeamFinderDialog({ project }: Props) {
   project;
 
   const [isSearch, setIsSearch] = useState(false);
-  const [responseData, setResponseData] = useState([{}]);
+  const [responseData, setResponseData] = useState<AuthUser[]>([]);
 
   return (
     <>
@@ -32,7 +32,7 @@ export function TeamFinderDialog({ project }: Props) {
             onSelect={(e) => e.preventDefault()}
             onClick={() => {
               setIsSearch(false);
-              setResponseData([{}]);
+              setResponseData([]);
             }}
           >
             <UsersIcon /> <span>Add members</span>

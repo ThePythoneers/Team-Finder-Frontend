@@ -64,7 +64,7 @@ const columns: ColumnDef<Project>[] = [
     cell: ({ row }) => {
       if (!row.original.deadline_date)
         return <Badge variant="outline">No Deadline Date</Badge>;
-      return <span>{row.original.deadline_date}</span>
+      return <span>{row.original.deadline_date}</span>;
     },
   },
   {
@@ -90,7 +90,7 @@ const columns: ColumnDef<Project>[] = [
 export function ProjectsPage() {
   const token = useAuthHeader();
 
-  const { data: skillsData, isLoading } = useQuery({
+  const { data: projectsData, isLoading } = useQuery({
     queryKey: ["userProjects"],
     queryFn: () => getUserProjects(token),
   });
@@ -100,7 +100,7 @@ export function ProjectsPage() {
         {isLoading ? (
           <Skeleton className="w-full h-[300px]  rounded-md" />
         ) : (
-          <DataTable columns={columns} data={skillsData} type="project" />
+          <DataTable columns={columns} data={projectsData} type="project" />
         )}
       </main>
     </>

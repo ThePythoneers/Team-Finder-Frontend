@@ -22,7 +22,7 @@ export function UserSkills({ token }: Props) {
           data &&
           data.map &&
           data.map((skill: userSkill) => (
-            <SkillCard key={skill.skill_id} skill={skill} />
+            <SkillCard key={skill.skill_id} skill={skill} edit={true} />
           ))
         )}
       </section>
