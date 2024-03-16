@@ -57,11 +57,11 @@ export function TeamRolesPage() {
   });
   return (
     <>
-        {isLoading ? (
-          <Skeleton className="w-full h-[300px]  rounded-md" />
-        ) : (
-          <DataTable columns={columns} data={teamRolesData} type="roles" />
-        )}
+      {isLoading ? (
+        <Skeleton className="w-full h-[300px]  rounded-md" />
+      ) : (
+        <DataTable columns={columns} data={teamRolesData} type="roles" />
+      )}
     </>
   );
 }

@@ -1,9 +1,9 @@
 import {
-  PlusIcon,
   ChevronsUpDown,
   Check,
   CalendarIcon,
   Loader2Icon,
+  PencilIcon,
 } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import {
@@ -51,58 +51,83 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllTeamRoles } from "@/api/teamRoles";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tech, teamRole } from "@/types";
+import { Project, Tech, teamRole } from "@/types";
 import { getAllTechnologies } from "@/api/technologies";
 import { toast } from "sonner";
-import { createProject } from "@/api/project";
+import { updateProject } from "@/api/project";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
 const ProjectPeriod = ["Fixed", "Ongoing"] as const;
-const ProjectStatus = ["Not Started", "Starting"] as const;
+const ProjectStatus = [
+  "Not Started",
+  "Starting",
+  "In Progress",
+  "Closing",
+  "Closed",
+] as const;
 
-const newProjectSchema = z.object({
+const formSchema = z.object({
   project_name: z
     .string()
     .min(4, { message: "The project name has to be at least 4 characters" }),
   project_period: z.enum(["Fixed", "Ongoing"]),
   start_date: z.date(),
   deadline_date: z.date().optional(),
-  project_status: z.enum(["Not Started", "Starting"]),
+  project_status: z.enum([
+    "Not Started",
+    "Starting",
+    "In Progress",
+    "Closing",
+    "Closed",
+  ]),
   general_description: z.string(),
   technologies: z.array(z.string()),
-  team_roles: z.array(z.string()),
+  project_roles: z.array(z.string()),
 });
 
-const defaultValues = {
-  project_name: "",
-  project_period: undefined,
-  start_date: new Date(),
-  deadline_date: undefined,
-  project_status: undefined,
-  general_description: "",
-  technologies: undefined,
-  team_roles: undefined,
+type Props = {
+  project: Project;
 };
 
-export function NewProjectDialog() {
+export function EditProjectDialog({ project }: Props) {
   const token = useAuthHeader();
   const queryClient = useQueryClient();
 
-  const form = useForm<z.infer<typeof newProjectSchema>>({
-    resolver: zodResolver(newProjectSchema),
-    defaultValues: defaultValues,
-  });
-
-  const [isFixed, setIsFixed] = useState(false);
-
-  const [teamRoles, setTeamRoles] = useState<teamRole[]>([]);
-  const [teamRolesID, setTeamRolesID] = useState<string[]>([]);
+  const [teamRoles, setTeamRoles] = useState<teamRole[]>(project.project_roles);
+  const [teamRolesID, setTeamRolesID] = useState<string[]>(
+    project.project_roles.map((role) => role.id)
+  );
   const { data: allTeamRolesData, isLoading: teamRolesLoading } = useQuery({
     queryKey: ["allTeamRoles"],
     queryFn: () => getAllTeamRoles(token),
   });
 
-  const [technologiesStack, setTechnologiesStack] = useState<Tech[]>([]);
-  const [technologiesStackID, setTechnologiesStackID] = useState<string[]>([]);
+  const [technologiesStack, setTechnologiesStack] = useState<Tech[]>(
+    project.technology_stack
+  );
+  const [technologiesStackID, setTechnologiesStackID] = useState<string[]>(
+    project.technology_stack.map((tech) => tech.id)
+  );
+
+  const defaultValues = {
+    project_name: project.project_name,
+    project_period: project.project_period,
+    start_date: new Date(project.start_date),
+    deadline_date: project.deadline_date
+      ? new Date(project.deadline_date)
+      : undefined,
+    project_status: project.project_status,
+    general_description: project.description,
+    technologies: technologiesStackID,
+    project_roles: teamRolesID,
+  };
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues,
+  });
+
+  const [isFixed, setIsFixed] = useState(!!project.deadline_date);
 
   const { data: techStackData, isLoading: techLoading } = useQuery({
     queryKey: ["technologies"],
@@ -111,53 +136,50 @@ export function NewProjectDialog() {
 
   const handleReset = () => {
     form.reset(defaultValues);
-    setTeamRoles([]);
-    setTeamRolesID([]);
-    setTechnologiesStack([]);
-    setTechnologiesStackID([]);
+    setTeamRoles(project.project_roles);
+    setTeamRolesID(project.project_roles.map((role) => role.id));
+    setTechnologiesStack(project.technology_stack);
+    setTechnologiesStackID(project.technology_stack.map((tech) => tech.id));
   };
 
-  const { mutateAsync: createProjectMutation, isPending } = useMutation({
-    mutationFn: createProject,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["userProjects"] });
-      // handleReset();
-    },
+  const { mutateAsync: updateProjectMutation, isPending } = useMutation({
+    mutationFn: updateProject,
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["userProjects"] }),
   });
 
-  const onSubmit = async (values: z.infer<typeof newProjectSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (isFixed && values.deadline_date === undefined)
       return toast.error(
         "If the project has a fixed date you have to specify a deadline date."
       );
     const params = {
       token,
-      project_roles: values.team_roles,
       ...values,
+      id: project.project_id,
     };
-    await createProjectMutation(params);
+    await updateProjectMutation(params);
   };
 
   return (
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button
-            size="sm"
-            variant="outline"
+          <DropdownMenuItem
             className="h-8 space-x-2 mr-2"
             onClick={handleReset}
+            onSelect={(e) => e.preventDefault()}
           >
-            <PlusIcon /> <span>Create project</span>
-          </Button>
+            <PencilIcon /> <span>Edit Project</span>
+          </DropdownMenuItem>
         </DialogTrigger>
         <DialogContent className="max-h-[95%] max-w-[600px] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="lg:text-3xl">
-              Create a new project
+              {project.project_name}
             </DialogTitle>
             <DialogDescription className="lg:text-lg">
-              Create a new project and be ready to take the risks.
+              Edit the project...
             </DialogDescription>
           </DialogHeader>
 
@@ -194,9 +216,9 @@ export function NewProjectDialog() {
                             <Button
                               variant="outline"
                               className={`
-                                w-[50%] justify-between
-                                ${!field.value && "text-muted-foreground"}
-                              `}
+                                  w-[50%] justify-between
+                                  ${!field.value && "text-muted-foreground"}
+                                `}
                             >
                               {field.value
                                 ? ProjectPeriod.find(
@@ -256,9 +278,9 @@ export function NewProjectDialog() {
                             <Button
                               variant="outline"
                               className={`
-                                w-[50%] 
-                                ${!field.value && "text-muted-foreground"}
-                              `}
+                                  w-[50%] 
+                                  ${!field.value && "text-muted-foreground"}
+                                `}
                             >
                               {field.value !== undefined ? (
                                 format(field.value, "PPP")
@@ -301,8 +323,8 @@ export function NewProjectDialog() {
                               <Button
                                 variant="outline"
                                 className={` w-[50%] 
-                                ${!field.value && "text-muted-foreground"}
-                              `}
+                                  ${!field.value && "text-muted-foreground"}
+                                `}
                               >
                                 {field.value !== undefined ? (
                                   format(field.value, "PPP")
@@ -347,9 +369,9 @@ export function NewProjectDialog() {
                             <Button
                               variant="outline"
                               className={`
-                                w-[50%] justify-between
-                                ${!field.value && "text-muted-foreground"}
-                              `}
+                                  w-[50%] justify-between
+                                  ${!field.value && "text-muted-foreground"}
+                                `}
                             >
                               {field.value
                                 ? ProjectStatus.find(
@@ -423,9 +445,9 @@ export function NewProjectDialog() {
                               <Button
                                 variant="outline"
                                 className={`
-                                w-[50%] justify-between
-                                ${!field.value && "text-muted-foreground"}
-                              `}
+                                  w-[50%] justify-between
+                                  ${!field.value && "text-muted-foreground"}
+                                `}
                               >
                                 {technologiesStackID.length > 0
                                   ? `${technologiesStackID.length} Selected`
@@ -526,7 +548,7 @@ export function NewProjectDialog() {
               />
               <FormField
                 control={form.control}
-                name="team_roles"
+                name="project_roles"
                 render={() => (
                   <FormItem className="mb-2">
                     <FormLabel className="lg:text-lg mr-2">
@@ -553,12 +575,12 @@ export function NewProjectDialog() {
                               <Button
                                 variant="outline"
                                 className={`
-                                w-[50%] justify-between
-                                ${
-                                  teamRolesID.length < 1 &&
-                                  "text-muted-foreground"
-                                }
-                              `}
+                                  w-[50%] justify-between
+                                  ${
+                                    teamRolesID.length < 1 &&
+                                    "text-muted-foreground"
+                                  }
+                                `}
                               >
                                 {teamRolesID.length > 0
                                   ? `${teamRolesID.length} Selected`
@@ -606,7 +628,7 @@ export function NewProjectDialog() {
                                               ]);
                                             }
                                             form.setValue(
-                                              "team_roles",
+                                              "project_roles",
                                               teamRolesID
                                             );
                                           }}

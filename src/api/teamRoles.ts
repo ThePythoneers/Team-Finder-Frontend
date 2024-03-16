@@ -74,3 +74,33 @@ export const createTeamRole = async ({
     checkError(error);
   }
 };
+
+type updateTeamRoleParams = {
+  token: Token;
+  role_id: string;
+  role_name: string;
+};
+
+export const updateTeamRole = async ({
+  token,
+  role_id,
+  role_name,
+}: updateTeamRoleParams) => {
+  try {
+    const response = await fetch(`${CREATE_GET_ALL_CUSTOM_ROLES}`, {
+      method: "PATCH",
+      headers: getAuthHeaders(token),
+      body: JSON.stringify({ role_id, role_name }),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You edited a team role with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};

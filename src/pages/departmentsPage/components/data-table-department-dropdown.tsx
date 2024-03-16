@@ -25,6 +25,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { ViewDepartmentDialog } from "./viewDepartment";
+import { EditDepartmentDialog } from "./editDepartentDialog";
 
 type RoleDropdownProps = {
   department: Department;
@@ -51,10 +52,6 @@ export function DepartmentsDropdown({ department }: RoleDropdownProps) {
     },
   });
 
-  // technologies
-// optional
-// 
-
   const handleDeleteDepartment = async () => {
     await deleteDepartmentMutation({ token, department_id });
   };
@@ -74,7 +71,9 @@ export function DepartmentsDropdown({ department }: RoleDropdownProps) {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <ViewDepartmentDialog department={department} />
-
+          {user_roles?.includes("Organization Admin") && (
+            <EditDepartmentDialog department={department} />
+          )}
           {user_roles?.includes("Organization Admin") &&
             department.department_manager && (
               <>

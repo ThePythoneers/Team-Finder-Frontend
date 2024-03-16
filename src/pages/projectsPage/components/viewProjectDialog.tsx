@@ -44,12 +44,7 @@ export function ViewProjectDialog({ project }: Props) {
               <Badge variant="secondary">{project.project_period}</Badge>
               <Badge variant="secondary">{project.project_status}</Badge>
             </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor
-              quidem numquam quas, deleniti dolorum ad eveniet repudiandae
-              fugit! Eaque numquam veniam eligendi esse amet. Quo obcaecati ab
-              aliquid dicta autem?
-            </p>
+            <p>{project.description}</p>
           </DialogHeader>
           <Tabs defaultValue="members">
             <TabsList className="flex">

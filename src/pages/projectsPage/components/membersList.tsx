@@ -1,14 +1,16 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Project } from "@/types";
+import { AuthUser, Project } from "@/types";
 import { DeallocateDialog } from "./deallocateDialog";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 type Props = {
   project: Project;
 };
 
 export function MembersList({ project }: Props) {
+  const auth: AuthUser | null = useAuthUser();
   return (
     <>
       <Card>
@@ -30,7 +32,10 @@ export function MembersList({ project }: Props) {
                 </div>
                 <Badge variant="outline">UI/UX Design</Badge>
               </div>
-              <DeallocateDialog user={user} project={project} />
+              {auth?.roles.includes("Project Manager") &&
+                project.project_manager === auth.id && (
+                  <DeallocateDialog user={user} project={project} />
+                )}
             </div>
           ))}
         </CardContent>

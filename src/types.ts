@@ -50,19 +50,25 @@ export type Project = {
   project_id?: string;
   id: string;
   project_name: string;
-  project_period: string;
-  start_date: string;
-  deadline_date: string;
-  project_status: string;
+  project_period: "Fixed" | "Ongoing";
+  start_date: Date;
+  deadline_date: Date;
+  project_status:
+    | "Not Started"
+    | "Starting"
+    | "In Progress"
+    | "Closing"
+    | "Closed";
   description: string;
   users: { id: string; username: string; email: string }[];
   project_roles: { id: string; custom_role_name: string }[];
   technology_stack: { id: string; technology_name: string }[];
+  project_manager?: string;
 };
 
 export type teamRole = {
   id: string;
-  organization_id: string;
+  organization_id?: string;
   custom_role_name: string;
 };
 export type Tech = {

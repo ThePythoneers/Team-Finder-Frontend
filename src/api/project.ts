@@ -12,7 +12,7 @@ type createProjectParams = {
   project_status: string;
   technologies: string[];
   general_description: string;
-  team_roles: string[];
+  project_roles: string[];
 };
 
 export const createProject = async (values: createProjectParams) => {
@@ -76,6 +76,40 @@ export const teamFinder = async (values: teamFinderParams) => {
       if (errMsg.detail) throw new Error(errMsg.detail);
       throw new Error(errMsg);
     }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+type updateProjectParams = {
+  token: Token;
+  id: string | undefined;
+  project_name: string;
+  project_period: string;
+  start_date: Date;
+  deadline_date?: Date;
+  project_status: string;
+  technologies: string[];
+  general_description: string;
+  project_roles: string[];
+};
+
+export const updateProject = async (values: updateProjectParams) => {
+  try {
+    const { token, ...body } = values;
+    const response = await fetch(`${UPDATE_PROJECT}`, {
+      method: "PATCH",
+      headers: getAuthHeaders(token),
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You updated the project with success!");
     return await response.json();
   } catch (error) {
     checkError(error);

@@ -12,6 +12,7 @@ import { teamRole } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2Icon, MoreHorizontalIcon, Trash2Icon } from "lucide-react";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { EditTeamRoleDialog } from "./editTeamRoleDialog";
 
 type Props = {
   teamRole: teamRole;
@@ -25,7 +26,6 @@ export function TeamRolesDropdown({ teamRole }: Props) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["teamRoles"] }),
   });
   const handleDelete = async () => {
-    console.log(teamRole.id);
     await deleteMutation({ token, _id: teamRole.id });
   };
   return (
@@ -40,7 +40,7 @@ export function TeamRolesDropdown({ teamRole }: Props) {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem>Edit</DropdownMenuItem>
+          <EditTeamRoleDialog teamRole={teamRole} />
           <DropdownMenuSeparator />
 
           <DropdownMenuItem

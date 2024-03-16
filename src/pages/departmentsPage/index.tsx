@@ -68,7 +68,7 @@ export function DepartmentsPage() {
   const token = useAuthHeader();
 
   const { data: departmentsData, isLoading } = useQuery({
-    queryKey: ["departments", { token }],
+    queryKey: ["departments"],
     queryFn: () => getDepartments(token),
   });
 

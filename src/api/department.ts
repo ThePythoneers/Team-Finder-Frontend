@@ -57,6 +57,33 @@ export const createDepartment = async ({
   }
 };
 
+type updateDepartmentParams = {
+  token: Token;
+  department_name: string;
+};
+
+export const updateDepartment = async ({
+  department_name,
+  token,
+}: updateDepartmentParams) => {
+  try {
+    const response = await fetch(`${DELETE_GET_CREATE_DEPARTMENT}`, {
+      method: "PATCH",
+      headers: getAuthHeaders(token),
+      body: JSON.stringify({ department_name }),
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You edited the department with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
 type deleteDepartmentParams = {
   department_id: string;
   token: string | null;

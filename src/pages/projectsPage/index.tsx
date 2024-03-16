@@ -62,9 +62,9 @@ const columns: ColumnDef<Project>[] = [
       <DataTableColumnHeader column={column} title="Deadline Date" />
     ),
     cell: ({ row }) => {
-      if (!row.original.deadline_date)
-        return <Badge variant="outline">No Deadline Date</Badge>;
-      return <span>{row.original.deadline_date}</span>;
+      const date = row.original.deadline_date;
+      if (!date) return <Badge variant="outline">No Deadline Date</Badge>;
+      return <p>{date.toString()}</p>;
     },
   },
   {
@@ -94,6 +94,7 @@ export function ProjectsPage() {
     queryKey: ["userProjects"],
     queryFn: () => getUserProjects(token),
   });
+  console.log("🚀 ~ ProjectsPage ~ projectsData:", projectsData);
   return (
     <>
       <main className="container mx-auto py-4">
