@@ -1,4 +1,10 @@
-import { PlusIcon, ChevronsUpDown, Check, CalendarIcon } from "lucide-react";
+import {
+  PlusIcon,
+  ChevronsUpDown,
+  Check,
+  CalendarIcon,
+  Loader2Icon,
+} from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import {
   Dialog,
@@ -41,17 +47,17 @@ import { Textarea } from "../../../components/ui/textarea";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllTeamRoles } from "@/api/teamRoles";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
-import { teamRole } from "@/types";
+import { Tech, teamRole } from "@/types";
+import { getAllTechnologies } from "@/api/technologies";
+import { toast } from "sonner";
+import { createProject } from "@/api/project";
 
 const ProjectPeriod = ["Fixed", "Ongoing"] as const;
 const ProjectStatus = ["Not Started", "Starting"] as const;
-const technologies = ["React", "Angular", "FastAPI", "Django"] as const;
-
-// const allTeamRolesData = ["Frontend", "Backend", "teste", "murimChat"];
 
 const newProjectSchema = z.object({
   project_name: z
@@ -72,38 +78,63 @@ const defaultValues = {
   start_date: new Date(),
   deadline_date: undefined,
   project_status: undefined,
-  general_description: undefined,
+  general_description: "",
   technologies: undefined,
   team_roles: undefined,
 };
 
 export function NewProjectDialog() {
   const token = useAuthHeader();
+  const queryClient = useQueryClient();
+
+  const form = useForm<z.infer<typeof newProjectSchema>>({
+    resolver: zodResolver(newProjectSchema),
+    defaultValues: defaultValues,
+  });
+
   const [isFixed, setIsFixed] = useState(false);
-  const [technologiesStack, setTechnologiesStack] = useState<string[]>([
-    "Django",
-    "React",
-    "Angular",
-  ]);
+
   const [teamRoles, setTeamRoles] = useState<teamRole[]>([]);
   const [teamRolesID, setTeamRolesID] = useState<string[]>([]);
   const { data: allTeamRolesData, isLoading: teamRolesLoading } = useQuery({
     queryKey: ["allTeamRoles"],
     queryFn: () => getAllTeamRoles(token),
   });
-  const form = useForm<z.infer<typeof newProjectSchema>>({
-    resolver: zodResolver(newProjectSchema),
-    defaultValues: defaultValues,
-  });
 
-  const onSubmit = (values: z.infer<typeof newProjectSchema>) => {
-    console.log(values);
-  };
+  const [technologiesStack, setTechnologiesStack] = useState<Tech[]>([]);
+  const [technologiesStackID, setTechnologiesStackID] = useState<string[]>([]);
+
+  const { data: techStackData, isLoading: techLoading } = useQuery({
+    queryKey: ["technologies"],
+    queryFn: () => getAllTechnologies(token),
+  });
 
   const handleReset = () => {
     form.reset(defaultValues);
     setTeamRoles([]);
     setTeamRolesID([]);
+    setTechnologiesStack([]);
+    setTechnologiesStackID([]);
+  };
+
+  const { mutateAsync: createProjectMutation, isPending } = useMutation({
+    mutationFn: createProject,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userProjects"] });
+      // handleReset();
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof newProjectSchema>) => {
+    if (isFixed && values.deadline_date === undefined)
+      return toast.error(
+        "If the project has a fixed date you have to specify a deadline date."
+      );
+    const params = {
+      token,
+      ...values,
+    };
+    await createProjectMutation(params);
   };
 
   return (
@@ -375,80 +406,100 @@ export function NewProjectDialog() {
                         <div className="flex flex-wrap gap-1 items-center py-2 px-4 mb-2 rounded-md border border-border border-dashed">
                           {technologiesStack.map((tech, index) => (
                             <Badge key={index} variant="secondary">
-                              {tech}
+                              {tech.technology_name}
                             </Badge>
                           ))}
                         </div>
                       )}
                     </section>
                     <div>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              className={`
+                      {techLoading ? (
+                        <Skeleton className="size-[100px]" />
+                      ) : (
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant="outline"
+                                className={`
                                 w-[50%] justify-between
                                 ${!field.value && "text-muted-foreground"}
                               `}
-                            >
-                              {technologiesStack.length > 0
-                                ? `${technologiesStack.length} Selected`
-                                : "Select a technology"}
-                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[200px] p-0">
-                          <Command>
-                            <CommandInput placeholder="Search a technology" />
-                            <CommandList>
-                              <CommandEmpty>No technology found.</CommandEmpty>
-                              <CommandGroup>
-                                {technologies.map((tech, index) => {
-                                  const isSelected =
-                                    technologiesStack.includes(tech);
-                                  return (
-                                    <CommandItem
-                                      key={index}
-                                      value={tech}
-                                      onSelect={() => {
-                                        if (isSelected) {
-                                          setTechnologiesStack((current) =>
-                                            current.filter(
-                                              (technology) =>
-                                                tech !== technology
-                                            )
-                                          );
-                                        } else {
-                                          setTechnologiesStack((current) => [
-                                            ...current,
-                                            tech,
-                                          ]);
-                                        }
-                                        form.setValue(
-                                          "technologies",
-                                          technologiesStack
-                                        );
-                                      }}
-                                    >
-                                      <Checkbox
-                                        checked={isSelected}
-                                        className={`mr-2 ${
-                                          isSelected
-                                            ? "bg-primary text-primary-foreground"
-                                            : "opacity-50"
-                                        }`}
-                                      />
-                                      {tech}
-                                    </CommandItem>
-                                  );
-                                })}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
+                              >
+                                {technologiesStackID.length > 0
+                                  ? `${technologiesStackID.length} Selected`
+                                  : "Select a technology"}
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-[200px] p-0">
+                            <Command>
+                              <CommandInput placeholder="Search a technology" />
+                              <CommandList>
+                                <CommandEmpty>
+                                  No technology found.
+                                </CommandEmpty>
+                                <CommandGroup>
+                                  {techStackData.map(
+                                    (tech: Tech, index: number) => {
+                                      const isSelected =
+                                        technologiesStack.includes(tech);
+                                      return (
+                                        <CommandItem
+                                          key={index}
+                                          value={tech.technology_name}
+                                          onSelect={() => {
+                                            if (isSelected) {
+                                              setTechnologiesStackID(
+                                                (current) =>
+                                                  current.filter(
+                                                    (technology) =>
+                                                      tech.id !== technology
+                                                  )
+                                              );
+                                              setTechnologiesStack((current) =>
+                                                current.filter(
+                                                  (technology) =>
+                                                    tech !== technology
+                                                )
+                                              );
+                                            } else {
+                                              setTechnologiesStackID(
+                                                (current) => [
+                                                  ...current,
+                                                  tech.id,
+                                                ]
+                                              );
+                                              setTechnologiesStack(
+                                                (current) => [...current, tech]
+                                              );
+                                            }
+                                            form.setValue(
+                                              "technologies",
+                                              technologiesStackID
+                                            );
+                                          }}
+                                        >
+                                          <Checkbox
+                                            checked={isSelected}
+                                            className={`mr-2 ${
+                                              isSelected
+                                                ? "bg-primary text-primary-foreground"
+                                                : "opacity-50"
+                                            }`}
+                                          />
+                                          {tech.technology_name}
+                                        </CommandItem>
+                                      );
+                                    }
+                                  )}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      )}
                     </div>
                     <FormMessage />
                   </FormItem>
@@ -474,7 +525,7 @@ export function NewProjectDialog() {
               />
               <FormField
                 control={form.control}
-                name="technologies"
+                name="team_roles"
                 render={() => (
                   <FormItem className="mb-2">
                     <FormLabel className="lg:text-lg mr-2">
@@ -597,6 +648,9 @@ export function NewProjectDialog() {
                   </Button>
                 </DialogClose>
                 <Button className="lg:text-lg h-8" size="sm" type="submit">
+                  {isPending && (
+                    <Loader2Icon className="mr-2 size-4 animate-spin" />
+                  )}
                   Submit
                 </Button>
               </div>

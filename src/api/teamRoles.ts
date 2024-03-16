@@ -29,7 +29,7 @@ type deleteTeamRoleParams = {
 
 export const deleteTeamRole = async ({ token, _id }: deleteTeamRoleParams) => {
   try {
-    const response = await fetch(`${CREATE_GET_ALL_CUSTOM_ROLES}/?_id=${_id}`, {
+    const response = await fetch(`${CREATE_GET_ALL_CUSTOM_ROLES}?_id=${_id}`, {
       method: "DELETE",
       headers: getAuthHeaders(token),
     });

@@ -40,3 +40,8 @@ export const GET_SKILL_CATEGORY = `${BASE_URL}/skill/category`;
 
 // TECH
 export const GET_UPDATE_ALL_TECH = `${BASE_URL}/technology/`;
+
+// PROJECT
+export const UPDATE_PROJECT = `${BASE_URL}/project/`;
+export const TEAM_FINDER = `${BASE_URL}/project/find`;
+export const CREATE_ALLOCATION = `${BASE_URL}/proposal/allocation`;

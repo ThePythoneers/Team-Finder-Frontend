@@ -8,26 +8,32 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { teamRole } from "@/types";
+import { Project } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2Icon, MoreHorizontalIcon, Trash2Icon } from "lucide-react";
+import {
+  FolderGit2,
+  Loader2Icon,
+  MoreHorizontalIcon,
+  Trash2Icon,
+} from "lucide-react";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { ViewProjectDialog } from "./viewProjectDialog";
+import { TeamFinderDialog } from "./teamFinder";
 
 type Props = {
-  teamRole: teamRole;
+  project: Project;
 };
 
-export function TeamRolesDropdown({ teamRole }: Props) {
+export function ProjectsDropdown({ project }: Props) {
   const token = useAuthHeader();
   const queryClient = useQueryClient();
   const { mutateAsync: deleteMutation, isPending } = useMutation({
     mutationFn: deleteTeamRole,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["teamRoles"] }),
   });
-  const handleDelete = async () => {
-    console.log(teamRole.id);
-    await deleteMutation({ token, _id: teamRole.id });
-  };
+  // const handleDelete = async () => {
+  //   await deleteMutation({ token, _id: teamRole.id });
+  // };
   return (
     <>
       <DropdownMenu>
@@ -39,15 +45,16 @@ export function TeamRolesDropdown({ teamRole }: Props) {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-
+          <ViewProjectDialog project={project} />
+          <TeamFinderDialog project={project} />
           <DropdownMenuItem>Edit</DropdownMenuItem>
           <DropdownMenuSeparator />
 
           <DropdownMenuItem
             className="bg-destructive space-x-2"
-            onClick={handleDelete}
+            onClick={() => {}}
           >
-            {isPending && <Loader2Icon className="mr-2 size-4 animate-spin" />}
+            {isPending && <Loader2Icon className="size-4 animate-spin" />}
             <Trash2Icon />
             <span>Delete</span>
           </DropdownMenuItem>

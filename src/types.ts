@@ -55,8 +55,8 @@ export type Project = {
   project_status: string;
   description: string;
   users: { id: string; username: string }[];
-  project_roles: string[];
-  technology_stack: string[];
+  project_roles: { id: string; custom_role_name: string }[];
+  technology_stack: { id: string; technology_name: string }[];
 };
 
 export type teamRole = {
