@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { EyeOffIcon, EyeIcon, Loader2Icon, MapPinIcon } from "lucide-react";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { registerEmployee } from "@/api/auth";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -56,6 +56,7 @@ const registerDefaultValues = {
 };
 
 export function RegisterEmployeePage() {
+  const navigate = useNavigate();
   const params = useParams();
   const link_ref = params.organization_invite_id;
 
@@ -77,12 +78,12 @@ export function RegisterEmployeePage() {
   const { mutateAsync: registerMutation, isPending: registerIsPending } =
     useMutation({
       mutationFn: registerEmployee,
-      onSuccess: () => form.reset(registerDefaultValues),
     });
 
   const onSubmit = async (values: z.infer<typeof registerSchema>) => {
     const body = { ...values, link_ref };
-    await registerMutation(body);
+    const data = await registerMutation(body);
+    if (data) navigate("/authentication/signIn");
   };
   if (isLoading)
     return (

@@ -10,6 +10,8 @@ import { getDepartments } from "@/api/department";
 import { DepartmentsDropdown } from "@/pages/departmentsPage/components/data-table-department-dropdown";
 import { AssignDepartmentManager } from "./components/data-table-assign-dialog";
 import { useAdminRedirect } from "@/hooks/useAdminRedirect";
+import { Badge } from "@/components/ui/badge";
+import { ShieldPlusIcon } from "lucide-react";
 
 const columns: ColumnDef<Department>[] = [
   {
@@ -38,6 +40,18 @@ const columns: ColumnDef<Department>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Department" />
     ),
+    cell: ({ row }) => {
+      return (
+        <>
+          <div className="flex items-center gap-2">
+            <ShieldPlusIcon />
+            <Badge variant="secondary" className="text-base">
+              {row.original.department_name}
+            </Badge>
+          </div>
+        </>
+      );
+    },
   },
   {
     id: "Manager",
@@ -50,7 +64,7 @@ const columns: ColumnDef<Department>[] = [
       const manager_email = department.manager_email;
       if (department.department_manager === null)
         return <AssignDepartmentManager department={department} />;
-      return <span>{manager_email}</span>;
+      return <p>{manager_email}</p>;
     },
   },
   {
@@ -68,7 +82,7 @@ export function DepartmentsPage() {
   const token = useAuthHeader();
 
   const { data: departmentsData, isLoading } = useQuery({
-    queryKey: ["departments"],
+    queryKey: ["departments", { token }],
     queryFn: () => getDepartments(token),
   });
 

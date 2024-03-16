@@ -7,7 +7,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { AuthUser, Project } from "@/types";
+import { Employee, Project } from "@/types";
 import { UsersIcon } from "lucide-react";
 import { TeamFinderForm } from "./teamFinderForm";
 import { useState } from "react";
@@ -21,7 +21,7 @@ export function TeamFinderDialog({ project }: Props) {
   project;
 
   const [isSearch, setIsSearch] = useState(false);
-  const [responseData, setResponseData] = useState<AuthUser[]>([]);
+  const [responseData, setResponseData] = useState<Employee[]>([]);
 
   return (
     <>

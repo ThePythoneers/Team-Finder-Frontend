@@ -136,6 +136,7 @@ export function NewProjectDialog() {
       ...values,
     };
     await createProjectMutation(params);
+    form.reset(defaultValues);
   };
 
   return (

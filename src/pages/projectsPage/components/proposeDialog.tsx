@@ -81,6 +81,7 @@ const hours = [
 ] as const;
 
 export function ProposeDialog({ employee, project }: Props) {
+  console.log("🚀 ~ ProposeDialog ~ project:", project)
   const token = useAuthHeader();
   const _id = employee.id;
 

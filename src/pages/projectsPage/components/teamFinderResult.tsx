@@ -1,9 +1,9 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ProposeDialog } from "./proposeDialog";
-import { AuthUser, Project } from "@/types";
+import { Employee, Project } from "@/types";
 
 type Props = {
-  responseData: AuthUser[];
+  responseData: Employee[];
   project: Project;
 };
 

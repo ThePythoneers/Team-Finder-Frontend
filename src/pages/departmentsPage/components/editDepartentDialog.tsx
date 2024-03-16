@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -14,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Department } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2Icon, PencilIcon } from "lucide-react";
+import { Loader2Icon, PencilIcon, ShieldPlusIcon } from "lucide-react";
 import { useState } from "react";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
@@ -57,9 +58,12 @@ export function EditDepartmentDialog({ department }: Props) {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-3xl">
-              Edit a custom team role
+            <DialogTitle className="text-2xl flex items-center gap-1">
+              <ShieldPlusIcon /> {department.department_name}
             </DialogTitle>
+            <DialogDescription>
+              Edit team role: {department.department_name}
+            </DialogDescription>
           </DialogHeader>
           <form onSubmit={(e) => handleSubmit(e)}>
             <Label htmlFor="input" className="text-lg">

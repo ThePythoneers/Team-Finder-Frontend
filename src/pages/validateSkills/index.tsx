@@ -5,13 +5,14 @@ import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-hea
 import { useQuery } from "@tanstack/react-query";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
-import { teamRole } from "@/types";
-import { getAllTeamRoles } from "@/api/teamRoles";
-import { TeamRolesDropdown } from "./components/data-table-team-roles-dropdown";
+import { SkillCategory } from "@/types";
+import { getSkillCategories } from "@/api/skill";
 import { Badge } from "@/components/ui/badge";
-import { AwardIcon } from "lucide-react";
+import { ShieldIcon } from "lucide-react";
+import { SkillCategoryDropdown } from "./skillCategoryDropdown";
+import { useDepartmentManagerRedirect } from "@/hooks/useDepartmentManagerRedirect";
 
-const columns: ColumnDef<teamRole>[] = [
+const columns: ColumnDef<SkillCategory>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -33,49 +34,48 @@ const columns: ColumnDef<teamRole>[] = [
     ),
   },
   {
-    id: "Team Role",
-    accessorKey: "custom_role_name",
+    id: "Skill Category",
+    accessorKey: "category_name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Team Role" />
+      <DataTableColumnHeader column={column} title="Skill Category" />
     ),
     cell: ({ row }) => {
-      const teamRole = row.original;
       return (
         <>
-          <div className="flex items-center">
-            <AwardIcon />
-            <Badge variant="outline" className="text-base">
-              {teamRole.custom_role_name}
+          <div className="flex items-center gap-2">
+            <ShieldIcon />
+            <Badge variant="secondary" className="text-base">
+              {row.original.category_name}
             </Badge>
           </div>
         </>
       );
     },
   },
-
   {
     id: "Actions",
     cell: ({ row }) => {
-      const teamRole = row.original;
+      const category = row.original;
 
-      return <TeamRolesDropdown teamRole={teamRole} />;
+      return <SkillCategoryDropdown category={category} />;
     },
   },
 ];
 
-export function TeamRolesPage() {
+export function ValidateSkillsPage() {
+  useDepartmentManagerRedirect();
   const token = useAuthHeader();
 
-  const { data: teamRolesData, isLoading } = useQuery({
-    queryKey: ["teamRoles", { token }],
-    queryFn: () => getAllTeamRoles(token),
+  const { data: skillCategoriesData, isLoading } = useQuery({
+    queryKey: ["skillCategories", { token }],
+    queryFn: () => getSkillCategories(token),
   });
   return (
     <>
       {isLoading ? (
         <Skeleton className="w-full h-[300px]  rounded-md" />
       ) : (
-        <DataTable columns={columns} data={teamRolesData} type="roles" />
+        <DataTable columns={columns} data={skillCategoriesData} type="skill" />
       )}
     </>
   );

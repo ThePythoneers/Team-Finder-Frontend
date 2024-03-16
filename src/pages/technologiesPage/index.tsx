@@ -9,6 +9,7 @@ import { Tech } from "@/types";
 import { getAllTechnologies } from "@/api/technologies";
 import { Badge } from "@/components/ui/badge";
 import { TechDropdown } from "./components/tech-dropdown";
+import { CpuIcon } from "lucide-react";
 
 const columns: ColumnDef<Tech>[] = [
   {
@@ -35,10 +36,19 @@ const columns: ColumnDef<Tech>[] = [
     id: "Tech Name",
     accessorKey: "technology_name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Team Role" />
+      <DataTableColumnHeader column={column} title="Technology" />
     ),
     cell: ({ row }) => {
-      return <Badge variant="secondary">{row.original.technology_name}</Badge>;
+      return (
+        <>
+          <div className="flex items-center gap-2">
+            <CpuIcon />
+            <Badge variant="secondary" className="text-base">
+              {row.original.technology_name}
+            </Badge>
+          </div>
+        </>
+      );
     },
   },
 

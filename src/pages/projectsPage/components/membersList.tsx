@@ -14,7 +14,7 @@ export function MembersList({ project }: Props) {
   return (
     <>
       <Card>
-        <CardContent className="py-2 space-y-4">
+        <CardContent className="space-y-4 p-2">
           {project.users.map((user, index) => (
             <div
               key={index}

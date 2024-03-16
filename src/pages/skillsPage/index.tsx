@@ -12,6 +12,8 @@ import { SkillCategoriesBadge } from "./components/data-table-skillCategoriesBad
 import { AuthorCard } from "./components/data-table-authorCard";
 import { SkillDepartmentsCard } from "./components/skillDepartments";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SkillCategoriesPage } from "./components/skillCategoriesPage";
 
 const columns: ColumnDef<Skill>[] = [
   {
@@ -111,7 +113,7 @@ export function SkillsPage() {
   const token = useAuthHeader();
 
   const { data: skillsData, isLoading } = useQuery({
-    queryKey: ["skills"],
+    queryKey: ["skills", { token }],
     queryFn: () => getSkills(token),
   });
   return (
@@ -120,7 +122,20 @@ export function SkillsPage() {
         {isLoading ? (
           <Skeleton className="w-full h-[300px]  rounded-md" />
         ) : (
-          <DataTable columns={columns} data={skillsData} type="skill" />
+          <Tabs defaultValue="skills">
+            <TabsList>
+              <TabsTrigger value="skills">Skills</TabsTrigger>
+              <TabsTrigger value="skillCategories">
+                Skill Categories
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="skills">
+              <DataTable columns={columns} data={skillsData} type="skill" />
+            </TabsContent>
+            <TabsContent value="skillCategories">
+              <SkillCategoriesPage />
+            </TabsContent>
+          </Tabs>
         )}
       </main>
     </>

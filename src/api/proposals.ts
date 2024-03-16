@@ -1,11 +1,15 @@
 import { Token } from "@/types";
 import { checkError, getAuthHeaders } from "./utils";
-import { CREATE_ALLOCATION, CREATE_DEALLOCATION } from "./URL";
+import {
+  CREATE_ALLOCATION,
+  CREATE_DEALLOCATION,
+  GET_ALLOCATION_ID,
+} from "./URL";
 import { toast } from "sonner";
 
 type createAllocationProposalParams = {
   token: Token;
-  project_id_allocation: string | undefined;
+  project_id_allocation: string;
   user_id: string;
   work_hours: number;
   team_roles: string[];
@@ -37,7 +41,7 @@ export const createAllocationProposal = async (
 
 type createDeAllocationProposalParams = {
   token: Token;
-  project_id_allocation: string | undefined;
+  project_id_allocation: string;
   user_id: string;
   comments: string;
 };
@@ -51,6 +55,33 @@ export const createDeAllocationProposal = async (
       method: "POST",
       headers: getAuthHeaders(token),
       body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You sent a deallocation proposal with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+type getAllocationProposalsParams = {
+  token: Token;
+  _id: string;
+};
+
+export const getAllocationProposals = async ({
+  token,
+  _id,
+}: getAllocationProposalsParams) => {
+  try {
+    const response = await fetch(`${GET_ALLOCATION_ID}?_id=${_id}`, {
+      method: "GET",
+      headers: getAuthHeaders(token),
     });
 
     if (!response.ok) {

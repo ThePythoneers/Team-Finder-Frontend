@@ -50,7 +50,7 @@ export const createDepartment = async ({
       if (errMsg.detail) throw new Error(errMsg.detail);
       throw new Error(errMsg);
     }
-    toast.success("You created a new department with success!!!");
+    toast.success("You created a new department with success!");
     return await response.json();
   } catch (error) {
     checkError(error);
@@ -104,7 +104,7 @@ export const deleteDepartment = async ({
       if (errMsg.detail) throw new Error(errMsg.detail);
       throw new Error(errMsg);
     }
-    toast.success("You deleted a department with success!!!");
+    toast.success("You deleted a department with success!");
     return await response.json();
   } catch (error) {
     checkError(error);
@@ -133,7 +133,7 @@ export const assignDepartmentManager = async ({
       if (errMsg.detail) throw new Error(errMsg.detail);
       throw new Error(errMsg);
     }
-    toast.success("You assigned a new department manager with success!!!");
+    toast.success("You assigned a new department manager with success!");
     return await response.json();
   } catch (error) {
     checkError(error);
@@ -160,6 +160,7 @@ export const removeDepartmentManager = async ({
       if (errMsg.detail) throw new Error(errMsg.detail);
       throw new Error(errMsg);
     }
+    toast.success("You remove a department manager with success!");
     return await response.json();
   } catch (error) {
     checkError(error);
@@ -220,7 +221,7 @@ export const assignUserToDepartment = async ({
       if (errMsg.detail) throw new Error(errMsg.detail);
       throw new Error(errMsg);
     }
-    toast.success("You assigned a user to a department with success!!!");
+    toast.success("You assigned a user to a department with success!");
     return await response.json();
   } catch (error) {
     checkError(error);
@@ -243,7 +244,7 @@ export const removeUserFromDepartment = async ({
       if (errMsg.detail) throw new Error(errMsg.detail);
       throw new Error(errMsg);
     }
-    toast.success("You assigned a user to a department with success!!!");
+    toast.success("You removed a user from a department with success!");
     return await response.json();
   } catch (error) {
     checkError(error);

@@ -64,7 +64,7 @@ export const createSkill = async (values: createSkillParams) => {
       if (errMsg.detail) throw new Error(errMsg.detail);
       throw new Error(errMsg);
     }
-    toast.success("You created a new skill with success!!!");
+    toast.success("You created a new skill with success!");
     return await response.json();
   } catch (error) {
     checkError(error);
@@ -91,7 +91,7 @@ export const deleteSkill = async ({ token, skill_id }: deleteSkillParams) => {
       if (errMsg.detail) throw new Error(errMsg.detail);
       throw new Error(errMsg);
     }
-    toast.success("You deleted a skill with success!!!");
+    toast.success("You deleted a skill with success!");
     return await response.json();
   } catch (error) {
     checkError(error);
@@ -220,6 +220,33 @@ export const getAnyUserSkills = async (token: Token, _id: string) => {
       if (errMsg.detail) throw new Error(errMsg.detail);
       throw new Error(errMsg);
     }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+type deleteSkillCategoryParams = {
+  token: Token;
+  _id: string;
+};
+
+export const deleteSkillCategory = async ({
+  token,
+  _id,
+}: deleteSkillCategoryParams) => {
+  try {
+    const response = await fetch(`${GET_SKILL_CATEGORY}/${_id}`, {
+      method: "DELETE",
+      headers: getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You deleted a skill category with success!");
     return await response.json();
   } catch (error) {
     checkError(error);

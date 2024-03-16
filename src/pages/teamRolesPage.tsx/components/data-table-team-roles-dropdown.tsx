@@ -21,13 +21,12 @@ type Props = {
 export function TeamRolesDropdown({ teamRole }: Props) {
   const token = useAuthHeader();
   const queryClient = useQueryClient();
+
   const { mutateAsync: deleteMutation, isPending } = useMutation({
     mutationFn: deleteTeamRole,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["teamRoles"] }),
   });
-  const handleDelete = async () => {
-    await deleteMutation({ token, _id: teamRole.id });
-  };
+
   return (
     <>
       <DropdownMenu>
@@ -45,7 +44,9 @@ export function TeamRolesDropdown({ teamRole }: Props) {
 
           <DropdownMenuItem
             className="bg-destructive space-x-2"
-            onClick={handleDelete}
+            onClick={async () =>
+              await deleteMutation({ token, _id: teamRole.id })
+            }
           >
             {isPending && <Loader2Icon className="mr-2 size-4 animate-spin" />}
             <Trash2Icon />

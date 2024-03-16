@@ -2,13 +2,15 @@ import { DataTable } from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-header";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Project } from "@/types";
+import { Employee, Project } from "@/types";
 import { getUserProjects } from "@/api/project";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getAssignedEmployees } from "@/api/department";
+import { getAllocationProposals } from "@/api/proposals";
 
 const columns: ColumnDef<Project>[] = [
   {
@@ -94,16 +96,31 @@ export function AllocationPage() {
     queryKey: ["userProjects"],
     queryFn: () => getUserProjects(token),
   });
-  console.log("🚀 ~ ProjectsPage ~ projectsData:", projectsData);
+  const { data: AssignedEmployeesData } = useQuery({
+    queryKey: ["assignedEmployees", { token }],
+    queryFn: () => getAssignedEmployees(token),
+  });
+  const results = useQueries({
+    queries: AssignedEmployeesData.map((employee: Employee) => ({
+      queryKey: ["usersAllocation", employee.id],
+      queryFn: () => getAllocationProposals({ token, _id: employee.id }),
+      staleTime: Infinity,
+    })),
+    combine: (results) => {
+      return {
+        data: results.map((result) => result.data),
+        pending: results.some((result) => result.isPending),
+      };
+    },
+  });
+
   return (
     <>
-      {/* <main className="container mx-auto py-4"> */}
-        {isLoading ? (
-          <Skeleton className="w-full h-[300px]  rounded-md" />
-        ) : (
-          <DataTable columns={columns} data={projectsData} type="project" />
-        )}
-      {/* </main> */}
+      {isLoading ? (
+        <Skeleton className="w-full h-[300px]  rounded-md" />
+      ) : (
+        <DataTable columns={columns} data={results.data} type="project" />
+      )}
     </>
   );
 }

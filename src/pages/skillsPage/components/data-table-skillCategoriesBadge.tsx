@@ -1,12 +1,12 @@
 import { getSkillCategory } from "@/api/skill";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Skill, userSkill } from "@/types";
+import { Skill } from "@/types";
 import { useQueries } from "@tanstack/react-query";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 type Props = {
-  skill: Skill | userSkill;
+  skill: Skill;
 };
 
 export function SkillCategoriesBadge({ skill }: Props) {
@@ -14,7 +14,7 @@ export function SkillCategoriesBadge({ skill }: Props) {
   const skill_categories = skill.skill_category;
   const results = useQueries({
     queries: skill_categories.map((category_id) => ({
-      queryKey: ["category", category_id],
+      queryKey: ["category", { category_id }],
       queryFn: () => getSkillCategory({ token, category_id }),
       staleTime: Infinity,
     })),

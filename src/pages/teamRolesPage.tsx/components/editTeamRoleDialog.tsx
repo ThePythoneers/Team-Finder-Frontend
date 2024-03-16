@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -14,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { teamRole } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2Icon, PencilIcon } from "lucide-react";
+import { AwardIcon, Loader2Icon, PencilIcon } from "lucide-react";
 import { useState } from "react";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
@@ -55,9 +56,10 @@ export function EditTeamRoleDialog({ teamRole }: Props) {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-3xl">
-              Edit a custom team role
+            <DialogTitle className="text-2xl flex items-center gap-1">
+              <AwardIcon /> {teamRole.custom_role_name}
             </DialogTitle>
+            <DialogDescription>Edit team role: {teamRole.custom_role_name}</DialogDescription>
           </DialogHeader>
           <form onSubmit={(e) => handleSubmit(e)}>
             <Label htmlFor="input" className="text-lg">

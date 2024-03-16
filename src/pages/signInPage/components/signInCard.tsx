@@ -68,6 +68,7 @@ export function SignInCard() {
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     const data = await signInMutation(values);
+    if (!data) return;
     signIn({
       auth: {
         token: data.access_token,

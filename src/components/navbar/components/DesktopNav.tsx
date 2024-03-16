@@ -78,7 +78,7 @@ export function DesktopNav({ auth }: Props) {
           {({ isActive }) => {
             return (
               <Button variant={isActive ? "secondary" : "ghost"} size="sm">
-                <UsersIcon className="mr-2" /> Proposals
+                <UsersIcon className="mr-2" /> Proposals wip
               </Button>
             );
           }}

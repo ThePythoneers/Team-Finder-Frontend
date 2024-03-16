@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Project } from "@/types";
 import { useMutation } from "@tanstack/react-query";
@@ -57,18 +58,19 @@ export function DeallocateDialog({ user, project }: Props) {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="flex gap-1 items-center">
+            <DialogTitle className="flex gap-1 items-center text-2xl">
               <UserIcon /> {user.username} deallocation
             </DialogTitle>
             <DialogDescription>{user.email}</DialogDescription>
           </DialogHeader>
-          <form className="space-y-2" onSubmit={(e) => handleSubmit(e)}>
+          <form onSubmit={(e) => handleSubmit(e)}>
+            <Label className="text-lg">Reason</Label>
             <Textarea
               placeholder="Give us a reason for the deallocation"
               value={reason}
               onChange={(e) => setReason(e.target.value)}
             />
-            <DialogFooter>
+            <DialogFooter className="mt-2">
               <DialogClose asChild>
                 <Button variant="ghost">Cancel</Button>
               </DialogClose>

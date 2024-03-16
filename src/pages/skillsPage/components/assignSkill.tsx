@@ -62,13 +62,19 @@ export function AssignSkill({ skill }: Props) {
           </DialogHeader>
 
           <section>
-            <div className="flex flex-wrap gap-1 items-center py-2 px-4 mb-2 rounded-md border border-border border-dashed">
-              {results.data.map((category) => (
-                <Badge key={category.id} variant="secondary">
-                  {category.category_name}
-                </Badge>
-              ))}
-            </div>
+            {results.pending ? (
+              <Skeleton className="size-[100px]" />
+            ) : (
+              <div className="flex flex-wrap gap-1 items-center py-2 px-4 mb-2 rounded-md border border-border border-dashed">
+                {results.data &&
+                  results.data.map &&
+                  results.data.map((category, index) => (
+                    <Badge key={index} variant="secondary">
+                      {category.category_name}
+                    </Badge>
+                  ))}
+              </div>
+            )}
             {skill.skill_description}
           </section>
           <AssignMeSkillForm skill={skill} />

@@ -55,6 +55,11 @@ const FormSchema = z.object({
   }),
 });
 
+const defaultValues = {
+  level: undefined,
+  experience: undefined,
+};
+
 type Props = {
   skill: Skill;
 };
@@ -63,6 +68,7 @@ export function AssignMeSkillForm({ skill }: Props) {
   const auth: AuthUser | null = useAuthUser();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues,
   });
 
   const { mutateAsync: assignSkillMutation, isPending } = useMutation({
@@ -71,13 +77,14 @@ export function AssignMeSkillForm({ skill }: Props) {
 
   const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
     const user_id = auth?.id;
-    await assignSkillMutation({
+    const data = await assignSkillMutation({
       token,
       user_id,
       skill_id: skill.id,
       level: values.level,
       experience: values.experience,
     });
+    if (data) form.reset(defaultValues);
   };
   return (
     <>

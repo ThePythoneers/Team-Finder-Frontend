@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogClose,
 } from "@/components/ui/dialog";
 import {
   Popover,
@@ -23,7 +24,7 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AuthUser, Department } from "@/types";
+import { AuthUser, Department, Employee } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { useState } from "react";
@@ -57,11 +58,12 @@ export function AssignDepartmentManager({ department }: Props) {
   });
 
   const handleAssignManager = async () => {
-    await assignManagerMutation({
+    const data = await assignManagerMutation({
       token,
       department_id: department.id,
       manager_id,
     });
+    if (!data) return;
   };
 
   return (
@@ -106,10 +108,10 @@ export function AssignDepartmentManager({ department }: Props) {
                   ) : (
                     <CommandGroup>
                       {employees
-                        .filter((employee: AuthUser) =>
-                          employee.roles.includes("Department Manager")
+                        .filter((employee: Employee) =>
+                          employee.primary_roles.includes("Department Manager")
                         )
-                        .map((employee: AuthUser) => (
+                        .map((employee: Employee) => (
                           <CommandItem
                             key={employee.id}
                             value={employee.email}
@@ -145,7 +147,9 @@ export function AssignDepartmentManager({ department }: Props) {
               </PopoverContent>
             </Popover>
             <DialogFooter>
-              <Button onClick={handleAssignManager}>Submit</Button>
+              <DialogClose asChild>
+                <Button onClick={handleAssignManager}>Submit</Button>
+              </DialogClose>
             </DialogFooter>
           </section>
         </DialogContent>

@@ -46,3 +46,4 @@ export const UPDATE_PROJECT = `${BASE_URL}/project/`;
 export const TEAM_FINDER = `${BASE_URL}/project/find`;
 export const CREATE_ALLOCATION = `${BASE_URL}/proposal/allocation`;
 export const CREATE_DEALLOCATION = `${BASE_URL}/proposal/deallocation`;
+export const GET_ALLOCATION_ID = `${BASE_URL}/proposal/allocation/`

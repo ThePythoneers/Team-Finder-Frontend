@@ -21,6 +21,7 @@ import {
 import { Tech } from "@/types";
 import {
   CpuIcon,
+  Loader2Icon,
   MoreHorizontalIcon,
   PencilIcon,
   Trash2Icon,
@@ -33,6 +34,7 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -76,7 +78,7 @@ export function TechDropdown({ tech }: Props) {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle className="text-xl flex items-center gap-2">
+                <DialogTitle className="text-2xl flex items-center gap-2">
                   <CpuIcon />
                   {tech.technology_name}
                 </DialogTitle>
@@ -84,27 +86,28 @@ export function TechDropdown({ tech }: Props) {
                   Edit technology: {tech.technology_name}
                 </DialogDescription>
               </DialogHeader>
-              <Label htmlFor="techName" className="text-lg">
-                New Name
-              </Label>
-              <Input
-                id="techName"
-                type="text"
-                placeholder="Change tech name"
-                value={editTech}
-                onChange={(e) => setEditTech(e.target.value)}
-              />
-              <div className="flex justify-between">
-                <DialogClose asChild>
-                  <Button
-                    variant="outline"
-                    onClick={() => setEditTech(tech.technology_name)}
-                  >
-                    Cancel
+              <form onSubmit={(e) => e.preventDefault()}>
+                <Label htmlFor="input" className="text-lg">
+                  Team Role
+                </Label>
+                <Input
+                  id="input"
+                  placeholder="Custom role name"
+                  value={editTech}
+                  onChange={(e) => setEditTech(e.target.value)}
+                />
+                <DialogFooter className="mt-2">
+                  <DialogClose asChild>
+                    <Button variant="ghost">Cancel</Button>
+                  </DialogClose>
+                  <Button>
+                    {true && (
+                      <Loader2Icon className="mr-2 size-4 animate-spin" />
+                    )}
+                    Submit
                   </Button>
-                </DialogClose>
-                <Button>Submit</Button>
-              </div>
+                </DialogFooter>
+              </form>
             </DialogContent>
           </Dialog>
 

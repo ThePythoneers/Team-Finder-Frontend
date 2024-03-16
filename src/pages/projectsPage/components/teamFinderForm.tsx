@@ -26,7 +26,7 @@ import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { teamFinder } from "@/api/project";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { AuthUser } from "@/types";
+import { Employee } from "@/types";
 
 const formSchema = z.object({
   partially_available: z.boolean().default(false),
@@ -44,7 +44,7 @@ const defaultValues = {
 
 type Props = {
   setIsSearch: React.Dispatch<React.SetStateAction<boolean>>;
-  setResponseData: React.Dispatch<React.SetStateAction<AuthUser[]>>;
+  setResponseData: React.Dispatch<React.SetStateAction<Employee[]>>;
 };
 
 export function TeamFinderForm({ setIsSearch, setResponseData }: Props) {

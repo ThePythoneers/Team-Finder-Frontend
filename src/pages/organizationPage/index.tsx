@@ -11,9 +11,9 @@ import useSignIn from "react-auth-kit/hooks/useSignIn";
 
 export function OrganizationPage() {
   const token = useAuthHeader();
+  const auth: AuthUser | null = useAuthUser();
   const signIn = useSignIn();
   const params = useParams();
-  const auth: AuthUser | null = useAuthUser();
 
   const { data: userData, isLoading } = useQuery({
     queryKey: ["connectedUser", { token }],
