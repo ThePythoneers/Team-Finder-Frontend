@@ -7,7 +7,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { AuthUser, userSkill } from "@/types";
+import { Employee, userSkill } from "@/types";
 import { UserIcon } from "lucide-react";
 import { RoleBadges } from "./roleBadges";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +20,7 @@ import { SkillCard } from "@/pages/profilePage/components/skillCard";
 import { getDepartmentInfo } from "@/api/department";
 
 type Props = {
-  user: AuthUser;
+  user: Employee;
 };
 
 export function ViewEmployeeDialog({ user }: Props) {
@@ -60,7 +60,7 @@ export function ViewEmployeeDialog({ user }: Props) {
               </div>
             </section>
           </DialogHeader>
-          <RoleBadges roles={user.roles} />
+          <RoleBadges roles={user.primary_roles} />
           {departmentLoading ? (
             <Skeleton className="size-[100px]" />
           ) : (

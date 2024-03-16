@@ -2,7 +2,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DataTable } from "@/components/ui/data-table";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-header";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AuthUser } from "@/types";
+import { Employee } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
@@ -10,7 +10,7 @@ import { EmployeesDropdown } from "./data-table-employee-dropdown";
 import { getEmployees } from "@/api/organization";
 import { RoleBadges } from "./roleBadges";
 
-const columns: ColumnDef<AuthUser>[] = [
+const columns: ColumnDef<Employee>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -50,20 +50,20 @@ const columns: ColumnDef<AuthUser>[] = [
       <DataTableColumnHeader column={column} title="Roles" />
     ),
     cell: ({ row }) => {
-      const data = row.original.roles;
+      const data = row.original.primary_roles;
       return <RoleBadges roles={data} />;
     },
     filterFn: (row, id, value) => {
       id;
       return value.some(
-        (val: string) => row.original.roles.indexOf(val) !== -1
+        (val: string) => row.original.primary_roles.indexOf(val) !== -1
       );
     },
   },
   {
     id: "Actions",
     cell: ({ row }) => {
-      const user: AuthUser = row.original;
+      const user = row.original;
 
       return <EmployeesDropdown user={user} />;
     },

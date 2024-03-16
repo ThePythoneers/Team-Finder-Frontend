@@ -7,8 +7,8 @@ export type AuthUser = {
   organization_id: string;
   organization_name: string;
   roles: string[];
-  department_id?: string;
-  skills?: string;
+  department_id: string;
+  skills: string;
 };
 
 export type Department = {
@@ -33,6 +33,7 @@ export type Skill = {
   organization_id: string;
   author: string;
   skill_description: string;
+  departments: string[];
 };
 
 export type userSkill = {
@@ -78,9 +79,10 @@ export type Tech = {
 
 export type Employee = {
   id: string;
-  department_id?: string;
   username: string;
+  department_id: string;
   email: string;
   organization_id: string;
   work_hours: number;
+  primary_roles: string[];
 };

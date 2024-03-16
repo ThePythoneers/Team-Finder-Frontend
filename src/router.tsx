@@ -17,6 +17,7 @@ import { AssignedEmployeesPage } from "./pages/employeesPage/components/assigned
 import { ProfilePage } from "./pages/profilePage";
 import { TeamRolesPage } from "./pages/teamRolesPage.tsx";
 import { TechnologiesPage } from "./pages/technologiesPage/index.tsx";
+import { ProposalsPage } from "./pages/proposalsPage/index.tsx";
 
 const router = createBrowserRouter([
   {
@@ -81,6 +82,10 @@ const router = createBrowserRouter([
       {
         path: "/:organization_name/profile",
         element: <ProfilePage />,
+      },
+      {
+        path: "/:organization_name/proposals",
+        element: <ProposalsPage />,
       },
     ],
   },

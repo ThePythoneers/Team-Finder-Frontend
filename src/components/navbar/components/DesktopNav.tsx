@@ -19,20 +19,18 @@ export function DesktopNav({ auth }: Props) {
       <ul className="flex gap-2">
         {(user_roles?.includes("Department Manager") ||
           user_roles?.includes("Organization Admin")) && (
-          <>
-            <NavLink
-              to={`/${auth?.organization_name}/employees`}
-              className="flex items-center"
-            >
-              {({ isActive }) => {
-                return (
-                  <Button variant={isActive ? "secondary" : "ghost"} size="sm">
-                    <UsersIcon className="mr-2" /> Employees
-                  </Button>
-                );
-              }}
-            </NavLink>
-          </>
+          <NavLink
+            to={`/${auth?.organization_name}/employees`}
+            className="flex items-center"
+          >
+            {({ isActive }) => {
+              return (
+                <Button variant={isActive ? "secondary" : "ghost"} size="sm">
+                  <UsersIcon className="mr-2" /> Employees
+                </Button>
+              );
+            }}
+          </NavLink>
         )}
         {user_roles?.includes("Organization Admin") && (
           <NavLink
@@ -69,6 +67,18 @@ export function DesktopNav({ auth }: Props) {
             return (
               <Button variant={isActive ? "secondary" : "ghost"} size="sm">
                 <FolderGit2Icon className="mr-2" /> Projects
+              </Button>
+            );
+          }}
+        </NavLink>
+        <NavLink
+          to={`/${auth?.organization_name}/proposals`}
+          className="flex items-center"
+        >
+          {({ isActive }) => {
+            return (
+              <Button variant={isActive ? "secondary" : "ghost"} size="sm">
+                <UsersIcon className="mr-2" /> Proposals
               </Button>
             );
           }}

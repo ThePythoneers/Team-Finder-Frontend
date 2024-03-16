@@ -1,4 +1,4 @@
-import { AuthUser } from "@/types";
+import { AuthUser, Employee } from "@/types";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +27,7 @@ import { ViewEmployeeDialog } from "./viewEmployee";
 import { assignUserToDepartment } from "@/api/department";
 
 type RoleDropdownProps = {
-  user: AuthUser;
+  user: Employee;
 };
 
 export function EmployeesDropdown({ user }: RoleDropdownProps) {
@@ -36,13 +36,13 @@ export function EmployeesDropdown({ user }: RoleDropdownProps) {
   const user_id = user.id;
 
   const [adminChecked, setAdminChecked] = useState(
-    user.roles.includes("Organization Admin")
+    user.primary_roles.includes("Organization Admin")
   );
   const [departmentManagerChecked, setDepartmentManagerChecked] = useState(
-    user.roles.includes("Department Manager")
+    user.primary_roles.includes("Department Manager")
   );
   const [projectManagerChecked, setProjectManagerChecked] = useState(
-    user.roles.includes("Project Manager")
+    user.primary_roles.includes("Project Manager")
   );
 
   const queryClient = useQueryClient();
@@ -124,7 +124,7 @@ export function EmployeesDropdown({ user }: RoleDropdownProps) {
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
-                    {user.roles.includes("Employee") && (
+                    {user.primary_roles.includes("Employee") && (
                       <DropdownMenuCheckboxItem
                         checked={adminChecked}
                         onSelect={(e) => e.preventDefault()}

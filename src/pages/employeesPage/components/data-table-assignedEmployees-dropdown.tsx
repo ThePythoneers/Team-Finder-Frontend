@@ -1,4 +1,4 @@
-import { AuthUser } from "@/types";
+import { AuthUser, Employee } from "@/types";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +27,7 @@ import { ViewEmployeeDialog } from "./viewEmployee";
 import { removeUserFromDepartment } from "@/api/department";
 
 type RoleDropdownProps = {
-  user: AuthUser;
+  user: Employee;
 };
 
 export function AssignedEmployeesDropdown({ user }: RoleDropdownProps) {

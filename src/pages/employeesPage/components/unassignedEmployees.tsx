@@ -77,7 +77,6 @@ export function UnassignedEmployeesPage() {
     queryKey: ["unassignedEmployees", { token }],
     queryFn: () => getUnassignedEmployees(token),
   });
-
   return (
     <>
       {isLoading ? (

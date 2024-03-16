@@ -10,6 +10,8 @@ import { getSkills } from "@/api/skill";
 import { SkillsDropdown } from "./components/data-table-skill-dropdown";
 import { SkillCategoriesBadge } from "./components/data-table-skillCategoriesBadge";
 import { AuthorCard } from "./components/data-table-authorCard";
+import { SkillDepartmentsCard } from "./components/skillDepartments";
+import { Badge } from "@/components/ui/badge";
 
 const columns: ColumnDef<Skill>[] = [
   {
@@ -78,6 +80,24 @@ const columns: ColumnDef<Skill>[] = [
     },
   },
   {
+    accessorKey: "departments",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Departments" />
+    ),
+    cell: ({ row }) => {
+      const skill = row.original;
+      if (skill.departments.length > 0)
+        return <SkillDepartmentsCard skill={skill} />;
+      return <Badge variant="outline">No Departments</Badge>;
+    },
+    filterFn: (row, id, value) => {
+      id;
+      return value.some(
+        (val: string) => row.original.departments.indexOf(val) !== -1
+      );
+    },
+  },
+  {
     id: "Actions",
     cell: ({ row }) => {
       const skill = row.original;
@@ -94,7 +114,6 @@ export function SkillsPage() {
     queryKey: ["skills"],
     queryFn: () => getSkills(token),
   });
-  // ! TODO: filter skills that are used in your department
   return (
     <>
       <main className="container mx-auto py-4">

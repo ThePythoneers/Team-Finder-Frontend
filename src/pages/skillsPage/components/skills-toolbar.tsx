@@ -32,6 +32,9 @@ export function SkillsToolbar<TData>({ table }: Props<TData>) {
   const authorOptions = [
     { label: "Created by me", value: auth.id, icon: BadgePlusIcon },
   ];
+  const departmentOptions = [
+    { label: "My Department", value: auth.department_id, icon: BadgePlusIcon },
+  ];
   return (
     <>
       <div className="flex flex-1 items-center space-x-2">
@@ -68,6 +71,13 @@ export function SkillsToolbar<TData>({ table }: Props<TData>) {
                 column={table.getColumn("author")}
                 title="Author"
                 options={authorOptions}
+              />
+            )}
+            {table.getColumn("departments") && (
+              <DataTableFacetedFilter
+                column={table.getColumn("departments")}
+                title="Departments"
+                options={departmentOptions}
               />
             )}
           </>
