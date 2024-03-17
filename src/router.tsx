@@ -18,6 +18,7 @@ import { ProfilePage } from "./pages/profilePage";
 import { TeamRolesPage } from "./pages/teamRolesPage.tsx";
 import { TechnologiesPage } from "./pages/technologiesPage/index.tsx";
 import { ProposalsPage } from "./pages/proposalsPage/index.tsx";
+import { ValidateSkillsPage } from "./pages/validateSkills/index.tsx";
 
 const router = createBrowserRouter([
   {
@@ -86,6 +87,10 @@ const router = createBrowserRouter([
       {
         path: "/:organization_name/proposals",
         element: <ProposalsPage />,
+      },
+      {
+        path: "/:organization_name/validate",
+        element: <ValidateSkillsPage />,
       },
     ],
   },

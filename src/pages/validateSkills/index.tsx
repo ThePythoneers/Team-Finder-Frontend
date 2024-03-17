@@ -5,13 +5,10 @@ import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-hea
 import { useQuery } from "@tanstack/react-query";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
-import { SkillCategory } from "@/types";
-import { getSkillCategories } from "@/api/skill";
-import { Badge } from "@/components/ui/badge";
-import { ShieldIcon } from "lucide-react";
-import { useDepartmentManagerRedirect } from "@/hooks/useDepartmentManagerRedirect";
+import { Proposal } from "@/types";
+import { getSkills } from "@/api/skill";
 
-const columns: ColumnDef<SkillCategory>[] = [
+const columns: ColumnDef<Proposal>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -33,49 +30,63 @@ const columns: ColumnDef<SkillCategory>[] = [
     ),
   },
   {
-    id: "Skill Category",
-    accessorKey: "category_name",
+    id: "Project",
+    accessorKey: "project_id",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Skill Category" />
+      <DataTableColumnHeader column={column} title="Project" />
     ),
     cell: ({ row }) => {
-      return (
-        <>
-          <div className="flex items-center gap-2">
-            <ShieldIcon />
-            <Badge variant="secondary" className="text-base">
-              {row.original.category_name}
-            </Badge>
-          </div>
-        </>
-      );
+      return <ProjectCard proposal={row.original} />;
     },
   },
+  {
+    id: "User",
+    accessorKey: "user_id",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="User" />
+    ),
+    cell: ({ row }) => {
+      return <UserCard proposal={row.original} />;
+    },
+  },
+  {
+    accessorKey: "comments",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Comments" />
+    ),
+  },
+  {
+    id: "Work Hours",
+    accessorKey: "work_hours",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Work Hours" />
+    ),
+  },
   // {
-  //   id: "Actions",
-  //   cell: ({ row }) => {
-  //     const category = row.original;
-
-  //     return <SkillCategoryDropdown category={category} />;
-  //   },
+  //   id: "Work Hours",
+  //   accessorKey: "work_hours",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Comments" />
+  //   ),
   // },
 ];
 
 export function ValidateSkillsPage() {
-  useDepartmentManagerRedirect();
   const token = useAuthHeader();
 
-  const { data: skillCategoriesData, isLoading } = useQuery({
-    queryKey: ["skillCategories", { token }],
-    queryFn: () => getSkillCategories(token),
+  const { data: skillsData, isLoading } = useQuery({
+    queryKey: ["validateSkills", { token }],
+    queryFn: () => getSkills(token),
   });
   return (
     <>
-      {isLoading ? (
-        <Skeleton className="w-full h-[300px]  rounded-md" />
-      ) : (
-        <DataTable columns={columns} data={skillCategoriesData} type="skill" />
-      )}
+      <main className="container mx-auto py-4">
+        {isLoading ? (
+          <Skeleton className="w-full h-[300px]  rounded-md" />
+        ) : (
+          <DataTable columns={columns} data={skillsData} type="proposals" />
+        )}
+      </main>
     </>
   );
 }

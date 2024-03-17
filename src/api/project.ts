@@ -115,3 +115,26 @@ export const updateProject = async (values: updateProjectParams) => {
     checkError(error);
   }
 };
+
+type getProjectInfoParams = {
+  token: Token;
+  id: string;
+};
+
+export const getProjectInfo = async ({ token, id }: getProjectInfoParams) => {
+  try {
+    const response = await fetch(`${UPDATE_PROJECT}?_id=${id}`, {
+      method: "GET",
+      headers: getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};

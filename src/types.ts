@@ -25,7 +25,11 @@ export type viewDepartment = {
   department_manager: string;
   manager_email: string;
   department_users: string[];
-  skills: {skill_name: string, skill_description: string, skill_category: string[]}[];
+  skills: {
+    skill_name: string;
+    skill_description: string;
+    skill_category: string[];
+  }[];
 };
 
 export type SkillCategory = {
@@ -95,3 +99,13 @@ export type Employee = {
   work_hours: number;
   primary_roles: string[];
 };
+
+export type Proposal = {
+  proposal_id: string;
+  project_id: string;
+  user_id: string;
+  comments: string;
+  work_hours: number;
+  proposed_roles: string[];
+};
+

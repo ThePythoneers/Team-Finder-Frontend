@@ -11,10 +11,19 @@ import { ProjectsToolbar } from "@/pages/projectsPage/components/projects-toolba
 import { TeamRolesToolbar } from "@/pages/teamRolesPage.tsx/components/teamRoles-toolbar";
 import { TechnologiesToolbar } from "@/pages/technologiesPage/components/technologies-toolbar";
 import { SkillCategoriesToolbar } from "@/pages/skillsPage/components/skillCategoriesToolbar";
+import { ProposalsToolbar } from "@/pages/proposalsPage/components/proposalsToolbar";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
-  type?: "employee" | "department" | "skill" | "project" | "roles" | "tech" | "skillCategory";
+  type?:
+    | "employee"
+    | "department"
+    | "skill"
+    | "project"
+    | "roles"
+    | "tech"
+    | "skillCategory"
+    | "proposals";
 }
 
 export function DataTableToolbar<TData>({
@@ -30,6 +39,7 @@ export function DataTableToolbar<TData>({
       {type === "roles" && <TeamRolesToolbar table={table} />}
       {type === "tech" && <TechnologiesToolbar table={table} />}
       {type === "skillCategory" && <SkillCategoriesToolbar table={table} />}
+      {type === "proposals" && <ProposalsToolbar table={table} />}
       <DataTableViewOptions table={table} />
     </div>
   );

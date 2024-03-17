@@ -34,13 +34,14 @@ export const GET_UNASSIGNED_EMPLOYEES = `${BASE_URL}/department/unassigned/`;
 export const GET_ASSIGNED_EMPLOYEES = `${BASE_URL}/department/users/`;
 export const REMOVE_ASSIGN_USER_TO_DEPARTMENT = `${BASE_URL}/department/user`;
 
-export const DEPARTMENT_SKILLS = `${BASE_URL}/department/skills`
+export const DEPARTMENT_SKILLS = `${BASE_URL}/department/skills`;
 
 // SKILLS
 export const CREATE_NEW_SKILL_CATEGORY = `${BASE_URL}/skill/category`;
 export const GET_SKILL_CATEGORIES = `${BASE_URL}/skill/categories/`;
 export const GET_CREATE_DELETE_SKILLS = `${BASE_URL}/skill/`;
 export const GET_SKILL_CATEGORY = `${BASE_URL}/skill/category`;
+export const VERIFY_SKILL = `${BASE_URL}/skill/verify`;
 
 // TECH
 export const GET_UPDATE_ALL_TECH = `${BASE_URL}/technology/`;
@@ -51,3 +52,7 @@ export const TEAM_FINDER = `${BASE_URL}/project/find`;
 export const CREATE_ALLOCATION = `${BASE_URL}/proposal/allocation`;
 export const CREATE_DEALLOCATION = `${BASE_URL}/proposal/deallocation`;
 export const GET_ALLOCATION_ID = `${BASE_URL}/proposal/allocation/`;
+export const ACCEPT_ALLOCATION = `${BASE_URL}/proposal/allocation/accept`;
+export const REJECT_ALLOCATION = `${BASE_URL}/proposal/allocation/reject`;
+export const REJECT_DEALLOCATION = `${BASE_URL}/proposal/deallocation/reject`;
+export const ACCEPT_DEALLOCATION = `${BASE_URL}/proposal/deallocation/accept`;

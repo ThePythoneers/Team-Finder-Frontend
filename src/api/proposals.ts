@@ -1,6 +1,7 @@
 import { Token } from "@/types";
 import { checkError, getAuthHeaders } from "./utils";
 import {
+  ACCEPT_ALLOCATION,
   CREATE_ALLOCATION,
   CREATE_DEALLOCATION,
   GET_ALLOCATION_ID,
@@ -90,6 +91,49 @@ export const getAllocationProposals = async ({
       throw new Error(errMsg);
     }
     toast.success("You sent a deallocation proposal with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+export const acceptAllocationProposal = async ({
+  token,
+  _id,
+}: getAllocationProposalsParams) => {
+  try {
+    const response = await fetch(`${ACCEPT_ALLOCATION}?_id=${_id}`, {
+      method: "POST",
+      headers: getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You accepted an allocation proposal with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+export const rejectAllocationProposal = async ({
+  token,
+  _id,
+}: getAllocationProposalsParams) => {
+  try {
+    const response = await fetch(`${ACCEPT_ALLOCATION}?_id=${_id}`, {
+      method: "POST",
+      headers: getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You rejected an allocation proposal with success!");
     return await response.json();
   } catch (error) {
     checkError(error);

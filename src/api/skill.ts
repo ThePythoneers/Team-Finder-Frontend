@@ -266,8 +266,9 @@ export const updateSkillCategory = async ({
 }: updateSkillCategoryParams) => {
   try {
     const response = await fetch(`${GET_SKILL_CATEGORY}/${category_id}`, {
-      method: "DELETE",
+      method: "PATCH",
       headers: getAuthHeaders(token),
+      body: JSON.stringify(category_name),
     });
 
     if (!response.ok) {
@@ -276,6 +277,30 @@ export const updateSkillCategory = async ({
       throw new Error(errMsg);
     }
     toast.success("You edited a skill category with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+type verifySkillParams = {
+  token: Token;
+  _id: string;
+};
+
+export const verifySkill = async ({ token, _id }: verifySkillParams) => {
+  try {
+    const response = await fetch(`${GET_SKILL_CATEGORY}/${_id}`, {
+      method: "POST",
+      headers: getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You verified a skill with success!");
     return await response.json();
   } catch (error) {
     checkError(error);
