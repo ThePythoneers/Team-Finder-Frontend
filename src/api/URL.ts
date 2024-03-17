@@ -1,4 +1,5 @@
-export const BASE_URL = "http://localhost:8000";
+// export const BASE_URL = "http://localhost:8000";
+export const BASE_URL = "https://atc-2024-thepythoneers-be-linux-web-app.azurewebsites.net/";
 
 // AUTHENTICATION
 export const LOGIN = `${BASE_URL}/auth/token`;
