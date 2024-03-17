@@ -12,7 +12,6 @@ export function UserSkills({ token }: Props) {
     queryKey: ["authUserSkills"],
     queryFn: () => getAuthUserSkills(token),
   });
-
   return (
     <>
       <section className="flex flex-col gap-2">
@@ -21,9 +20,11 @@ export function UserSkills({ token }: Props) {
         ) : (
           data &&
           data.map &&
-          data.map((skill: userSkill) => (
-            <SkillCard key={skill.skill_id} skill={skill} edit={true} />
-          ))
+          data
+            .filter((skill: userSkill) => !skill.verified)
+            .map((skill: userSkill) => (
+              <SkillCard key={skill.skill_id} skill={skill} edit={true} />
+            ))
         )}
       </section>
     </>

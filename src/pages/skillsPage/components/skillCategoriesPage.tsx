@@ -73,7 +73,7 @@ export function SkillCategoriesPage() {
       {isLoading ? (
         <Skeleton className="w-full h-[300px]  rounded-md" />
       ) : (
-        <DataTable columns={columns} data={skillCategoriesData} type="skill" />
+        <DataTable columns={columns} data={skillCategoriesData} type="skillCategory" />
       )}
     </>
   );

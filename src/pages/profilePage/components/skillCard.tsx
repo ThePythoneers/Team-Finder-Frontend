@@ -33,7 +33,7 @@ export function SkillCard({ skill, edit }: Props) {
             )}
             {isEdit && edit && <AddEndorsementDialog />}
           </div>
-          <Switch disabled />
+          <Switch disabled checked={skill.verified} />
         </section>
         <section>
           <SkillCategoriesBadge skill={skill} />

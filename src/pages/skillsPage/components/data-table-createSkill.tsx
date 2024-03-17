@@ -74,7 +74,7 @@ export function CreateSkillDialog() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (skillName.length < 4)
+    if (skillName.length < 1)
       return toast.error(
         "The skill name has to be at least 4 characters long!"
       );
@@ -105,7 +105,7 @@ export function CreateSkillDialog() {
               className="h-8 space-x-2"
               onClick={handleReset}
             >
-              <PlusIcon /> <span>Create skill</span>
+              <PlusIcon /> <span className="hidden lg:block">Create skill</span>
             </Button>
           </DialogTrigger>
           <DialogContent>

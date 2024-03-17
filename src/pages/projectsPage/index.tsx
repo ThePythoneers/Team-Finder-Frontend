@@ -94,7 +94,6 @@ export function ProjectsPage() {
     queryKey: ["userProjects"],
     queryFn: () => getUserProjects(token),
   });
-  console.log("🚀 ~ ProjectsPage ~ projectsData:", projectsData);
   return (
     <>
       <main className="container mx-auto py-4">

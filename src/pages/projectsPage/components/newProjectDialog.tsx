@@ -119,10 +119,8 @@ export function NewProjectDialog() {
 
   const { mutateAsync: createProjectMutation, isPending } = useMutation({
     mutationFn: createProject,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["userProjects"] });
-      // handleReset();
-    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["userProjects"] }),
   });
 
   const onSubmit = async (values: z.infer<typeof newProjectSchema>) => {
@@ -137,6 +135,7 @@ export function NewProjectDialog() {
     };
     await createProjectMutation(params);
     form.reset(defaultValues);
+    handleReset();
   };
 
   return (
@@ -418,7 +417,7 @@ export function NewProjectDialog() {
                       {techLoading ? (
                         <Skeleton className="size-[100px]" />
                       ) : (
-                        <Popover>
+                        <Popover modal>
                           <PopoverTrigger asChild>
                             <FormControl>
                               <Button
@@ -548,7 +547,7 @@ export function NewProjectDialog() {
                       {teamRolesLoading ? (
                         <Skeleton className="size-[100px]" />
                       ) : (
-                        <Popover>
+                        <Popover modal>
                           <PopoverTrigger asChild>
                             <FormControl>
                               <Button

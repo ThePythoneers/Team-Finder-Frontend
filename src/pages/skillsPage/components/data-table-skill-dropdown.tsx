@@ -55,50 +55,50 @@ export function SkillsDropdown({ skill }: Props) {
           <DropdownMenuSeparator />
           <ViewSkill skill={skill} />
           <AssignSkill skill={skill} />
-          {auth?.roles?.includes("Department Manager") && (
-            <>
+          {auth?.roles?.includes("Department Manager") &&
+            auth.department_id && (
               <DropdownMenuItem onClick={() => {}}>
                 <LinkIcon className="size-5 mr-2" /> Link skill
               </DropdownMenuItem>
-              {auth.id === skill.author && (
-                <>
-                  <DropdownMenuSeparator />
+            )}
+          {auth?.roles.includes("Department Manager") &&
+            auth.id === skill.author && (
+              <>
+                <DropdownMenuSeparator />
 
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <DropdownMenuItem
-                        className="bg-destructive"
-                        onSelect={(e) => e.preventDefault()}
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <DropdownMenuItem
+                      className="bg-destructive"
+                      onSelect={(e) => e.preventDefault()}
+                    >
+                      <Trash2Icon className="size-5 mr-2" /> Delete Skill
+                    </DropdownMenuItem>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete the skill from our servers.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={async () =>
+                          await deleteSkillMutation({ token, skill_id })
+                        }
                       >
-                        <Trash2Icon className="size-5 mr-2" /> Delete Skill
-                      </DropdownMenuItem>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Are you absolutely sure?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This action cannot be undone. This will permanently
-                          delete the skill from our servers.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={async () =>
-                            await deleteSkillMutation({ token, skill_id })
-                          }
-                        >
-                          Continue
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </>
-              )}
-            </>
-          )}
+                        Continue
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </>
+            )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

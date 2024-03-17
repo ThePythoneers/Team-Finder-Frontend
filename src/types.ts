@@ -45,6 +45,7 @@ export type userSkill = {
   training_title?: string;
   training_description?: string;
   project_link?: string;
+  verified: boolean;
 };
 
 export type Project = {

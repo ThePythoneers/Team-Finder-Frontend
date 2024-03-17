@@ -41,7 +41,7 @@ export function CreateSkillCategoryPopover() {
         <Popover>
           <PopoverTrigger asChild>
             <Button size="sm" variant="outline" className="h-8 space-x-2">
-              <PlusIcon /> <span>Create skill category</span>
+              <PlusIcon /> <span className="hidden lg:block">Create skill category</span>
             </Button>
           </PopoverTrigger>
           <PopoverContent>
