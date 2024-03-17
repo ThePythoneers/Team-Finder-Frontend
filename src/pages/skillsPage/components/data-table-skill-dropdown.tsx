@@ -26,6 +26,7 @@ import { AssignSkill } from "./assignSkill";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteSkill } from "@/api/skill";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { linkSkillToDepartment } from "@/api/department";
 
 type Props = {
   skill: Skill;
@@ -40,6 +41,10 @@ export function SkillsDropdown({ skill }: Props) {
   const { mutateAsync: deleteSkillMutation } = useMutation({
     mutationFn: deleteSkill,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["skills"] }),
+  });
+
+  const { mutateAsync: linkSkillMutation } = useMutation({
+    mutationFn: linkSkillToDepartment,
   });
 
   return (
@@ -57,7 +62,11 @@ export function SkillsDropdown({ skill }: Props) {
           <AssignSkill skill={skill} />
           {auth?.roles?.includes("Department Manager") &&
             auth.department_id && (
-              <DropdownMenuItem onClick={() => {}}>
+              <DropdownMenuItem
+                onClick={async () =>
+                  await linkSkillMutation({ token, skill_id: [skill.id] })
+                }
+              >
                 <LinkIcon className="size-5 mr-2" /> Link skill
               </DropdownMenuItem>
             )}

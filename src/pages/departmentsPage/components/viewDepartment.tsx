@@ -29,7 +29,7 @@ export function ViewDepartmentDialog({ department }: Props) {
       <Dialog>
         <DialogTrigger asChild>
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-            <MessageCircleCodeIcon className="size-5 mr-1" /> View Department
+            <MessageCircleCodeIcon className="size-5 mr-2" /> View Department
           </DropdownMenuItem>
         </DialogTrigger>
         <DialogContent>

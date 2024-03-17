@@ -6,6 +6,7 @@ import {
   GET_ASSIGNED_EMPLOYEES,
   GET_DEPARTMENTS,
   GET_UNASSIGNED_EMPLOYEES,
+  DEPARTMENT_SKILLS,
 } from "./URL";
 import { checkError, getAuthHeaders } from "./utils";
 import { toast } from "sonner";
@@ -293,6 +294,33 @@ export const getDepartmentInfo = async ({
       if (errMsg.detail) throw new Error(errMsg.detail);
       throw new Error(errMsg);
     }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+type linkSkillToDepartmentParams = {
+  token: Token;
+  skill_id: string[];
+};
+
+export const linkSkillToDepartment = async ({
+  token,
+  skill_id,
+}: linkSkillToDepartmentParams) => {
+  try {
+    const response = await fetch(`${DEPARTMENT_SKILLS}`, {
+      method: "POST",
+      headers: getAuthHeaders(token),
+      body: JSON.stringify({skill_id}),
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You added a new skill to your department with success!");
     return await response.json();
   } catch (error) {
     checkError(error);

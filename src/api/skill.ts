@@ -252,3 +252,32 @@ export const deleteSkillCategory = async ({
     checkError(error);
   }
 };
+
+type updateSkillCategoryParams = {
+  token: Token;
+  category_name: string;
+  category_id: string;
+};
+
+export const updateSkillCategory = async ({
+  token,
+  category_name,
+  category_id,
+}: updateSkillCategoryParams) => {
+  try {
+    const response = await fetch(`${GET_SKILL_CATEGORY}/${category_id}`, {
+      method: "DELETE",
+      headers: getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You edited a skill category with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};

@@ -19,19 +19,30 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { AuthUser, SkillCategory } from "@/types";
-import { MoreHorizontalIcon, PencilIcon, Trash2Icon } from "lucide-react";
+import {
+  Loader2Icon,
+  MoreHorizontalIcon,
+  PencilIcon,
+  ShieldIcon,
+  Trash2Icon,
+} from "lucide-react";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { deleteSkillCategory } from "@/api/skill";
+import { deleteSkillCategory, updateSkillCategory } from "@/api/skill";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 type Props = {
   category: SkillCategory;
@@ -53,6 +64,24 @@ export function SkillCategoryDropdown({ category }: Props) {
     if (!data) return;
   };
 
+  const [newSkillCategoryName, setNewSkillCategoryName] = useState(
+    category.category_name
+  );
+
+  const { mutateAsync: updateSkillCategoryMutation, isPending } = useMutation({
+    mutationFn: updateSkillCategory,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["teamRoles"] }),
+  });
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await updateSkillCategoryMutation({
+      token,
+      category_id: category.id,
+      category_name: newSkillCategoryName,
+    });
+  };
+
   return (
     <>
       <DropdownMenu>
@@ -70,15 +99,47 @@ export function SkillCategoryDropdown({ category }: Props) {
             <>
               <Dialog>
                 <DialogTrigger asChild>
-                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                    <PencilIcon className="size-5 mr-2" /> Edit Category
+                  <DropdownMenuItem
+                    onSelect={(e) => e.preventDefault()}
+                    className="flex gap-2"
+                  >
+                    <PencilIcon />
+                    Edit
                   </DropdownMenuItem>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Edit Category</DialogTitle>
-                    <DialogDescription></DialogDescription>
+                    <DialogTitle className="text-2xl flex items-center gap-1">
+                      <ShieldIcon /> {category.category_name}
+                    </DialogTitle>
+                    <DialogDescription>
+                      Edit skill category: {category.category_name}
+                    </DialogDescription>
                   </DialogHeader>
+                  <form onSubmit={(e) => handleSubmit(e)}>
+                    <Label htmlFor="input" className="text-lg">
+                      Skill Category Name
+                    </Label>
+                    <Input
+                      id="input"
+                      placeholder="Custom role name"
+                      value={newSkillCategoryName}
+                      onChange={(e) => setNewSkillCategoryName(e.target.value)}
+                    />
+                    <DialogFooter className="mt-2">
+                      <DialogClose asChild>
+                        <Button variant="ghost">Cancel</Button>
+                      </DialogClose>
+                      <DialogClose>
+                        <Button>
+                          {isPending && (
+                            <Loader2Icon className="mr-2 size-4 animate-spin" />
+                          )}
+                          Submit
+                        </Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </form>
                 </DialogContent>
               </Dialog>
 

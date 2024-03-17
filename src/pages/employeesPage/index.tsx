@@ -18,7 +18,7 @@ export function EmployeesPage() {
   return (
     <>
       <main className="flex gap-10 lg:mt-10 flex-col lg:flex-row">
-        <aside className="mt-5 pl-5 lg:block">
+        <aside className="mt-5 pl-9 lg:block">
           <ul className="flex lg:flex-col flex-wrap gap-2 w-full sticky top-[100px]">
             {auth?.roles?.includes("Organization Admin") && (
               <>

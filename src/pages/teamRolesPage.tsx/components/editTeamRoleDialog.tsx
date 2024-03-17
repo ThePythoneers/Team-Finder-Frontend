@@ -59,7 +59,9 @@ export function EditTeamRoleDialog({ teamRole }: Props) {
             <DialogTitle className="text-2xl flex items-center gap-1">
               <AwardIcon /> {teamRole.custom_role_name}
             </DialogTitle>
-            <DialogDescription>Edit team role: {teamRole.custom_role_name}</DialogDescription>
+            <DialogDescription>
+              Edit team role: {teamRole.custom_role_name}
+            </DialogDescription>
           </DialogHeader>
           <form onSubmit={(e) => handleSubmit(e)}>
             <Label htmlFor="input" className="text-lg">
@@ -75,12 +77,14 @@ export function EditTeamRoleDialog({ teamRole }: Props) {
               <DialogClose asChild>
                 <Button variant="ghost">Cancel</Button>
               </DialogClose>
-              <Button>
-                {isPending && (
-                  <Loader2Icon className="mr-2 size-4 animate-spin" />
-                )}
-                Submit
-              </Button>
+              <DialogClose>
+                <Button>
+                  {isPending && (
+                    <Loader2Icon className="mr-2 size-4 animate-spin" />
+                  )}
+                  Submit
+                </Button>
+              </DialogClose>
             </DialogFooter>
           </form>
         </DialogContent>

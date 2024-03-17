@@ -62,12 +62,12 @@ export function EditDepartmentDialog({ department }: Props) {
               <ShieldPlusIcon /> {department.department_name}
             </DialogTitle>
             <DialogDescription>
-              Edit team role: {department.department_name}
+              Edit department name: {department.department_name}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={(e) => handleSubmit(e)}>
             <Label htmlFor="input" className="text-lg">
-              Team Role
+              Department Name
             </Label>
             <Input
               id="input"

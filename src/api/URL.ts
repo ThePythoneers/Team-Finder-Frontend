@@ -1,6 +1,6 @@
-// export const BASE_URL = "http://localhost:8000";
+export const BASE_URL = "http://localhost:8000";
 // export const BASE_URL = "https://atc-2024-thepythoneers-be-linux-web-app.azurewebsites.net";
-export const BASE_URL = "https://tender-mable-unl00ky.koyeb.app";
+// export const BASE_URL = "https://tender-mable-unl00ky.koyeb.app";
 
 // AUTHENTICATION
 export const LOGIN = `${BASE_URL}/auth/token`;
@@ -33,6 +33,8 @@ export const DELETE_ASSIGN_DEPARTMENT_MANAGER = `${BASE_URL}/department/manager/
 export const GET_UNASSIGNED_EMPLOYEES = `${BASE_URL}/department/unassigned/`;
 export const GET_ASSIGNED_EMPLOYEES = `${BASE_URL}/department/users/`;
 export const REMOVE_ASSIGN_USER_TO_DEPARTMENT = `${BASE_URL}/department/user`;
+
+export const DEPARTMENT_SKILLS = `${BASE_URL}/department/skills`
 
 // SKILLS
 export const CREATE_NEW_SKILL_CATEGORY = `${BASE_URL}/skill/category`;
