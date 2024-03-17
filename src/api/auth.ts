@@ -55,7 +55,7 @@ export const registerEmployee = async (values: registerEmployeeBody) => {
       if (errMsg.detail) throw new Error(errMsg.detail);
       throw new Error(errMsg);
     }
-    toast.success("You registered with success!!!");
+    toast.success("You registered with success!");
     return await response.json();
   } catch (error) {
     checkError(error);
@@ -71,7 +71,12 @@ export const signInUser = async (body: loginBody) => {
   try {
     const response = await fetch(LOGIN, {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST,PATCH,OPTIONS",
+      },
       body: `grant_type=password&clientId=my-trusted-client&username=${body.email}&password=${body.password}&scope=user_info`,
     });
     if (!response.ok) {

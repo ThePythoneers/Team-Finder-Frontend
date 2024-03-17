@@ -13,11 +13,19 @@ export const checkError = (error: unknown) => {
 
 export const getAuthHeaders = (token: Token) => {
   return {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST,PATCH,OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
     "Content-Type": "application/json",
     Authorization: `${token}`,
   };
 };
 
 export const getHeaders = () => {
-  return { "Content-Type": "application/json" };
+  return {
+    "Access-Control-Allow-Methods": "POST,PATCH,OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  };
 };
