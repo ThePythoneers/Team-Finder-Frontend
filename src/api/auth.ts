@@ -73,9 +73,6 @@ export const signInUser = async (body: loginBody) => {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST,PATCH,OPTIONS",
       },
       body: `grant_type=password&clientId=my-trusted-client&username=${body.email}&password=${body.password}&scope=user_info`,
     });
