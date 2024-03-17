@@ -1,4 +1,4 @@
-import { AuthUser, Department } from "@/types";
+import { AuthUser, viewDepartment } from "@/types";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,7 +28,7 @@ import { ViewDepartmentDialog } from "./viewDepartment";
 import { EditDepartmentDialog } from "./editDepartentDialog";
 
 type RoleDropdownProps = {
-  department: Department;
+  department: viewDepartment;
 };
 
 export function DepartmentsDropdown({ department }: RoleDropdownProps) {

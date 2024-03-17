@@ -5,7 +5,7 @@ import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-hea
 import { useQuery } from "@tanstack/react-query";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Department } from "@/types";
+import { viewDepartment } from "@/types";
 import { getDepartments } from "@/api/department";
 import { DepartmentsDropdown } from "@/pages/departmentsPage/components/data-table-department-dropdown";
 import { AssignDepartmentManager } from "./components/data-table-assign-dialog";
@@ -13,7 +13,7 @@ import { useAdminRedirect } from "@/hooks/useAdminRedirect";
 import { Badge } from "@/components/ui/badge";
 import { ShieldPlusIcon } from "lucide-react";
 
-const columns: ColumnDef<Department>[] = [
+const columns: ColumnDef<viewDepartment>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -86,6 +86,7 @@ export function DepartmentsPage() {
     queryFn: () => getDepartments(token),
   });
 
+  console.log("🚀 ~ DepartmentsPage ~ departmentsData:", departmentsData)
   return (
     <>
       <main className="container mx-auto py-4">

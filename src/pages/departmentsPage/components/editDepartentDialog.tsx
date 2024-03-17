@@ -13,14 +13,14 @@ import {
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Department } from "@/types";
+import { viewDepartment } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2Icon, PencilIcon, ShieldPlusIcon } from "lucide-react";
 import { useState } from "react";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 type Props = {
-  department: Department;
+  department: viewDepartment;
 };
 
 export function EditDepartmentDialog({ department }: Props) {

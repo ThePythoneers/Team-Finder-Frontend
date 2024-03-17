@@ -7,13 +7,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Department } from "@/types";
+import { viewDepartment } from "@/types";
 import { useQueries } from "@tanstack/react-query";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { SingleUserCard } from "./singleUserCard";
 
 type Props = {
-  department: Department;
+  department: viewDepartment;
 };
 
 export function UsersCard({ department }: Props) {

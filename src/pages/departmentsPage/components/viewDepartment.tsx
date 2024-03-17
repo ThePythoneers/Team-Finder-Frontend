@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Department } from "@/types";
+import { viewDepartment } from "@/types";
 import {
   BadgePlusIcon,
   Code2Icon,
@@ -19,7 +19,7 @@ import { UsersCard } from "./usersCard";
 import { SkillsCard } from "./skillsCard";
 
 type Props = {
-  department: Department;
+  department: viewDepartment;
 };
 
 export function ViewDepartmentDialog({ department }: Props) {

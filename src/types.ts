@@ -19,6 +19,14 @@ export type Department = {
   department_users: string[];
   skills: string[];
 };
+export type viewDepartment = {
+  id: string;
+  department_name: string;
+  department_manager: string;
+  manager_email: string;
+  department_users: string[];
+  skills: {skill_name: string, skill_description: string, skill_category: string[]}[];
+};
 
 export type SkillCategory = {
   id: string;

@@ -9,7 +9,6 @@ import { SkillCategory } from "@/types";
 import { getSkillCategories } from "@/api/skill";
 import { Badge } from "@/components/ui/badge";
 import { ShieldIcon } from "lucide-react";
-import { SkillCategoryDropdown } from "./skillCategoryDropdown";
 import { useDepartmentManagerRedirect } from "@/hooks/useDepartmentManagerRedirect";
 
 const columns: ColumnDef<SkillCategory>[] = [
@@ -52,14 +51,14 @@ const columns: ColumnDef<SkillCategory>[] = [
       );
     },
   },
-  {
-    id: "Actions",
-    cell: ({ row }) => {
-      const category = row.original;
+  // {
+  //   id: "Actions",
+  //   cell: ({ row }) => {
+  //     const category = row.original;
 
-      return <SkillCategoryDropdown category={category} />;
-    },
-  },
+  //     return <SkillCategoryDropdown category={category} />;
+  //   },
+  // },
 ];
 
 export function ValidateSkillsPage() {

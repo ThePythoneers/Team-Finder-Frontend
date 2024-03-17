@@ -24,7 +24,7 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AuthUser, Department, Employee } from "@/types";
+import { AuthUser, Employee, viewDepartment } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { useState } from "react";
@@ -32,7 +32,7 @@ import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 type Props = {
-  department: Department;
+  department: viewDepartment;
 };
 
 export function AssignDepartmentManager({ department }: Props) {
