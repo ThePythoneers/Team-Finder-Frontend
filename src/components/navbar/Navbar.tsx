@@ -2,10 +2,10 @@ import { AuthUser } from "@/types";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { AvatarNav } from "./components/Profile";
 import { MobileNav } from "./components/MobileNav";
-import { DesktopNav } from "./components/desktopNav";
 import { Link } from "react-router-dom";
 import { InviteEmployeesPopover } from "@/components/navbar/components/invite-employee";
 import { Notifications } from "./components/notifications";
+import { DesktopNav } from "@/components/navbar/components/desktopNav";
 
 type NavbarProps = {
   auth: AuthUser | null;
