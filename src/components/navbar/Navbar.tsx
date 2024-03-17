@@ -5,7 +5,7 @@ import { MobileNav } from "./components/MobileNav";
 import { Link } from "react-router-dom";
 import { InviteEmployeesPopover } from "@/components/navbar/components/invite-employee";
 import { Notifications } from "./components/notifications";
-import { DesktopNav } from "@/components/navbar/components/desktopNav";
+import { DesktopNav } from "./components/DesktopNav";
 
 type NavbarProps = {
   auth: AuthUser | null;
