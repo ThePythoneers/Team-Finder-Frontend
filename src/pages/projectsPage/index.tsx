@@ -54,6 +54,10 @@ const columns: ColumnDef<Project>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Start Date" />
     ),
+    cell: ({ row }) => {
+      const date = row.original.deadline_date;
+      return <p>{date.toString().slice(0, 10)}</p>;
+    },
   },
   {
     accessorKey: "deadline_date",
@@ -64,7 +68,7 @@ const columns: ColumnDef<Project>[] = [
     cell: ({ row }) => {
       const date = row.original.deadline_date;
       if (!date) return <Badge variant="outline">No Deadline Date</Badge>;
-      return <p>{date.toString()}</p>;
+      return <p>{date.toString().slice(0, 10)}</p>;
     },
   },
   {

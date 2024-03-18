@@ -58,7 +58,7 @@ type teamFinderParams = {
   token: Token;
   partially_available: boolean;
   close_to_finish: boolean;
-  deadline?: Date;
+  deadline?: number;
   unavailable: boolean;
 };
 
@@ -90,9 +90,7 @@ type updateProjectParams = {
   start_date: Date;
   deadline_date?: Date;
   project_status: string;
-  technologies: string[];
-  general_description: string;
-  project_roles: string[];
+  description: string;
 };
 
 export const updateProject = async (values: updateProjectParams) => {

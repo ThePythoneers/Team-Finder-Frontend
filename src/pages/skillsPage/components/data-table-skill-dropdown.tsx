@@ -45,6 +45,7 @@ export function SkillsDropdown({ skill }: Props) {
 
   const { mutateAsync: linkSkillMutation } = useMutation({
     mutationFn: linkSkillToDepartment,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["skills"] }),
   });
 
   return (

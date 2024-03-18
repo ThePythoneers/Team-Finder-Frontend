@@ -75,9 +75,10 @@ export type Project = {
     | "Closed";
   description: string;
   users: { id: string; username: string; email: string }[];
-  project_roles: { id: string; custom_role_name: string }[];
+  project_roles: { id: string; role_name: string }[];
   technology_stack: { id: string; technology_name: string }[];
   project_manager?: string;
+  deallocated_users: { id: string; username: string; email: string }[];
 };
 
 export type teamRole = {
@@ -109,3 +110,14 @@ export type Proposal = {
   proposed_roles: string[];
 };
 
+export type findResponseData = {
+  id: string;
+  username: string;
+  email: string;
+  department_id: string;
+  method: string[];
+  organization_id: string;
+  projects?: string[];
+  primary_roles: string[];
+  work_hours: number;
+};

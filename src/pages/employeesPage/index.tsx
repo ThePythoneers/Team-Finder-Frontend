@@ -30,7 +30,7 @@ export function EmployeesPage() {
                     return (
                       <Button
                         variant={isActive ? "outline" : "ghost"}
-                        className="w-full text-lg"
+                        className="w-full text-lg justify-start"
                         size="lg"
                       >
                         <Contact2Icon className="mr-2" /> All Employees
@@ -46,7 +46,7 @@ export function EmployeesPage() {
                     return (
                       <Button
                         variant={isActive ? "outline" : "ghost"}
-                        className="w-full text-lg"
+                        className="w-full text-lg justify-start"
                         size="lg"
                       >
                         <BookmarkIcon className="mr-2" /> Team Roles
@@ -62,7 +62,7 @@ export function EmployeesPage() {
                     return (
                       <Button
                         variant={isActive ? "outline" : "ghost"}
-                        className="w-full text-lg"
+                        className="w-full text-lg justify-start" 
                         size="lg"
                       >
                         <CpuIcon className="mr-2" /> Technologies

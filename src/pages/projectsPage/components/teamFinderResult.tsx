@@ -1,36 +1,59 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ProposeDialog } from "./proposeDialog";
-import { Employee, Project } from "@/types";
+import { Project, findResponseData } from "@/types";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { EmployeeList } from "./employeeList";
 
 type Props = {
-  responseData: Employee[];
+  responseData: findResponseData[];
   project: Project;
 };
 
 export function TeamFinderResult({ responseData, project }: Props) {
+  console.log("🚀 ~ TeamFinderResult ~ responseData:", responseData);
   return (
     <>
-      {responseData.length < 1 && <div>No employees</div>}
-      {responseData.length > 0 &&
-        responseData.map((employee, index) => (
-          <div
-            key={index}
-            className="flex items-center  hover:bg-secondary/60 transition-all rounded p-1 justify-between"
-          >
-            <div className="flex items-center gap-2">
-              <Avatar className="size-12">
-                <AvatarFallback>C</AvatarFallback>
-              </Avatar>
-              <div>
-                <h4 className="text-lg">{employee.username}</h4>
-                <p className="text-sm text-muted-foreground">
-                  {employee.email}
-                </p>
-              </div>
-            </div>
-            <ProposeDialog employee={employee} project={project} />
-          </div>
-        ))}
+      {responseData && responseData.length < 1 && <div>No employees</div>}
+      {responseData && responseData.length > 0 && (
+        <>
+          <Tabs defaultValue="available">
+            <TabsList>
+              <TabsTrigger value="available">Available</TabsTrigger>
+              <TabsTrigger value="unavailable">Unavailable</TabsTrigger>
+              <TabsTrigger value="close_to_finish">Close to Finish</TabsTrigger>
+              <TabsTrigger value="partially_available">
+                Partially Available
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="available">
+              <EmployeeList
+                users={responseData}
+                project={project}
+                type="available"
+              />
+            </TabsContent>
+            <TabsContent value="unavailable">
+              <EmployeeList
+                users={responseData}
+                project={project}
+                type="unavailable"
+              />
+            </TabsContent>
+            <TabsContent value="close_to_finish">
+              <EmployeeList
+                users={responseData}
+                project={project}
+                type="close_to_finish"
+              />
+            </TabsContent>
+            <TabsContent value="partially_available">
+              <EmployeeList
+                users={responseData}
+                project={project}
+                type="partially_available"
+              />
+            </TabsContent>
+          </Tabs>
+        </>
+      )}
     </>
   );
 }

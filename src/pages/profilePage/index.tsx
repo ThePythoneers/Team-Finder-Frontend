@@ -14,6 +14,9 @@ import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { UserSkills } from "./components/userSkills";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TabsContent } from "@radix-ui/react-tabs";
+import { CurrentProjectsList } from "./components/currentProjectsList";
 
 export function ProfilePage() {
   const auth: AuthUser | null = useAuthUser();
@@ -59,6 +62,15 @@ export function ProfilePage() {
                   )}
                 </>
               )}
+              <Tabs defaultValue="current">
+                <TabsList>
+                  <TabsTrigger value="current">Current Projects</TabsTrigger>
+                  <TabsTrigger value="past">Past Projects</TabsTrigger>
+                </TabsList>
+                <TabsContent value="current">
+                  <CurrentProjectsList />
+                </TabsContent>
+              </Tabs>
             </aside>
             <section className="overflow-auto h-[calc(100vh-20vh)]">
               <UserSkills token={token} />

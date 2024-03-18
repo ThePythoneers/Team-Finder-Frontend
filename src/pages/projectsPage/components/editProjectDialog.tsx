@@ -38,21 +38,15 @@ import {
   CommandInput,
   CommandEmpty,
   CommandItem,
-  CommandList,
 } from "../../../components/ui/command";
 import { Calendar } from "../../../components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Textarea } from "../../../components/ui/textarea";
 import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getAllTeamRoles } from "@/api/teamRoles";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Project, Tech, teamRole } from "@/types";
-import { getAllTechnologies } from "@/api/technologies";
+import { Project } from "@/types";
 import { toast } from "sonner";
 import { updateProject } from "@/api/project";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
@@ -80,9 +74,7 @@ const formSchema = z.object({
     "Closing",
     "Closed",
   ]),
-  general_description: z.string(),
-  technologies: z.array(z.string()),
-  project_roles: z.array(z.string()),
+  description: z.string(),
 });
 
 type Props = {
@@ -90,24 +82,9 @@ type Props = {
 };
 
 export function EditProjectDialog({ project }: Props) {
+  console.log("🚀 ~ EditProjectDialog ~ project:", project);
   const token = useAuthHeader();
   const queryClient = useQueryClient();
-
-  const [teamRoles, setTeamRoles] = useState<teamRole[]>(project.project_roles);
-  const [teamRolesID, setTeamRolesID] = useState<string[]>(
-    project.project_roles.map((role) => role.id)
-  );
-  const { data: allTeamRolesData, isLoading: teamRolesLoading } = useQuery({
-    queryKey: ["allTeamRoles"],
-    queryFn: () => getAllTeamRoles(token),
-  });
-
-  const [technologiesStack, setTechnologiesStack] = useState<Tech[]>(
-    project.technology_stack
-  );
-  const [technologiesStackID, setTechnologiesStackID] = useState<string[]>(
-    project.technology_stack.map((tech) => tech.id)
-  );
 
   const defaultValues = {
     project_name: project.project_name,
@@ -117,9 +94,7 @@ export function EditProjectDialog({ project }: Props) {
       ? new Date(project.deadline_date)
       : undefined,
     project_status: project.project_status,
-    general_description: project.description,
-    technologies: technologiesStackID,
-    project_roles: teamRolesID,
+    description: project.description,
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -129,17 +104,8 @@ export function EditProjectDialog({ project }: Props) {
 
   const [isFixed, setIsFixed] = useState(!!project.deadline_date);
 
-  const { data: techStackData, isLoading: techLoading } = useQuery({
-    queryKey: ["technologies"],
-    queryFn: () => getAllTechnologies(token),
-  });
-
   const handleReset = () => {
     form.reset(defaultValues);
-    setTeamRoles(project.project_roles);
-    setTeamRolesID(project.project_roles.map((role) => role.id));
-    setTechnologiesStack(project.technology_stack);
-    setTechnologiesStackID(project.technology_stack.map((tech) => tech.id));
   };
 
   const { mutateAsync: updateProjectMutation, isPending } = useMutation({
@@ -179,7 +145,7 @@ export function EditProjectDialog({ project }: Props) {
               {project.project_name}
             </DialogTitle>
             <DialogDescription className="lg:text-lg">
-              Edit the project...
+              Edit project: {project.project_name}
             </DialogDescription>
           </DialogHeader>
 
@@ -416,121 +382,10 @@ export function EditProjectDialog({ project }: Props) {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
-                name="technologies"
-                render={({ field }) => (
-                  <FormItem className="mb-2">
-                    <FormLabel className="lg:text-lg mr-2">
-                      Project Technologies
-                    </FormLabel>
-                    <section>
-                      {technologiesStack.length > 0 && (
-                        <div className="flex flex-wrap gap-1 items-center py-2 px-4 mb-2 rounded-md border border-border border-dashed">
-                          {technologiesStack.map((tech, index) => (
-                            <Badge key={index} variant="secondary">
-                              {tech.technology_name}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
-                    </section>
-                    <div>
-                      {techLoading ? (
-                        <Skeleton className="size-[100px]" />
-                      ) : (
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant="outline"
-                                className={`
-                                  w-[50%] justify-between
-                                  ${!field.value && "text-muted-foreground"}
-                                `}
-                              >
-                                {technologiesStackID.length > 0
-                                  ? `${technologiesStackID.length} Selected`
-                                  : "Select a technology"}
-                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-[200px] p-0">
-                            <Command>
-                              <CommandInput placeholder="Search a technology" />
-                              <CommandList>
-                                <CommandEmpty>
-                                  No technology found.
-                                </CommandEmpty>
-                                <CommandGroup>
-                                  {techStackData.map(
-                                    (tech: Tech, index: number) => {
-                                      const isSelected =
-                                        technologiesStack.includes(tech);
-                                      return (
-                                        <CommandItem
-                                          key={index}
-                                          value={tech.technology_name}
-                                          onSelect={() => {
-                                            if (isSelected) {
-                                              setTechnologiesStackID(
-                                                (current) =>
-                                                  current.filter(
-                                                    (technology) =>
-                                                      tech.id !== technology
-                                                  )
-                                              );
-                                              setTechnologiesStack((current) =>
-                                                current.filter(
-                                                  (technology) =>
-                                                    tech !== technology
-                                                )
-                                              );
-                                            } else {
-                                              setTechnologiesStackID(
-                                                (current) => [
-                                                  ...current,
-                                                  tech.id,
-                                                ]
-                                              );
-                                              setTechnologiesStack(
-                                                (current) => [...current, tech]
-                                              );
-                                            }
-                                            form.setValue(
-                                              "technologies",
-                                              technologiesStackID
-                                            );
-                                          }}
-                                        >
-                                          <Checkbox
-                                            checked={isSelected}
-                                            className={`mr-2 ${
-                                              isSelected
-                                                ? "bg-primary text-primary-foreground"
-                                                : "opacity-50"
-                                            }`}
-                                          />
-                                          {tech.technology_name}
-                                        </CommandItem>
-                                      );
-                                    }
-                                  )}
-                                </CommandGroup>
-                              </CommandList>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
-                      )}
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="general_description"
+                name="description"
                 render={({ field }) => (
                   <FormItem className="mb-2">
                     <FormLabel className="lg:text-lg">
@@ -542,117 +397,6 @@ export function EditProjectDialog({ project }: Props) {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="project_roles"
-                render={() => (
-                  <FormItem className="mb-2">
-                    <FormLabel className="lg:text-lg mr-2">
-                      Team Roles
-                    </FormLabel>
-                    <section>
-                      {teamRoles.length > 0 && (
-                        <div className="flex flex-wrap gap-1 items-center py-2 px-4 mb-2 rounded-md border border-border border-dashed">
-                          {teamRoles.map((role, index) => (
-                            <Badge key={index} variant="secondary">
-                              {role.custom_role_name}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
-                    </section>
-                    <div>
-                      {teamRolesLoading ? (
-                        <Skeleton className="size-[100px]" />
-                      ) : (
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant="outline"
-                                className={`
-                                  w-[50%] justify-between
-                                  ${
-                                    teamRolesID.length < 1 &&
-                                    "text-muted-foreground"
-                                  }
-                                `}
-                              >
-                                {teamRolesID.length > 0
-                                  ? `${teamRolesID.length} Selected`
-                                  : "Select a team role"}
-                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-[200px] p-0">
-                            <Command>
-                              <CommandInput placeholder="Search a team role" />
-                              <CommandList>
-                                <CommandEmpty>No team role found.</CommandEmpty>
-                                <CommandGroup>
-                                  {allTeamRolesData.map(
-                                    (role: teamRole, index: number) => {
-                                      const isSelected =
-                                        teamRoles.includes(role);
-                                      return (
-                                        <CommandItem
-                                          key={index}
-                                          value={role.custom_role_name}
-                                          onSelect={() => {
-                                            if (isSelected) {
-                                              setTeamRoles((current) =>
-                                                current.filter(
-                                                  (teamRole) =>
-                                                    role !== teamRole
-                                                )
-                                              );
-                                              setTeamRolesID((current) =>
-                                                current.filter(
-                                                  (teamRole) =>
-                                                    role.id !== teamRole
-                                                )
-                                              );
-                                            } else {
-                                              setTeamRoles((current) => [
-                                                ...current,
-                                                role,
-                                              ]);
-                                              setTeamRolesID((current) => [
-                                                ...current,
-                                                role.id,
-                                              ]);
-                                            }
-                                            form.setValue(
-                                              "project_roles",
-                                              teamRolesID
-                                            );
-                                          }}
-                                        >
-                                          <Checkbox
-                                            checked={isSelected}
-                                            className={`mr-2 ${
-                                              isSelected
-                                                ? "bg-primary text-primary-foreground"
-                                                : "opacity-50"
-                                            }`}
-                                          />
-                                          {role.custom_role_name}
-                                        </CommandItem>
-                                      );
-                                    }
-                                  )}
-                                </CommandGroup>
-                              </CommandList>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
-                      )}
-                    </div>
                     <FormMessage />
                   </FormItem>
                 )}

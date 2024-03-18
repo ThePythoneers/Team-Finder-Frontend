@@ -37,8 +37,8 @@ export function ViewProjectDialog({ project }: Props) {
               <FolderGit2Icon /> {project.project_name}
             </DialogTitle>
             <DialogDescription>
-              {project.start_date && `Date: ${project.start_date}`}
-              {project.deadline_date && ` - ${project.deadline_date}`}
+              {project.start_date && `Date: ${project.start_date.toString().slice(0, 10)}`}
+              {project.deadline_date && ` <-> ${project.deadline_date.toString().slice(0, 10)}`}
             </DialogDescription>
             <div className="flex justify-between">
               <Badge variant="secondary">{project.project_period}</Badge>
@@ -62,10 +62,10 @@ export function ViewProjectDialog({ project }: Props) {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="members">
-              <MembersList project={project} />
+              {project.users && <MembersList project={project} type="members" />}
             </TabsContent>
             <TabsContent value="pastMembers">
-              <MembersList project={project} />
+              {project.users && <MembersList project={project} type="past" />}
             </TabsContent>
             <TabsContent value="teamRoles">
               <TeamRolesList project={project} />

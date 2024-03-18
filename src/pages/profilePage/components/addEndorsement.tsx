@@ -1,13 +1,17 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { PlusIcon } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@radix-ui/react-label";
+import { AwardIcon, PlusIcon } from "lucide-react";
 
 export function AddEndorsementDialog() {
   return (
@@ -20,9 +24,32 @@ export function AddEndorsementDialog() {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Skill Endorsement</DialogTitle>
-            <DialogDescription>Here you can add a skill endorsement.</DialogDescription>
+            <DialogTitle className="text-2xl flex items-center gap-1">
+              <AwardIcon /> Add skill endorsement
+            </DialogTitle>
+            <DialogDescription>
+              Skill endorsement provides you more
+            </DialogDescription>
           </DialogHeader>
+          <form onSubmit={(e) => {}}>
+            <Label htmlFor="input" className="text-lg">
+              Training title
+            </Label>
+            <Input id="input" placeholder="Training title" />
+            <DialogFooter className="mt-2">
+              <DialogClose asChild>
+                <Button variant="ghost">Cancel</Button>
+              </DialogClose>
+              <DialogClose>
+                <Button>
+                  {/* {isPending && (
+                    <Loader2Icon className="mr-2 size-4 animate-spin" />
+                  )} */}
+                  Submit
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </>

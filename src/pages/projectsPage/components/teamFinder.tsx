@@ -1,27 +1,32 @@
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { Employee, Project } from "@/types";
-import { UsersIcon } from "lucide-react";
+import { Project, findResponseData } from "@/types";
+import { BotIcon, HeartHandshakeIcon, UsersIcon } from "lucide-react";
 import { TeamFinderForm } from "./teamFinderForm";
 import { useState } from "react";
 import { TeamFinderResult } from "./teamFinderResult";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 type Props = {
   project: Project;
 };
 
 export function TeamFinderDialog({ project }: Props) {
-  project;
-
   const [isSearch, setIsSearch] = useState(false);
-  const [responseData, setResponseData] = useState<Employee[]>([]);
+  const [responseData, setResponseData] = useState<findResponseData[]>([]);
+
+  const [aiMessage, setAiMessage] = useState("");
 
   return (
     <>
@@ -43,10 +48,56 @@ export function TeamFinderDialog({ project }: Props) {
             <DialogTitle className="flex gap-2 items-center text-2xl">
               <UsersIcon /> Team Finder
             </DialogTitle>
-            <DialogDescription className="text-lg">
-              Let us help you find the best team!
-            </DialogDescription>
           </DialogHeader>
+          {!isSearch && (
+            <div className="flex justify-between">
+              <p className="text-xl">Let AI help you find your teammates</p>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button>
+                    <HeartHandshakeIcon /> Additional Context
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl flex items-center gap-1">
+                      <BotIcon /> OpenAI
+                    </DialogTitle>
+                    <DialogDescription>
+                      Let AI help you finding your best team
+                    </DialogDescription>
+                  </DialogHeader>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                    }}
+                  >
+                    <Label htmlFor="input" className="text-lg">
+                      Message
+                    </Label>
+                    <Textarea
+                      id="input"
+                      placeholder="Message"
+                      value={aiMessage}
+                      onChange={(e) => setAiMessage(e.target.value)}
+                    />
+                    <DialogFooter className="mt-2">
+                      <DialogClose asChild>
+                        <Button variant="ghost">Cancel</Button>
+                      </DialogClose>
+                      <Button>
+                        {/* {isPending && (
+                          <Loader2Icon className="mr-2 size-4 animate-spin" />
+                        )} */}
+                        Submit
+                      </Button>
+                    </DialogFooter>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            </div>
+          )}
+
           {!isSearch ? (
             <TeamFinderForm
               setIsSearch={setIsSearch}

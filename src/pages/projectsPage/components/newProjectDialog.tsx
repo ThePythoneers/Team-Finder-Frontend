@@ -69,7 +69,7 @@ const newProjectSchema = z.object({
   project_status: z.enum(["Not Started", "Starting"]),
   general_description: z.string(),
   technologies: z.array(z.string()),
-  team_roles: z.array(z.string()),
+  project_roles: z.array(z.string()),
 });
 
 const defaultValues = {
@@ -80,7 +80,7 @@ const defaultValues = {
   project_status: undefined,
   general_description: "",
   technologies: undefined,
-  team_roles: undefined,
+  project_roles: undefined,
 };
 
 export function NewProjectDialog() {
@@ -130,9 +130,9 @@ export function NewProjectDialog() {
       );
     const params = {
       token,
-      project_roles: values.team_roles,
       ...values,
     };
+    console.log(params)
     await createProjectMutation(params);
     form.reset(defaultValues);
     handleReset();
@@ -526,7 +526,7 @@ export function NewProjectDialog() {
               />
               <FormField
                 control={form.control}
-                name="team_roles"
+                name="project_roles"
                 render={() => (
                   <FormItem className="mb-2">
                     <FormLabel className="lg:text-lg mr-2">
@@ -606,7 +606,7 @@ export function NewProjectDialog() {
                                               ]);
                                             }
                                             form.setValue(
-                                              "team_roles",
+                                              "project_roles",
                                               teamRolesID
                                             );
                                           }}

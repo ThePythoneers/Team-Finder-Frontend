@@ -43,9 +43,7 @@ export function CreateSkillDialog() {
   const queryClient = useQueryClient();
 
   const [skillCategories, setSkillCategories] = useState<SkillCategory[]>([]);
-  const [selectedDepartments, setSelectedDepartments] = useState<Department[]>(
-    []
-  );
+  const [selectedDepartments, setSelectedDepartments] = useState<Department>();
 
   const [skillName, setSkillName] = useState("");
   const [description, setDescription] = useState("");
@@ -64,7 +62,7 @@ export function CreateSkillDialog() {
     setSkillName("");
     setDescription("");
     setSkillCategories([]);
-    setSelectedDepartments([]);
+    setSelectedDepartments(undefined);
   };
 
   const { mutateAsync: createSkillMutation, isPending } = useMutation({
@@ -87,8 +85,7 @@ export function CreateSkillDialog() {
       skill_category: skillCategories.map((category) => category.id),
       skill_name: skillName,
       description,
-      author: auth?.id,
-      departments: selectedDepartments.map((department) => department.id),
+      department_id: selectedDepartments?.id,
     };
     await createSkillMutation(params);
     handleReset();
@@ -234,13 +231,11 @@ export function CreateSkillDialog() {
               </div>
 
               <section>
-                {selectedDepartments.length > 0 && (
+                {selectedDepartments && (
                   <div className="flex flex-wrap gap-1 items-center py-2 px-4 mb-2 rounded-md border border-border border-dashed">
-                    {selectedDepartments.map((department) => (
-                      <Badge key={department.id} variant="secondary">
-                        {department.department_name}
-                      </Badge>
-                    ))}
+                    <Badge variant="secondary">
+                      {selectedDepartments.department_name}
+                    </Badge>
                   </div>
                 )}
                 <Popover modal>
@@ -248,12 +243,12 @@ export function CreateSkillDialog() {
                     <Button
                       variant="outline"
                       className={`justify-between w-full mx-auto ${
-                        selectedDepartments.length < 1 &&
+                        selectedDepartments === undefined &&
                         "text-muted-foreground"
                       }`}
                     >
-                      {selectedDepartments.length > 0
-                        ? `${selectedDepartments.length} Selected`
+                      {selectedDepartments !== undefined
+                        ? `Selected`
                         : "Select your department"}
                       <ChevronsUpDownIcon />
                     </Button>
@@ -275,22 +270,15 @@ export function CreateSkillDialog() {
                                 )
                                 .map((department: Department) => {
                                   const isSelected =
-                                    selectedDepartments.includes(department);
+                                    selectedDepartments === department;
                                   return (
                                     <CommandItem
                                       key={department.id}
                                       onSelect={() => {
                                         if (isSelected) {
-                                          setSelectedDepartments((current) =>
-                                            current.filter(
-                                              (depart) => depart !== department
-                                            )
-                                          );
+                                          setSelectedDepartments(undefined);
                                         } else {
-                                          setSelectedDepartments((current) => [
-                                            ...current,
-                                            department,
-                                          ]);
+                                          setSelectedDepartments(department);
                                         }
                                       }}
                                     >
@@ -310,14 +298,14 @@ export function CreateSkillDialog() {
                           </>
                         )}
                       </CommandList>
-                      {selectedDepartments.length > 0 && (
+                      {selectedDepartments && (
                         <>
                           <CommandSeparator className="my-1" />
                           <Button
                             size="sm"
                             className="h-8"
                             variant="secondary"
-                            onClick={() => setSelectedDepartments([])}
+                            onClick={() => setSelectedDepartments(undefined)}
                           >
                             Reset
                           </Button>

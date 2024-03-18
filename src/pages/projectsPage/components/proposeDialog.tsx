@@ -54,14 +54,14 @@ import { z } from "zod";
 
 const formSchema = z.object({
   work_hours: z.number(),
-  team_roles: z.array(z.string()),
-  comments: z.string(),
+  project_roles: z.array(z.string()),
+  comment: z.string(),
 });
 
 const defaultValues = {
   work_hours: undefined,
-  team_roles: undefined,
-  comments: undefined,
+  project_roles: undefined,
+  comment: undefined,
 };
 
 type Props = {
@@ -81,7 +81,7 @@ const hours = [
 ] as const;
 
 export function ProposeDialog({ employee, project }: Props) {
-  console.log("🚀 ~ ProposeDialog ~ project:", project)
+  console.log("🚀 ~ ProposeDialog ~ project:", project);
   const token = useAuthHeader();
   const _id = employee.id;
 
@@ -106,12 +106,12 @@ export function ProposeDialog({ employee, project }: Props) {
   });
 
   const [userTeamRoles, setUserTeamRoles] = useState<
-    { id: string; custom_role_name: string }[]
+    { id: string; role_name: string }[]
   >([]);
   const [userTeamRolesID, setUserTeamRolesID] = useState<string[]>([]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    values.team_roles = userTeamRolesID;
+    values.project_roles = userTeamRolesID;
     if (employee.work_hours + values.work_hours > 8)
       return toast.error("The user can't have more than 8 work hours!");
     const body = {
@@ -196,8 +196,8 @@ export function ProposeDialog({ employee, project }: Props) {
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0">
                           <Command>
-                            <CommandInput placeholder="Search level..." />
-                            <CommandEmpty>No level found.</CommandEmpty>
+                            <CommandInput placeholder="Search hours..." />
+                            <CommandEmpty>No hours found.</CommandEmpty>
                             <CommandGroup>
                               {hours.map((hour) => (
                                 <CommandItem
@@ -231,7 +231,7 @@ export function ProposeDialog({ employee, project }: Props) {
 
                 <FormField
                   control={form.control}
-                  name="team_roles"
+                  name="project_roles"
                   render={() => (
                     <FormItem className="mb-2">
                       <FormLabel className="lg:text-lg mr-2">
@@ -242,7 +242,7 @@ export function ProposeDialog({ employee, project }: Props) {
                           <div className="flex flex-wrap gap-1 items-center py-2 px-4 mb-2 rounded-md border border-border border-dashed">
                             {userTeamRoles.map((role, index) => (
                               <Badge key={index} variant="secondary">
-                                {role.custom_role_name}
+                                {role.role_name}
                               </Badge>
                             ))}
                           </div>
@@ -275,63 +275,54 @@ export function ProposeDialog({ employee, project }: Props) {
                               <CommandList>
                                 <CommandEmpty>No team role found.</CommandEmpty>
                                 <CommandGroup>
-                                  {project.project_roles.map(
-                                    (
-                                      role: {
-                                        id: string;
-                                        custom_role_name: string;
-                                      },
-                                      index: number
-                                    ) => {
-                                      const isSelected =
-                                        userTeamRoles.includes(role);
-                                      return (
-                                        <CommandItem
-                                          key={index}
-                                          value={role.custom_role_name}
-                                          onSelect={() => {
-                                            if (isSelected) {
-                                              setUserTeamRoles((current) =>
-                                                current.filter(
-                                                  (teamRole) =>
-                                                    role !== teamRole
-                                                )
-                                              );
-                                              setUserTeamRolesID((current) =>
-                                                current.filter(
-                                                  (teamRole) =>
-                                                    role.id !== teamRole
-                                                )
-                                              );
-                                            } else {
-                                              setUserTeamRoles((current) => [
-                                                ...current,
-                                                role,
-                                              ]);
-                                              setUserTeamRolesID((current) => [
-                                                ...current,
-                                                role.id,
-                                              ]);
-                                            }
-                                            form.setValue(
-                                              "team_roles",
-                                              userTeamRolesID
+                                  {project.project_roles.map((role, index) => {
+                                    const isSelected =
+                                      userTeamRoles.includes(role);
+                                    return (
+                                      <CommandItem
+                                        key={index}
+                                        value={role.role_name}
+                                        onSelect={() => {
+                                          if (isSelected) {
+                                            setUserTeamRoles((current) =>
+                                              current.filter(
+                                                (teamRole) => role !== teamRole
+                                              )
                                             );
-                                          }}
-                                        >
-                                          <Checkbox
-                                            checked={isSelected}
-                                            className={`mr-2 ${
-                                              isSelected
-                                                ? "bg-primary text-primary-foreground"
-                                                : "opacity-50"
-                                            }`}
-                                          />
-                                          {role.custom_role_name}
-                                        </CommandItem>
-                                      );
-                                    }
-                                  )}
+                                            setUserTeamRolesID((current) =>
+                                              current.filter(
+                                                (teamRole) =>
+                                                  role.id !== teamRole
+                                              )
+                                            );
+                                          } else {
+                                            setUserTeamRoles((current) => [
+                                              ...current,
+                                              role,
+                                            ]);
+                                            setUserTeamRolesID((current) => [
+                                              ...current,
+                                              role.id,
+                                            ]);
+                                          }
+                                          form.setValue(
+                                            "project_roles",
+                                            userTeamRolesID
+                                          );
+                                        }}
+                                      >
+                                        <Checkbox
+                                          checked={isSelected}
+                                          className={`mr-2 ${
+                                            isSelected
+                                              ? "bg-primary text-primary-foreground"
+                                              : "opacity-50"
+                                          }`}
+                                        />
+                                        {role.role_name}
+                                      </CommandItem>
+                                    );
+                                  })}
                                 </CommandGroup>
                               </CommandList>
                             </Command>
@@ -344,7 +335,7 @@ export function ProposeDialog({ employee, project }: Props) {
                 />
                 <FormField
                   control={form.control}
-                  name="comments"
+                  name="comment"
                   render={({ field }) => (
                     <FormItem className="mb-2">
                       <FormLabel className="lg:text-lg">Comments</FormLabel>

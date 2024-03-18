@@ -13,8 +13,8 @@ type createAllocationProposalParams = {
   project_id_allocation: string;
   user_id: string;
   work_hours: number;
-  team_roles: string[];
-  comments: string;
+  project_roles: string[];
+  comment: string;
 };
 
 export const createAllocationProposal = async (

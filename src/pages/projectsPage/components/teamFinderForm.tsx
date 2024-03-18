@@ -18,22 +18,41 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon, Loader2Icon, SearchIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
+import {
+  Check,
+  ChevronsUpDownIcon,
+  Loader2Icon,
+  SearchIcon,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { teamFinder } from "@/api/project";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { Employee } from "@/types";
+import { findResponseData } from "@/types";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
 
 const formSchema = z.object({
   partially_available: z.boolean().default(false),
   close_to_finish: z.boolean().default(false),
-  deadline: z.date().optional(),
+  deadline: z.number().optional(),
   unavailable: z.boolean().default(true),
 });
+
+const weeks = [
+  { label: "1 - Week", value: 1 },
+  { label: "2 - Weeks", value: 2 },
+  { label: "3 - Weeks", value: 3 },
+  { label: "4 - Weeks", value: 4 },
+  { label: "5 - Weeks", value: 5 },
+  { label: "6 - Weeks", value: 6 },
+] as const;
 
 const defaultValues = {
   partially_available: false,
@@ -44,7 +63,7 @@ const defaultValues = {
 
 type Props = {
   setIsSearch: React.Dispatch<React.SetStateAction<boolean>>;
-  setResponseData: React.Dispatch<React.SetStateAction<Employee[]>>;
+  setResponseData: React.Dispatch<React.SetStateAction<findResponseData[]>>;
 };
 
 export function TeamFinderForm({ setIsSearch, setResponseData }: Props) {
@@ -129,44 +148,56 @@ export function TeamFinderForm({ setIsSearch, setResponseData }: Props) {
                 control={form.control}
                 name="deadline"
                 render={({ field }) => (
-                  <FormItem className="mb-2">
-                    <FormLabel className="lg:text-lg">Deadline Date</FormLabel>
-                    <div>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              className={`
-                                w-[50%] 
-                                ${!field.value && "text-muted-foreground"}
-                              `}
-                            >
-                              {field.value !== undefined ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) => {
-                              const maxDate = new Date();
-                              maxDate.setDate(maxDate.getDate() + 42);
-                              return date < new Date() || date > maxDate;
-                            }}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="lg:text-xl">How close do you want the deadline to be ?</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={` justify-between w-fit
+                           ${!field.value && "text-muted-foreground"}
+                         `}
+                          >
+                            {field.value
+                              ? weeks.find((week) => week.value === field.value)
+                                  ?.label
+                              : "Select the number of weeks"}
+                            <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Command>
+                          <CommandInput placeholder="Search week..." />
+                          <CommandEmpty>No week found.</CommandEmpty>
+                          <CommandGroup>
+                            {weeks.map((week) => (
+                              <CommandItem
+                                value={week.label}
+                                key={week.value}
+                                onSelect={() => {
+                                  form.setValue("deadline", week.value);
+                                }}
+                              >
+                                <Check
+                                  className={`f
+                                 mr-2 h-4 w-4
+                                 ${
+                                   week.value === field.value
+                                     ? "opacity-100"
+                                     : "opacity-0"
+                                 }
+                               `}
+                                />
+                                {week.label}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                     <FormMessage />
                   </FormItem>
                 )}

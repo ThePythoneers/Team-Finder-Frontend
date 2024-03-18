@@ -7,6 +7,7 @@ type Props = {
 };
 
 export function TeamRolesList({ project }: Props) {
+  console.log("🚀 ~ TeamRolesList ~ project:", project)
   return (
     <>
       <Card>
@@ -17,7 +18,7 @@ export function TeamRolesList({ project }: Props) {
               className="flex items-center gap-2 hover:bg-secondary/60 transition-all rounded p-1"
             >
               <AwardIcon />
-              <h4 className="text-lg">{role.custom_role_name}</h4>
+              <h4 className="text-lg">{role.role_name}</h4>
             </div>
           ))}
         </CardContent>

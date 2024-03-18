@@ -46,8 +46,7 @@ type createSkillParams = {
   skill_category: string[];
   skill_name: string;
   description: string;
-  author: string | undefined;
-  departments: string[];
+  department_id?: string;
 };
 
 export const createSkill = async (values: createSkillParams) => {
