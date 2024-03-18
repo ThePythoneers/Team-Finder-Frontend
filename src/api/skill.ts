@@ -6,6 +6,7 @@ import {
   GET_SKILLS_ANY_USER,
   GET_SKILL_CATEGORIES,
   GET_SKILL_CATEGORY,
+  VERIFY_SKILL,
 } from "./URL";
 import { checkError, getAuthHeaders } from "./utils";
 import { Token } from "@/types";
@@ -207,7 +208,7 @@ export const removeUserSkill = async (values: removeUserSkillParams) => {
   }
 };
 
-export const getAnyUserSkills = async (token: Token, _id: string) => {
+export const getAnyUserSkills = async (token: Token, _id?: string) => {
   try {
     const response = await fetch(`${GET_SKILLS_ANY_USER}?_id=${_id}`, {
       method: "GET",
@@ -284,12 +285,12 @@ export const updateSkillCategory = async ({
 
 type verifySkillParams = {
   token: Token;
-  _id: string;
+  _id?: string;
 };
 
 export const verifySkill = async ({ token, _id }: verifySkillParams) => {
   try {
-    const response = await fetch(`${GET_SKILL_CATEGORY}/${_id}`, {
+    const response = await fetch(`${VERIFY_SKILL}/${_id}`, {
       method: "POST",
       headers: getAuthHeaders(token),
     });
@@ -300,6 +301,24 @@ export const verifySkill = async ({ token, _id }: verifySkillParams) => {
       throw new Error(errMsg);
     }
     toast.success("You verified a skill with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+export const getAllUnverifiedSkills = async (token: Token) => {
+  try {
+    const response = await fetch(`${VERIFY_SKILL}`, {
+      method: "GET",
+      headers: getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
     return await response.json();
   } catch (error) {
     checkError(error);

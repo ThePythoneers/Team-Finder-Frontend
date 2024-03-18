@@ -2,9 +2,12 @@ import { Token } from "@/types";
 import { checkError, getAuthHeaders } from "./utils";
 import {
   ACCEPT_ALLOCATION,
+  ACCEPT_DEALLOCATION,
   CREATE_ALLOCATION,
   CREATE_DEALLOCATION,
-  GET_ALLOCATION_ID,
+  DEPARTMENT_ALLOCATION,
+  DEPARTMENT_DEALLOCATION,
+  REJECT_DEALLOCATION,
 } from "./URL";
 import { toast } from "sonner";
 
@@ -13,7 +16,7 @@ type createAllocationProposalParams = {
   project_id_allocation: string;
   user_id: string;
   work_hours: number;
-  project_roles: string[];
+  roles: string[];
   comment: string;
 };
 
@@ -42,9 +45,9 @@ export const createAllocationProposal = async (
 
 type createDeAllocationProposalParams = {
   token: Token;
-  project_id_allocation: string;
+  project_id?: string;
   user_id: string;
-  comments: string;
+  comment: string;
 };
 
 export const createDeAllocationProposal = async (
@@ -72,7 +75,7 @@ export const createDeAllocationProposal = async (
 
 type getAllocationProposalsParams = {
   token: Token;
-  _id: string;
+  _id?: string;
 };
 
 export const getAllocationProposals = async ({
@@ -80,7 +83,7 @@ export const getAllocationProposals = async ({
   _id,
 }: getAllocationProposalsParams) => {
   try {
-    const response = await fetch(`${GET_ALLOCATION_ID}?_id=${_id}`, {
+    const response = await fetch(`${DEPARTMENT_ALLOCATION}/${_id}`, {
       method: "GET",
       headers: getAuthHeaders(token),
     });
@@ -90,7 +93,27 @@ export const getAllocationProposals = async ({
       if (errMsg.detail) throw new Error(errMsg.detail);
       throw new Error(errMsg);
     }
-    toast.success("You sent a deallocation proposal with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+export const getDeAllocationProposals = async ({
+  token,
+  _id,
+}: getAllocationProposalsParams) => {
+  try {
+    const response = await fetch(`${DEPARTMENT_DEALLOCATION}/${_id}`, {
+      method: "GET",
+      headers: getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
     return await response.json();
   } catch (error) {
     checkError(error);
@@ -134,6 +157,50 @@ export const rejectAllocationProposal = async ({
       throw new Error(errMsg);
     }
     toast.success("You rejected an allocation proposal with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+export const rejectDeAllocationProposal = async ({
+  token,
+  _id,
+}: getAllocationProposalsParams) => {
+  try {
+    const response = await fetch(`${REJECT_DEALLOCATION}?_id=${_id}`, {
+      method: "POST",
+      headers: getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You rejected a deallocation proposal with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+export const acceptDeAllocationProposal = async ({
+  token,
+  _id,
+}: getAllocationProposalsParams) => {
+  try {
+    const response = await fetch(`${ACCEPT_DEALLOCATION}?_id=${_id}`, {
+      method: "POST",
+      headers: getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You accepted a deallocation proposal with success!");
     return await response.json();
   } catch (error) {
     checkError(error);

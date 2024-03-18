@@ -5,11 +5,16 @@ import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-hea
 import { useQuery } from "@tanstack/react-query";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Proposal } from "@/types";
-import { getSkills } from "@/api/skill";
-import { UserCard } from "../proposalsPage/components/userCard";
+import { userSkill } from "@/types";
+import { getAllUnverifiedSkills } from "@/api/skill";
+import { UserCard } from "./components/UserCard";
+import { SkillCard } from "./components/skillCard";
+import { SkillLevelCard } from "./components/skillLevelCard";
+import { SkillExperienceCard } from "./components/skillExperienceCard";
+import { Badge } from "@/components/ui/badge";
+import { VerifySkillAction } from "./components/verifyAction";
 
-const columns: ColumnDef<Proposal>[] = [
+const columns: ColumnDef<userSkill>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -31,45 +36,65 @@ const columns: ColumnDef<Proposal>[] = [
     ),
   },
   {
-    id: "Project",
-    accessorKey: "project_id",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Project" />
-    ),
-    // cell: ({ row }) => {
-      // return <ProjectCard proposal={row.original} />;
-    // },
-  },
-  {
     id: "User",
     accessorKey: "user_id",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="User" />
     ),
     cell: ({ row }) => {
-      return <UserCard proposal={row.original} />;
+      return <UserCard skill={row.original} />;
     },
   },
   {
-    accessorKey: "comments",
+    id: "Skill",
+    accessorKey: "skill_id",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Comments" />
+      <DataTableColumnHeader column={column} title="Skill" />
     ),
+    cell: ({ row }) => {
+      return <SkillCard skill={row.original} />;
+    },
   },
   {
-    id: "Work Hours",
-    accessorKey: "work_hours",
+    id: "Skill Level",
+    accessorKey: "skill_level",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Work Hours" />
+      <DataTableColumnHeader column={column} title="Skill Level" />
     ),
+    cell: ({ row }) => {
+      return <SkillLevelCard skill_level={row.original.skill_level} />;
+    },
   },
-  // {
-  //   id: "Work Hours",
-  //   accessorKey: "work_hours",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Comments" />
-  //   ),
-  // },
+  {
+    id: "Skill Experience",
+    accessorKey: "skill_experience",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Skill Experience" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <SkillExperienceCard skill_level={row.original.skill_experience} />
+      );
+    },
+  },
+  {
+    id: "Training Title",
+    accessorKey: "training_title",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Training Title" />
+    ),
+    cell: ({ row }) => {
+      if (row.original.training_title)
+        return <Badge variant="outline">{row.original.training_title}</Badge>;
+      return <Badge variant="outline">No Training Title</Badge>;
+    },
+  },
+  {
+    id: "Actions",
+    cell: ({ row }) => {
+      return <VerifySkillAction skill={row.original} />;
+    },
+  },
 ];
 
 export function ValidateSkillsPage() {
@@ -77,8 +102,9 @@ export function ValidateSkillsPage() {
 
   const { data: skillsData, isLoading } = useQuery({
     queryKey: ["validateSkills", { token }],
-    queryFn: () => getSkills(token),
+    queryFn: () => getAllUnverifiedSkills(token),
   });
+  console.log("🚀 ~ ValidateSkillsPage ~ skillsData:", skillsData);
   return (
     <>
       <main className="container mx-auto py-4">

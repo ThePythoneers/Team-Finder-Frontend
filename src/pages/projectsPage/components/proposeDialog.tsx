@@ -54,7 +54,7 @@ import { z } from "zod";
 
 const formSchema = z.object({
   work_hours: z.number(),
-  project_roles: z.array(z.string()),
+  roles: z.array(z.string()),
   comment: z.string(),
 });
 
@@ -111,7 +111,7 @@ export function ProposeDialog({ employee, project }: Props) {
   const [userTeamRolesID, setUserTeamRolesID] = useState<string[]>([]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    values.project_roles = userTeamRolesID;
+    values.roles = userTeamRolesID;
     if (employee.work_hours + values.work_hours > 8)
       return toast.error("The user can't have more than 8 work hours!");
     const body = {
@@ -231,7 +231,7 @@ export function ProposeDialog({ employee, project }: Props) {
 
                 <FormField
                   control={form.control}
-                  name="project_roles"
+                  name="roles"
                   render={() => (
                     <FormItem className="mb-2">
                       <FormLabel className="lg:text-lg mr-2">
@@ -306,7 +306,7 @@ export function ProposeDialog({ employee, project }: Props) {
                                             ]);
                                           }
                                           form.setValue(
-                                            "project_roles",
+                                            "roles",
                                             userTeamRolesID
                                           );
                                         }}

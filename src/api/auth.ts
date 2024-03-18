@@ -28,7 +28,7 @@ export const registerAdminUser = async (body: registerAdminBody) => {
       if (errMsg.detail) throw new Error(errMsg.detail);
       throw new Error(errMsg);
     }
-    toast.success("You registered with succes");
+    toast.success("You registered with success!");
     return await response.json();
   } catch (error) {
     checkError(error);
@@ -81,7 +81,7 @@ export const signInUser = async (body: loginBody) => {
       if (errMsg.detail) throw new Error(errMsg.detail);
       throw new Error(errMsg);
     }
-    toast.success("You signed in with succes!");
+    toast.success("You signed in with success!");
     return await response.json();
   } catch (error) {
     checkError(error);

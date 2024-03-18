@@ -5,12 +5,14 @@ import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-hea
 import { useQuery } from "@tanstack/react-query";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Proposal } from "@/types";
-import { getSkills } from "@/api/skill";
+import { AuthUser, Proposal } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProjectCard } from "./components/projectCard";
 import { UserCard } from "./components/userCard";
 import { DeallocationPage } from "./components/deAllocationPage";
+import { getAllocationProposals } from "@/api/proposals";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { AllocationActions } from "./components/allocationActions";
 
 const columns: ColumnDef<Proposal>[] = [
   {
@@ -66,21 +68,22 @@ const columns: ColumnDef<Proposal>[] = [
       <DataTableColumnHeader column={column} title="Work Hours" />
     ),
   },
-  // {
-  //   id: "Work Hours",
-  //   accessorKey: "work_hours",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Comments" />
-  //   ),
-  // },
+  {
+    id: "Actions",
+    cell: ({ row }) => {
+      return <AllocationActions proposal={row.original} />;
+    },
+  },
 ];
 
 export function ProposalsPage() {
   const token = useAuthHeader();
+  const auth: AuthUser | null = useAuthUser();
 
-  const { data: skillsData, isLoading } = useQuery({
-    queryKey: ["skills", { token }],
-    queryFn: () => getSkills(token),
+  const { data: allocationsData, isLoading } = useQuery({
+    queryKey: ["departmentAllocations", { token }],
+    queryFn: () => getAllocationProposals({ token, _id: auth?.department_id }),
+    enabled: !!auth?.department_id,
   });
   return (
     <>
@@ -94,7 +97,11 @@ export function ProposalsPage() {
               <TabsTrigger value="skillCategories">Deallocation</TabsTrigger>
             </TabsList>
             <TabsContent value="skills">
-              <DataTable columns={columns} data={skillsData} type="proposals" />
+              <DataTable
+                columns={columns}
+                data={allocationsData}
+                type="proposals"
+              />
             </TabsContent>
             <TabsContent value="skillCategories">
               <DeallocationPage />

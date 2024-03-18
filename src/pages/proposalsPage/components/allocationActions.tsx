@@ -12,21 +12,21 @@ type Props = {
   proposal: Proposal;
 };
 
-export function ProposalsActions({ proposal }: Props) {
+export function AllocationActions({ proposal }: Props) {
   const token = useAuthHeader();
   const queryClient = useQueryClient();
   const { mutateAsync: acceptMutation, isPending: acceptPending } = useMutation(
     {
       mutationFn: acceptAllocationProposal,
       onSuccess: () =>
-        queryClient.invalidateQueries({ queryKey: ["proposals"] }),
+        queryClient.invalidateQueries({ queryKey: ["departmentAllocations"] }),
     }
   );
   const { mutateAsync: rejectMutation, isPending: rejectPending } = useMutation(
     {
       mutationFn: rejectAllocationProposal,
       onSuccess: () =>
-        queryClient.invalidateQueries({ queryKey: ["proposals"] }),
+        queryClient.invalidateQueries({ queryKey: ["departmentAllocations"] }),
     }
   );
 

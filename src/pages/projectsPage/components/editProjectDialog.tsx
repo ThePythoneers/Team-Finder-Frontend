@@ -4,6 +4,7 @@ import {
   CalendarIcon,
   Loader2Icon,
   PencilIcon,
+  Code2Icon,
 } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import {
@@ -141,7 +142,8 @@ export function EditProjectDialog({ project }: Props) {
         </DialogTrigger>
         <DialogContent className="max-h-[95%] max-w-[600px] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="lg:text-3xl">
+            <DialogTitle className="lg:text-3xl flex items-center gap-2">
+              <Code2Icon />
               {project.project_name}
             </DialogTitle>
             <DialogDescription className="lg:text-lg">

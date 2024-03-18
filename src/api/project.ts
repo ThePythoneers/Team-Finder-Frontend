@@ -17,6 +17,7 @@ type createProjectParams = {
 
 export const createProject = async (values: createProjectParams) => {
   try {
+    console.log(values)
     const { token, ...body } = values;
     const response = await fetch(`${UPDATE_PROJECT}`, {
       method: "POST",
@@ -121,7 +122,7 @@ type getProjectInfoParams = {
 
 export const getProjectInfo = async ({ token, id }: getProjectInfoParams) => {
   try {
-    const response = await fetch(`${UPDATE_PROJECT}?_id=${id}`, {
+    const response = await fetch(`${UPDATE_PROJECT}${id}`, {
       method: "GET",
       headers: getAuthHeaders(token),
     });

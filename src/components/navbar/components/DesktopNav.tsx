@@ -4,6 +4,7 @@ import {
   AlbumIcon,
   FolderGit2Icon,
   GanttChartSquareIcon,
+  ShieldCheckIcon,
   UsersIcon,
 } from "lucide-react";
 import { AuthUser } from "@/types";
@@ -71,18 +72,20 @@ export function DesktopNav({ auth }: Props) {
             );
           }}
         </NavLink>
-        <NavLink
-          to={`/${auth?.organization_name}/proposals`}
-          className="flex items-center"
-        >
-          {({ isActive }) => {
-            return (
-              <Button variant={isActive ? "secondary" : "ghost"} size="sm">
-                <UsersIcon className="mr-2" /> Proposals wip
-              </Button>
-            );
-          }}
-        </NavLink>
+        {auth?.roles.includes("Department Manager") && auth.department_id && (
+          <NavLink
+            to={`/${auth?.organization_name}/proposals`}
+            className="flex items-center"
+          >
+            {({ isActive }) => {
+              return (
+                <Button variant={isActive ? "secondary" : "ghost"} size="sm">
+                  <ShieldCheckIcon className="mr-2" /> Proposals
+                </Button>
+              );
+            }}
+          </NavLink>
+        )}
       </ul>
     </>
   );

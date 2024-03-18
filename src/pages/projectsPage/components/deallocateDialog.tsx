@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Project } from "@/types";
 import { useMutation } from "@tanstack/react-query";
-import { Loader2Icon, UserIcon } from "lucide-react";
+import { BanIcon, Loader2Icon, UserIcon } from "lucide-react";
 import { useState } from "react";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { toast } from "sonner";
@@ -29,6 +29,7 @@ type Props = {
 };
 
 export function DeallocateDialog({ user, project }: Props) {
+  console.log("🚀 ~ DeallocateDialog ~ project:", project);
   const token = useAuthHeader();
 
   const [reason, setReason] = useState("");
@@ -42,9 +43,9 @@ export function DeallocateDialog({ user, project }: Props) {
       return toast.error("You have to specify a reason for the deallocation!");
     const values = {
       token,
-      project_id_allocation: project.id,
+      project_id: project.project_id,
       user_id: user.id,
-      comments: reason,
+      comment: reason,
     };
     await mutateAsync(values);
     setReason("");
@@ -54,7 +55,14 @@ export function DeallocateDialog({ user, project }: Props) {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button onClick={() => setReason("")}>Deallocate</Button>
+          <Button
+            onClick={() => setReason("")}
+            variant="destructive"
+            className="flex gap-1"
+          >
+            <BanIcon />
+            Deallocate
+          </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>

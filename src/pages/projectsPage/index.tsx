@@ -55,7 +55,7 @@ const columns: ColumnDef<Project>[] = [
       <DataTableColumnHeader column={column} title="Start Date" />
     ),
     cell: ({ row }) => {
-      const date = row.original.deadline_date;
+      const date = row.original.start_date;
       return <p>{date.toString().slice(0, 10)}</p>;
     },
   },

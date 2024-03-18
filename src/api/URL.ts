@@ -1,6 +1,6 @@
-// export const BASE_URL = "http://localhost:8000";
+export const BASE_URL = "http://localhost:8000";
 // export const BASE_URL = "https://atc-2024-thepythoneers-be-linux-web-app.azurewebsites.net";
-export const BASE_URL = "https://tender-mable-unl00ky.koyeb.app";
+// export const BASE_URL = "https://tender-mable-unl00ky.koyeb.app";
 
 // AUTHENTICATION
 export const LOGIN = `${BASE_URL}/auth/token`;
@@ -54,5 +54,8 @@ export const CREATE_DEALLOCATION = `${BASE_URL}/proposal/deallocation`;
 export const GET_ALLOCATION_ID = `${BASE_URL}/proposal/allocation/`;
 export const ACCEPT_ALLOCATION = `${BASE_URL}/proposal/allocation/accept`;
 export const REJECT_ALLOCATION = `${BASE_URL}/proposal/allocation/reject`;
+
 export const REJECT_DEALLOCATION = `${BASE_URL}/proposal/deallocation/reject`;
 export const ACCEPT_DEALLOCATION = `${BASE_URL}/proposal/deallocation/accept`;
+export const DEPARTMENT_ALLOCATION = `${BASE_URL}/proposal/alloc-department`;
+export const DEPARTMENT_DEALLOCATION = `${BASE_URL}/proposal/dealloc-department`;

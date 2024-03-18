@@ -49,6 +49,8 @@ export type Skill = {
 };
 
 export type userSkill = {
+  id?: string;
+  user_id?: string;
   skill_id: string;
   skill_name: string;
   skill_category: string[];

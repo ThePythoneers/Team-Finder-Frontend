@@ -5,11 +5,12 @@ import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-hea
 import { useQuery } from "@tanstack/react-query";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Proposal } from "@/types";
-import { getSkills } from "@/api/skill";
+import { AuthUser, Proposal } from "@/types";
 import { ProjectCard } from "./projectCard";
 import { UserCard } from "./userCard";
-import { ProposalsActions } from "./actions";
+import { getDeAllocationProposals } from "@/api/proposals";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { DeAllocationActions } from "./deAllocationActions";
 
 const columns: ColumnDef<Proposal>[] = [
   {
@@ -67,23 +68,32 @@ const columns: ColumnDef<Proposal>[] = [
   },
   {
     id: "Actions",
-    cell: ({ row }) => <ProposalsActions proposal={row.original} />,
+    cell: ({ row }) => {
+      return <DeAllocationActions proposal={row.original} />;
+    },
   },
 ];
 
 export function DeallocationPage() {
   const token = useAuthHeader();
+  const auth: AuthUser | null = useAuthUser();
 
-  const { data: skillsData, isLoading } = useQuery({
-    queryKey: ["proposals", { token }],
-    queryFn: () => getSkills(token),
+  const { data: deAllocationsData, isLoading } = useQuery({
+    queryKey: ["departmentDeAllocations", { token }],
+    queryFn: () =>
+      getDeAllocationProposals({ token, _id: auth?.department_id }),
+    enabled: !!auth?.department_id,
   });
   return (
     <>
       {isLoading ? (
         <Skeleton className="w-full h-[300px]  rounded-md" />
       ) : (
-        <DataTable columns={columns} data={skillsData} type="proposals" />
+        <DataTable
+          columns={columns}
+          data={deAllocationsData ? deAllocationsData : []}
+          type="proposals"
+        />
       )}
     </>
   );

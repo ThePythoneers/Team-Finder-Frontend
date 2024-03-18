@@ -1,19 +1,19 @@
 import { getUserInfo } from "@/api/user";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Proposal } from "@/types";
+import { userSkill } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 type Props = {
-  proposal: Proposal;
+  skill: userSkill;
 };
 
-export function UserCard({ proposal }: Props) {
+export function UserCard({ skill }: Props) {
   const token = useAuthHeader();
   const { data, isLoading } = useQuery({
     queryKey: ["allocationUserInfo"],
-    queryFn: () => getUserInfo({ token, user: proposal.user_id }),
-    enabled: !!proposal.user_id,
+    queryFn: () => getUserInfo({ token, user: skill.user_id }),
+    enabled: !!skill.user_id,
   });
 
   return (
@@ -21,7 +21,10 @@ export function UserCard({ proposal }: Props) {
       {isLoading ? (
         <Skeleton className="size-[100px]" />
       ) : (
-        <p>{data.username}</p>
+        <>
+          <h3>{data.username}</h3>
+          <p className="text-muted-foreground">{data.email}</p>
+        </>
       )}
     </>
   );
