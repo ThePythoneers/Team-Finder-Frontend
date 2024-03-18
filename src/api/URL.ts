@@ -1,6 +1,6 @@
-export const BASE_URL = "http://localhost:8000";
+// export const BASE_URL = "http://localhost:8000";
 // export const BASE_URL = "https://atc-2024-thepythoneers-be-linux-web-app.azurewebsites.net";
-// export const BASE_URL = "https://tender-mable-unl00ky.koyeb.app";
+export const BASE_URL = "https://tender-mable-unl00ky.koyeb.app";
 
 // AUTHENTICATION
 export const LOGIN = `${BASE_URL}/auth/token`;
