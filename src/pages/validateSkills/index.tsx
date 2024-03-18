@@ -7,6 +7,7 @@ import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Proposal } from "@/types";
 import { getSkills } from "@/api/skill";
+import { UserCard } from "../proposalsPage/components/userCard";
 
 const columns: ColumnDef<Proposal>[] = [
   {
@@ -35,9 +36,9 @@ const columns: ColumnDef<Proposal>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Project" />
     ),
-    cell: ({ row }) => {
-      return <ProjectCard proposal={row.original} />;
-    },
+    // cell: ({ row }) => {
+      // return <ProjectCard proposal={row.original} />;
+    // },
   },
   {
     id: "User",

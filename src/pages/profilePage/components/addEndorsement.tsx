@@ -31,7 +31,7 @@ export function AddEndorsementDialog() {
               Skill endorsement provides you more
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={(e) => {}}>
+          <form onSubmit={() => {}}>
             <Label htmlFor="input" className="text-lg">
               Training title
             </Label>
