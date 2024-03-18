@@ -13,6 +13,8 @@ import {
   UsersIcon,
   XIcon,
   AlbumIcon,
+  ShieldCheckIcon,
+  FolderGit2Icon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AuthUser } from "@/types";
@@ -97,6 +99,42 @@ export function MobileNav({ auth }: Props) {
                 );
               }}
             </NavLink>
+            <NavLink
+              to={`/${auth?.organization_name}/projects`}
+              className="flex items-center"
+            >
+              {({ isActive }) => {
+                return (
+                  <Button
+                    variant={isActive ? "secondary" : "ghost"}
+                    className="w-full text-lg"
+                    size="lg"
+                  >
+                    <FolderGit2Icon className="mr-2" /> Projects
+                  </Button>
+                );
+              }}
+            </NavLink>
+
+            {auth?.roles.includes("Department Manager") &&
+              auth.department_id && (
+                <NavLink
+                  to={`/${auth?.organization_name}/proposals`}
+                  className="flex items-center"
+                >
+                  {({ isActive }) => {
+                    return (
+                      <Button
+                        variant={isActive ? "secondary" : "ghost"}
+                        className="w-full text-lg"
+                        size="lg"
+                      >
+                        <ShieldCheckIcon className="mr-2" /> Proposals
+                      </Button>
+                    );
+                  }}
+                </NavLink>
+              )}
           </ul>
         </DrawerContent>
       </Drawer>
