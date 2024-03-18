@@ -35,7 +35,7 @@ export const createSkillCategory = async ({
       throw new Error(errMsg);
     }
 
-    toast.success("You created a new skill category with success!!");
+    toast.success("You created a new skill category with success!");
     return await response.json();
   } catch (error) {
     checkError(error);

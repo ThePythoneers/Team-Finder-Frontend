@@ -1,7 +1,4 @@
-import {
-  acceptAllocationProposal,
-  rejectAllocationProposal,
-} from "@/api/proposals";
+import { acceptDeAllocationProposal, rejectDeAllocationProposal } from "@/api/proposals";
 import { Button } from "@/components/ui/button";
 import { Proposal } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -17,7 +14,7 @@ export function DeAllocationActions({ proposal }: Props) {
   const queryClient = useQueryClient();
   const { mutateAsync: acceptMutation, isPending: acceptPending } = useMutation(
     {
-      mutationFn: acceptAllocationProposal,
+      mutationFn: acceptDeAllocationProposal,
       onSuccess: () =>
         queryClient.invalidateQueries({
           queryKey: ["departmentDeAllocations"],
@@ -26,7 +23,7 @@ export function DeAllocationActions({ proposal }: Props) {
   );
   const { mutateAsync: rejectMutation, isPending: rejectPending } = useMutation(
     {
-      mutationFn: rejectAllocationProposal,
+      mutationFn: rejectDeAllocationProposal,
       onSuccess: () =>
         queryClient.invalidateQueries({
           queryKey: ["departmentDeAllocations"],

@@ -6,7 +6,6 @@ import { useState } from "react";
 import { userSkill } from "@/types";
 import { SkillCategoriesBadge } from "@/pages/skillsPage/components/data-table-skillCategoriesBadge";
 import { Switch } from "@/components/ui/switch";
-import { AddEndorsementDialog } from "./addEndorsement";
 
 type Props = {
   skill: userSkill;
@@ -31,7 +30,6 @@ export function SkillCard({ skill, edit }: Props) {
                 <ClipboardEditIcon />
               </Button>
             )}
-            {isEdit && edit && <AddEndorsementDialog />}
           </div>
           <Switch disabled checked={skill.verified} />
         </section>

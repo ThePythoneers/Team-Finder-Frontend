@@ -14,9 +14,10 @@ import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { UserSkills } from "./components/userSkills";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TabsContent } from "@radix-ui/react-tabs";
-import { CurrentProjectsList } from "./components/currentProjectsList";
+// import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// import { TabsContent } from "@radix-ui/react-tabs";
+// import { PastProjectsList } from "./components/currentProjectsList";
+// import { getProjectInfo } from "@/api/project";
 
 export function ProfilePage() {
   const auth: AuthUser | null = useAuthUser();
@@ -29,6 +30,20 @@ export function ProfilePage() {
       return getDepartmentInfo({ token, department_id: auth?.department_id });
     },
   });
+
+  // const results = useQueries({
+  //   queries: .map((category_id) => ({
+  //     queryKey: ["category", { category_id }],
+  //     queryFn: () => getSkillCategory({ token, category_id }),
+  //     staleTime: Infinity,
+  //   })),
+  //   combine: (results) => {
+  //     return {
+  //       data: results.map((result) => result.data),
+  //       pending: results.some((result) => result.isPending),
+  //     };
+  //   },
+  // });
 
   if (!auth) return;
   return (
@@ -62,15 +77,14 @@ export function ProfilePage() {
                   )}
                 </>
               )}
-              <Tabs defaultValue="current">
+              {/* <Tabs defaultValue="past">
                 <TabsList>
-                  <TabsTrigger value="current">Current Projects</TabsTrigger>
                   <TabsTrigger value="past">Past Projects</TabsTrigger>
                 </TabsList>
                 <TabsContent value="current">
-                  <CurrentProjectsList />
+                  <PastProjectsList />
                 </TabsContent>
-              </Tabs>
+              </Tabs> */}
             </aside>
             <section className="overflow-auto h-[calc(100vh-20vh)]">
               <UserSkills token={token} />

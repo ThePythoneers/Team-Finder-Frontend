@@ -28,6 +28,8 @@ import { useMutation } from "@tanstack/react-query";
 import { AuthUser, Skill } from "@/types";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 const level = [
   { label: "1 - Learns", value: 1 },
@@ -53,11 +55,17 @@ const FormSchema = z.object({
   experience: z.number({
     required_error: "Please select a level of experience.",
   }),
+  training_title: z.string().optional(),
+  training_description: z.string().optional(),
+  project_link: z.string().optional(),
 });
 
 const defaultValues = {
   level: undefined,
   experience: undefined,
+  training_title: "",
+  training_description: "",
+  project_link: undefined,
 };
 
 type Props = {
@@ -207,6 +215,40 @@ export function AssignMeSkillForm({ skill }: Props) {
                       </Command>
                     </PopoverContent>
                   </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="mt-5 flex flex-col gap-2">
+            <FormField
+              control={form.control}
+              name="training_title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="lg:text-xl">Training Title</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Title optional..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="training_description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="lg:text-xl">
+                    Training Description
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Training description optional..."
+                      {...field}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

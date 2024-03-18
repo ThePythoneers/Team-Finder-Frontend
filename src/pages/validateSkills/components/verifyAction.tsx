@@ -14,8 +14,10 @@ export function VerifySkillAction({ skill }: Props) {
   const queryClient = useQueryClient();
   const { mutateAsync: verifyMutation, isPending } = useMutation({
     mutationFn: verifySkill,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["validateSkills"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["validateSkills"] });
+      queryClient.invalidateQueries({ queryKey: ["userSkills"] });
+    },
   });
 
   return (

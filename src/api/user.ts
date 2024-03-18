@@ -1,5 +1,9 @@
 import { Token } from "@/types";
-import { GET_POST_DELETE_ASSIGN_SKILL_USER, GET_USER } from "./URL";
+import {
+  GET_POST_DELETE_ASSIGN_SKILL_USER,
+  GET_USER,
+  PAST_PROJECTS_USER,
+} from "./URL";
 import { checkError, getAuthHeaders } from "./utils";
 import { toast } from "sonner";
 
@@ -31,6 +35,9 @@ type assignSkillMeParams = {
   skill_id: string;
   level: number;
   experience: number;
+  training_title?: string;
+  training_description?: string;
+  project_link?: string;
 };
 
 export const assignSkillMe = async (values: assignSkillMeParams) => {
@@ -46,7 +53,32 @@ export const assignSkillMe = async (values: assignSkillMeParams) => {
       if (errMsg.detail) throw new Error(errMsg.detail);
       throw new Error(errMsg);
     }
-    toast.success("You assigned a new skill to yourself with success!!!");
+    toast.success("You assigned a new skill to yourself with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+type getPastProjectsParams = {
+  token: Token;
+  _id?: string;
+};
+
+export const getPastProjects = async ({
+  token,
+  _id,
+}: getPastProjectsParams) => {
+  try {
+    const response = await fetch(`${PAST_PROJECTS_USER}/${_id}`, {
+      method: "GET",
+      headers: getAuthHeaders(token),
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
     return await response.json();
   } catch (error) {
     checkError(error);

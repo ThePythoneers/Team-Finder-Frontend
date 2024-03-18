@@ -91,7 +91,7 @@ export function DeallocationPage() {
       ) : (
         <DataTable
           columns={columns}
-          data={deAllocationsData ? deAllocationsData : []}
+          data={deAllocationsData}
           type="proposals"
         />
       )}

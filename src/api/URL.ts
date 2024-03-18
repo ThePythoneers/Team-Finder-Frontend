@@ -59,3 +59,9 @@ export const REJECT_DEALLOCATION = `${BASE_URL}/proposal/deallocation/reject`;
 export const ACCEPT_DEALLOCATION = `${BASE_URL}/proposal/deallocation/accept`;
 export const DEPARTMENT_ALLOCATION = `${BASE_URL}/proposal/alloc-department`;
 export const DEPARTMENT_DEALLOCATION = `${BASE_URL}/proposal/dealloc-department`;
+
+export const GPT = `${BASE_URL}/gpt/additional-context`;
+
+export const DEPARTMENT_PROJECTS = `${BASE_URL}/project/info/department/`;
+
+export const PAST_PROJECTS_USER = `${BASE_URL}/user/projects`;

@@ -7,7 +7,6 @@ type Props = {
 };
 
 export function TeamRolesList({ project }: Props) {
-  console.log("🚀 ~ TeamRolesList ~ project:", project)
   return (
     <>
       <Card>

@@ -77,9 +77,11 @@ export function ViewEmployeeDialog({ user }: Props) {
             userSkills &&
             userSkills.map && (
               <section className="space-y-2 max-h-[500px] overflow-auto w-full">
-                {userSkills.map((skill: userSkill) => (
-                  <SkillCard key={skill.skill_id} skill={skill} />
-                ))}
+                {userSkills
+                  .filter((skill: userSkill) => skill.verified)
+                  .map((skill: userSkill) => (
+                    <SkillCard key={skill.skill_id} skill={skill} />
+                  ))}
               </section>
             )
           )}

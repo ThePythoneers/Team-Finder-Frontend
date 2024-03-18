@@ -19,6 +19,7 @@ import { TeamRolesPage } from "./pages/teamRolesPage.tsx";
 import { TechnologiesPage } from "./pages/technologiesPage/index.tsx";
 import { ProposalsPage } from "./pages/proposalsPage/index.tsx";
 import { ValidateSkillsPage } from "./pages/validateSkills/index.tsx";
+import { DepartmentProjects } from "./pages/departmentProjectsPage/index.tsx";
 
 const router = createBrowserRouter([
   {
@@ -91,6 +92,10 @@ const router = createBrowserRouter([
       {
         path: "/:organization_name/validate",
         element: <ValidateSkillsPage />,
+      },
+      {
+        path: "/:organization_name/departmentProjects",
+        element: <DepartmentProjects />,
       },
     ],
   },

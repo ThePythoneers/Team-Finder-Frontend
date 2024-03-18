@@ -21,7 +21,7 @@ export function UserSkills({ token }: Props) {
           data &&
           data.map &&
           data
-            .filter((skill: userSkill) => !skill.verified)
+            .filter((skill: userSkill) => skill.verified)
             .map((skill: userSkill) => (
               <SkillCard key={skill.skill_id} skill={skill} edit={true} />
             ))

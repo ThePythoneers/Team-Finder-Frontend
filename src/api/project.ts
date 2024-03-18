@@ -1,5 +1,5 @@
 import { Token } from "@/types";
-import { TEAM_FINDER, UPDATE_PROJECT } from "./URL";
+import { DEPARTMENT_PROJECTS, TEAM_FINDER, UPDATE_PROJECT } from "./URL";
 import { checkError, getAuthHeaders } from "./utils";
 import { toast } from "sonner";
 
@@ -17,7 +17,7 @@ type createProjectParams = {
 
 export const createProject = async (values: createProjectParams) => {
   try {
-    console.log(values)
+    console.log(values);
     const { token, ...body } = values;
     const response = await fetch(`${UPDATE_PROJECT}`, {
       method: "POST",
@@ -117,12 +117,33 @@ export const updateProject = async (values: updateProjectParams) => {
 
 type getProjectInfoParams = {
   token: Token;
-  id: string;
+  id: string | undefined;
 };
 
 export const getProjectInfo = async ({ token, id }: getProjectInfoParams) => {
   try {
     const response = await fetch(`${UPDATE_PROJECT}${id}`, {
+      method: "GET",
+      headers: getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+export const getDepartmentProjects = async ({
+  token,
+  id,
+}: getProjectInfoParams) => {
+  try {
+    const response = await fetch(`${DEPARTMENT_PROJECTS}${id}`, {
       method: "GET",
       headers: getAuthHeaders(token),
     });
