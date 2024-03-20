@@ -11,7 +11,7 @@ type Props = {
 export function ProjectCard({ proposal }: Props) {
   const token = useAuthHeader();
   const { data, isLoading } = useQuery({
-    queryKey: ["allocationProjectInfo"],
+    queryKey: ["allocationProjectInfo", { id: proposal.project_id }],
     queryFn: () => getProjectInfo({ token, id: proposal.project_id }),
     enabled: !!proposal.project_id,
   });

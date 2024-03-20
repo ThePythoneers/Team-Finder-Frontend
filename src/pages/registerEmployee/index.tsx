@@ -94,7 +94,9 @@ export function RegisterEmployeePage() {
         </main>
       </>
     );
-  if (error) return <NotFoundPage errorMsg={error.message} />;
+  if (error)
+    return <NotFoundPage errorMsg={"This Organization does not exist."} />;
+
   return (
     <>
       <main className="h-screen px-4 pt-36 md:mx-auto md:max-w-[800px]">

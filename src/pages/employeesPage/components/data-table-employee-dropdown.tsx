@@ -110,12 +110,14 @@ export function EmployeesDropdown({ user }: RoleDropdownProps) {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <ViewEmployeeDialog user={user} />
-          {auth?.roles.includes("Department Manager") && auth.department_id && (
-            <DropdownMenuItem onClick={handleAssign}>
-              <MilestoneIcon className="size-5 mr-1" />
-              Assign employee
-            </DropdownMenuItem>
-          )}
+          {auth?.roles.includes("Department Manager") &&
+            auth.department_id &&
+            !user.department_id && (
+              <DropdownMenuItem onClick={handleAssign}>
+                <MilestoneIcon className="size-5 mr-1" />
+                Assign employee
+              </DropdownMenuItem>
+            )}
           {auth?.roles.includes("Organization Admin") && (
             <>
               <DropdownMenuSub>

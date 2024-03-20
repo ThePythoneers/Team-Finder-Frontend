@@ -8,7 +8,7 @@ import { EmployeesToolbar } from "@/pages/employeesPage/components/employees-too
 import { DepartmentsToolbar } from "@/pages/departmentsPage/components/departments-toolbar";
 import { SkillsToolbar } from "@/pages/skillsPage/components/skills-toolbar";
 import { ProjectsToolbar } from "@/pages/projectsPage/components/projects-toolbar";
-import { TeamRolesToolbar } from "@/pages/teamRolesPage.tsx/components/teamRoles-toolbar";
+import { TeamRolesToolbar } from "@/pages/roles/components/teamRoles-toolbar";
 import { TechnologiesToolbar } from "@/pages/technologiesPage/components/technologies-toolbar";
 import { SkillCategoriesToolbar } from "@/pages/skillsPage/components/skillCategoriesToolbar";
 import { ProposalsToolbar } from "@/pages/proposalsPage/components/proposalsToolbar";

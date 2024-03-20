@@ -31,6 +31,7 @@ import { AuthUser, Skill, SkillCategory } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import {
   ChevronsUpDownIcon,
+  Code2Icon,
   Edit2Icon,
   MessageCircleCodeIcon,
   SaveIcon,
@@ -56,7 +57,7 @@ export function ViewSkill({ skill }: Props) {
   );
 
   const { data: skillCategoriesData, isLoading: categoriesLoading } = useQuery({
-    queryKey: ["skillCategories", { token }],
+    queryKey: ["skillCategories"],
     queryFn: () => getSkillCategories(token),
   });
   return (
@@ -69,7 +70,10 @@ export function ViewSkill({ skill }: Props) {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-2xl">{skill.skill_name}</DialogTitle>
+            <DialogTitle className="text-2xl flex items-center gap-2">
+              <Code2Icon />
+              {skill.skill_name}
+            </DialogTitle>
             <DialogDescription>
               Author: <AuthorCard skill={skill} />
             </DialogDescription>

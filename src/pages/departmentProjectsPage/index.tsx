@@ -81,16 +81,13 @@ export function DepartmentProjects() {
     queryKey: ["departmentProjects", { token }],
     queryFn: () => getDepartmentProjects({ token, id: auth?.id }),
   });
-  console.log("🚀 ~ DepartmentProjects ~ projectsData:", projectsData);
   return (
     <>
-      <main className="container mx-auto py-4">
-        {isLoading ? (
-          <Skeleton className="w-full h-[300px]  rounded-md" />
-        ) : (
-          <DataTable columns={columns} data={projectsData} type="project" />
-        )}
-      </main>
+      {isLoading ? (
+        <Skeleton className="w-full h-[300px]  rounded-md" />
+      ) : (
+        <DataTable columns={columns} data={projectsData} type="project" />
+      )}
     </>
   );
 }

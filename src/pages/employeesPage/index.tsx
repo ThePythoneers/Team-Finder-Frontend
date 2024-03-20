@@ -3,9 +3,9 @@ import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { Button } from "@/components/ui/button";
 import { NavLink, Outlet } from "react-router-dom";
 import {
-  BookmarkIcon,
+  CheckCircleIcon,
   Contact2Icon,
-  CpuIcon,
+  FolderCog2Icon,
   UserCogIcon,
   UserPlusIcon,
 } from "lucide-react";
@@ -38,38 +38,6 @@ export function EmployeesPage() {
                     );
                   }}
                 </NavLink>
-                <NavLink
-                  to={`/${auth?.organization_name}/employees/teamroles`}
-                  className="flex items-center"
-                >
-                  {({ isActive }) => {
-                    return (
-                      <Button
-                        variant={isActive ? "outline" : "ghost"}
-                        className="w-full text-lg justify-start"
-                        size="lg"
-                      >
-                        <BookmarkIcon className="mr-2" /> Team Roles
-                      </Button>
-                    );
-                  }}
-                </NavLink>
-                <NavLink
-                  to={`/${auth?.organization_name}/employees/technologies`}
-                  className="flex items-center"
-                >
-                  {({ isActive }) => {
-                    return (
-                      <Button
-                        variant={isActive ? "outline" : "ghost"}
-                        className="w-full text-lg justify-start" 
-                        size="lg"
-                      >
-                        <CpuIcon className="mr-2" /> Technologies
-                      </Button>
-                    );
-                  }}
-                </NavLink>
               </>
             )}
             {auth?.department_id &&
@@ -83,7 +51,7 @@ export function EmployeesPage() {
                       return (
                         <Button
                           variant={isActive ? "outline" : "ghost"}
-                          className="w-full text-lg"
+                          className="w-full text-lg justify-start"
                           size="lg"
                         >
                           <UserPlusIcon className="mr-2" /> Assign Employees
@@ -99,10 +67,48 @@ export function EmployeesPage() {
                       return (
                         <Button
                           variant={isActive ? "outline" : "ghost"}
-                          className="w-full text-lg"
+                          className="w-full text-lg justify-start"
                           size="lg"
                         >
                           <UserCogIcon className="mr-2" /> Current Members
+                        </Button>
+                      );
+                    }}
+                  </NavLink>
+                </>
+              )}
+            {auth?.roles.includes("Department Manager") &&
+              auth.department_id && (
+                <>
+                  <NavLink
+                    to={`/${auth?.organization_name}/employees/validate`}
+                    className="flex items-center"
+                  >
+                    {({ isActive }) => {
+                      return (
+                        <Button
+                          variant={isActive ? "outline" : "ghost"}
+                          className="w-full text-lg justify-start"
+                          size="lg"
+                        >
+                          <CheckCircleIcon className="mr-2" /> Validate Skills
+                        </Button>
+                      );
+                    }}
+                  </NavLink>
+                  <NavLink
+                    to={`/${auth?.organization_name}/employees/departmentProjects`}
+                    className="flex items-center"
+                  >
+                    {({ isActive }) => {
+                      return (
+                        <Button
+                          variant={isActive ? "outline" : "ghost"}
+                          className="w-full text-lg justify-start"
+                          size="lg"
+                        >
+                          <FolderCog2Icon className="mr-2" /> Department
+                          Projects
                         </Button>
                       );
                     }}

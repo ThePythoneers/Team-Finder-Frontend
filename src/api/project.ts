@@ -1,5 +1,15 @@
 import { Token } from "@/types";
-import { DEPARTMENT_PROJECTS, TEAM_FINDER, UPDATE_PROJECT } from "./URL";
+import {
+  ADD_ROLE_TO_PROJECT,
+  ADD_TECH_PROJECT,
+  DEPARTMENT_PROJECTS,
+  GET_ACTIVE_PROJECTS,
+  GET_INACTIVE_PROJECTS,
+  PROJECT_MEMBERS,
+  REMOVE_TECH_PROJECT,
+  TEAM_FINDER,
+  UPDATE_PROJECT,
+} from "./URL";
 import { checkError, getAuthHeaders } from "./utils";
 import { toast } from "sonner";
 
@@ -144,6 +154,189 @@ export const getDepartmentProjects = async ({
 }: getProjectInfoParams) => {
   try {
     const response = await fetch(`${DEPARTMENT_PROJECTS}${id}`, {
+      method: "GET",
+      headers: getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+export const getProjectMembers = async ({
+  token,
+  id,
+}: getProjectInfoParams) => {
+  try {
+    const response = await fetch(`${PROJECT_MEMBERS}/${id}`, {
+      method: "GET",
+      headers: getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+export const deleteProject = async ({ token, id }: getProjectInfoParams) => {
+  try {
+    const response = await fetch(`${UPDATE_PROJECT}?_id=${id}`, {
+      method: "DELETE",
+      headers: getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You deleted a project with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+type addRoleToProjectParams = {
+  token: Token;
+  role_id: string;
+  project_id?: string;
+};
+
+export const addRoleToProject = async ({
+  token,
+  role_id,
+  project_id,
+}: addRoleToProjectParams) => {
+  try {
+    const response = await fetch(`${ADD_ROLE_TO_PROJECT}`, {
+      method: "POST",
+      headers: getAuthHeaders(token),
+      body: JSON.stringify({ role_id, project_id }),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You added a new role to your project with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+export const removeRoleFromProject = async ({
+  token,
+  role_id,
+  project_id,
+}: addRoleToProjectParams) => {
+  try {
+    const response = await fetch(`${ADD_ROLE_TO_PROJECT}`, {
+      method: "DELETE",
+      headers: getAuthHeaders(token),
+      body: JSON.stringify({ role_id, project_id }),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You removed a role from your project with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+type addTechToProjectParams = {
+  token: Token;
+  tech_id: string;
+  project_id?: string;
+};
+
+export const addTechToProject = async ({
+  token,
+  tech_id,
+  project_id,
+}: addTechToProjectParams) => {
+  try {
+    const response = await fetch(`${ADD_TECH_PROJECT}`, {
+      method: "POST",
+      headers: getAuthHeaders(token),
+      body: JSON.stringify({ tech_id, project_id }),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You added a new technology to your project with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+export const removeTechFromProject = async ({
+  token,
+  tech_id,
+  project_id,
+}: addTechToProjectParams) => {
+  try {
+    const response = await fetch(`${REMOVE_TECH_PROJECT}`, {
+      method: "DELETE",
+      headers: getAuthHeaders(token),
+      body: JSON.stringify({ tech_id, project_id }),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You removed a technology from your project with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+export const getActiveUserProjects = async (token: Token) => {
+  try {
+    const response = await fetch(`${GET_ACTIVE_PROJECTS}`, {
+      method: "GET",
+      headers: getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+export const getInActiveUserProjects = async (token: Token) => {
+  try {
+    const response = await fetch(`${GET_INACTIVE_PROJECTS}`, {
       method: "GET",
       headers: getAuthHeaders(token),
     });

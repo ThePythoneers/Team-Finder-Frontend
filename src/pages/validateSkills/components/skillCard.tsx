@@ -18,8 +18,6 @@ export function SkillCard({ skill }: Props) {
     queryFn: () => getAnyUserSkills(token, _id),
     enabled: !!skill.user_id,
   });
-
-  console.log("🚀 ~ SkillCard ~ data:", data);
   return (
     <>
       {isLoading ? (

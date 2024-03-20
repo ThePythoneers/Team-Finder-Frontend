@@ -313,7 +313,7 @@ export const linkSkillToDepartment = async ({
     const response = await fetch(`${DEPARTMENT_SKILLS}`, {
       method: "POST",
       headers: getAuthHeaders(token),
-      body: JSON.stringify({skill_id}),
+      body: JSON.stringify({ skill_id }),
     });
     if (!response.ok) {
       const errMsg = await response.json();
@@ -321,6 +321,28 @@ export const linkSkillToDepartment = async ({
       throw new Error(errMsg);
     }
     toast.success("You added a new skill to your department with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
+export const removeSkillFromDepartment = async ({
+  token,
+  skill_id,
+}: linkSkillToDepartmentParams) => {
+  try {
+    const response = await fetch(`${DEPARTMENT_SKILLS}`, {
+      method: "DELETE",
+      headers: getAuthHeaders(token),
+      body: JSON.stringify({ skill_id }),
+    });
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You removed a skill from your department with success!");
     return await response.json();
   } catch (error) {
     checkError(error);

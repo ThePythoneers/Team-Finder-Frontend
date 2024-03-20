@@ -58,28 +58,6 @@ export function AvatarNav({ auth }: Props) {
               <UserIcon className="mr-2 size-4" />
               <span>View Profile</span>
             </DropdownMenuItem>
-            {auth?.roles.includes("Department Manager") &&
-              auth.department_id && (
-                <DropdownMenuItem
-                  onClick={() =>
-                    navigate(`/${auth?.organization_name}/validate`)
-                  }
-                >
-                  <UserIcon className="mr-2 size-4" />
-                  <span>Validate</span>
-                </DropdownMenuItem>
-              )}
-            {auth?.roles.includes("Department Manager") &&
-              auth.department_id && (
-                <DropdownMenuItem
-                  onClick={() =>
-                    navigate(`/${auth?.organization_name}/departmentProjects`)
-                  }
-                >
-                  <UserIcon className="mr-2 size-4" />
-                  <span>View members projects</span>
-                </DropdownMenuItem>
-              )}
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
                 <SunIcon className="size-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />

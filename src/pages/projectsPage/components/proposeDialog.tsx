@@ -61,7 +61,7 @@ const formSchema = z.object({
 const defaultValues = {
   work_hours: undefined,
   project_roles: undefined,
-  comment: undefined,
+  comment: "",
 };
 
 type Props = {
@@ -81,16 +81,15 @@ const hours = [
 ] as const;
 
 export function ProposeDialog({ employee, project }: Props) {
-  console.log("🚀 ~ ProposeDialog ~ project:", project);
   const token = useAuthHeader();
   const _id = employee.id;
 
   const { data: userSkillsData, isLoading } = useQuery({
-    queryKey: ["userSkills"],
+    queryKey: ["userSkills", { _id }],
     queryFn: () => getAnyUserSkills(token, _id),
   });
   const { data: departmentData, isLoading: departmentLoading } = useQuery({
-    queryKey: ["userDepartment"],
+    queryKey: ["userDepartment", { employee }],
     queryFn: () =>
       getDepartmentInfo({ token, department_id: employee.department_id }),
     enabled: !!employee.department_id,
@@ -110,6 +109,12 @@ export function ProposeDialog({ employee, project }: Props) {
   >([]);
   const [userTeamRolesID, setUserTeamRolesID] = useState<string[]>([]);
 
+  const handleReset = () => {
+    form.reset(defaultValues);
+    setUserTeamRoles([]);
+    setUserTeamRolesID([]);
+  };
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     values.roles = userTeamRolesID;
     if (employee.work_hours + values.work_hours > 8)
@@ -118,20 +123,23 @@ export function ProposeDialog({ employee, project }: Props) {
       token,
       ...values,
       user_id: _id,
-      project_id_allocation: project.id,
+      project_id: project.project_id,
     };
+    console.log(body)
     await createAllocationMutation(body);
+    handleReset();
   };
+
   return (
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button onClick={() => form.reset(defaultValues)}>
+          <Button onClick={handleReset}>
             <HeartHandshakeIcon />
             Propose
           </Button>
         </DialogTrigger>
-        <DialogContent className="grid xl:grid-cols-2 lg:max-w-[60%]">
+        <DialogContent className="grid xl:grid-cols-2 lg:max-w-[60%] max-h-[90vh] overflow-auto">
           <section className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -161,9 +169,11 @@ export function ProposeDialog({ employee, project }: Props) {
               {isLoading && <Skeleton className="size-[100px]" />}
               {userSkillsData &&
                 userSkillsData.map &&
-                userSkillsData.map((skill: userSkill) => (
-                  <SkillCard key={skill.skill_id} skill={skill} />
-                ))}
+                userSkillsData
+                  .filter((skill: userSkill) => skill.verified)
+                  .map((skill: userSkill) => (
+                    <SkillCard key={skill.skill_id} skill={skill} />
+                  ))}
             </ul>
           </section>
           <section>

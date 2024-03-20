@@ -5,14 +5,15 @@ import { GPT } from "./URL";
 type gptParams = {
   token: Token;
   message: string;
+  project_id?: string;
 };
 
-export const gpt = async ({ token, message }: gptParams) => {
+export const gpt = async ({ token, message, project_id }: gptParams) => {
   try {
     const response = await fetch(`${GPT}`, {
       method: "POST",
       headers: getAuthHeaders(token),
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message, project_id }),
     });
 
     if (!response.ok) {

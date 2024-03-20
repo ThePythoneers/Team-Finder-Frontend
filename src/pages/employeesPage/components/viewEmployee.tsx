@@ -25,12 +25,12 @@ type Props = {
 
 export function ViewEmployeeDialog({ user }: Props) {
   const token = useAuthHeader();
+  const id = user.id;
 
   const { data: userSkills, isLoading: skillsLoading } = useQuery({
-    queryKey: ["userSkills"],
+    queryKey: ["userSkills", { id }],
     queryFn: () => getAnyUserSkills(token, user.id),
   });
-
   const { data: userDepartment, isLoading: departmentLoading } = useQuery({
     queryKey: ["userDepartment"],
     queryFn: () =>

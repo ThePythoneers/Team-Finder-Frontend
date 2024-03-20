@@ -83,7 +83,6 @@ type Props = {
 };
 
 export function EditProjectDialog({ project }: Props) {
-  console.log("🚀 ~ EditProjectDialog ~ project:", project);
   const token = useAuthHeader();
   const queryClient = useQueryClient();
 

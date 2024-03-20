@@ -21,8 +21,10 @@ export function EmployeeList({ users, project, type }: Props) {
         rounded p-1 justify-between"
             >
               <div className="flex items-center gap-2">
-                <Avatar className="size-12">
-                  <AvatarFallback>C</AvatarFallback>
+                <Avatar className="size-12 hidden sm:block">
+                  <AvatarFallback>
+                    {employee.username.at(0)?.toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
                 <div>
                   <h4 className="text-lg">{employee.username}</h4>

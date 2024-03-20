@@ -29,7 +29,6 @@ type Props = {
 };
 
 export function DeallocateDialog({ user, project }: Props) {
-  console.log("🚀 ~ DeallocateDialog ~ project:", project);
   const token = useAuthHeader();
 
   const [reason, setReason] = useState("");

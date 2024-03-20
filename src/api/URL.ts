@@ -1,6 +1,6 @@
-// export const BASE_URL = "http://localhost:8000";
+export const BASE_URL = "http://localhost:8000";
 // export const BASE_URL = "https://atc-2024-thepythoneers-be-linux-web-app.azurewebsites.net";
-export const BASE_URL = "https://tender-mable-unl00ky.koyeb.app";
+// export const BASE_URL = "https://tender-mable-unl00ky.koyeb.app";
 
 // AUTHENTICATION
 export const LOGIN = `${BASE_URL}/auth/token`;
@@ -42,6 +42,7 @@ export const GET_SKILL_CATEGORIES = `${BASE_URL}/skill/categories/`;
 export const GET_CREATE_DELETE_SKILLS = `${BASE_URL}/skill/`;
 export const GET_SKILL_CATEGORY = `${BASE_URL}/skill/category`;
 export const VERIFY_SKILL = `${BASE_URL}/skill/verify`;
+export const REJECT_VERIFY_SKILL = `${BASE_URL}/skill/verify/reject/`;
 
 // TECH
 export const GET_UPDATE_ALL_TECH = `${BASE_URL}/technology/`;
@@ -65,3 +66,13 @@ export const GPT = `${BASE_URL}/gpt/additional-context`;
 export const DEPARTMENT_PROJECTS = `${BASE_URL}/project/info/department/`;
 
 export const PAST_PROJECTS_USER = `${BASE_URL}/user/projects`;
+export const PROJECT_MEMBERS = `${BASE_URL}/project/user-info`;
+
+export const ADD_ROLE_TO_PROJECT = `${BASE_URL}/project/roles`;
+export const ADD_TECH_PROJECT = `${BASE_URL}/technology/assign`;
+export const REMOVE_TECH_PROJECT = `${BASE_URL}/technology/project`;
+
+// NOTIFICATIONS
+export const NOTIFICATIONS = `${BASE_URL}/notifications/`;
+export const GET_ACTIVE_PROJECTS = `${BASE_URL}/project/active/`;
+export const GET_INACTIVE_PROJECTS = `${BASE_URL}/project/inactive/`;

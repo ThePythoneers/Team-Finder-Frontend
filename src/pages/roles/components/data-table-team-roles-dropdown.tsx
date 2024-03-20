@@ -1,35 +1,25 @@
-import {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogAction,
-  AlertDialogCancel,
-} from "@/components/ui/alert-dialog";
+import { deleteTeamRole } from "@/api/teamRoles";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuLabel,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { AuthUser, Project, Tech } from "@/types";
+import { AuthUser, Project, teamRole } from "@/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Check,
   ChevronsUpDownIcon,
-  CpuIcon,
   Loader2Icon,
+  MilestoneIcon,
   MoreHorizontalIcon,
   Trash2Icon,
 } from "lucide-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { deleteTech } from "@/api/technologies";
+import { EditTeamRoleDialog } from "./editTeamRoleDialog";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import {
   Dialog,
@@ -42,7 +32,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -55,22 +45,21 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
-import { addTechToProject, getUserProjects } from "@/api/project";
-import { useState } from "react";
+import { addRoleToProject, getUserProjects } from "@/api/project";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {
-  tech: Tech;
+  teamRole: teamRole;
 };
 
-export function TechDropdown({ tech }: Props) {
-  const auth: AuthUser | null = useAuthUser();
+export function TeamRolesDropdown({ teamRole }: Props) {
   const token = useAuthHeader();
+  const auth: AuthUser | null = useAuthUser();
   const queryClient = useQueryClient();
 
-  const { mutateAsync: deleteTechMutation } = useMutation({
-    mutationFn: deleteTech,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["technologies"] }),
+  const { mutateAsync: deleteMutation, isPending } = useMutation({
+    mutationFn: deleteTeamRole,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["teamRoles"] }),
   });
 
   const { data, isLoading } = useQuery({
@@ -80,20 +69,19 @@ export function TechDropdown({ tech }: Props) {
 
   const [selectedProject, setSelectedProject] = useState<Project>();
 
-  const { mutateAsync: addTechMutation, isPending: addTechPending } =
+  const { mutateAsync: addRoleMutation, isPending: addRolePending } =
     useMutation({
-      mutationFn: addTechToProject,
+      mutationFn: addRoleToProject,
     });
 
   const handleAddRole = async () => {
-    const data = await addTechMutation({
+    const data = await addRoleMutation({
       token,
-      tech_id: tech.id,
+      role_id: teamRole.id,
       project_id: selectedProject?.project_id,
     });
     if (data) setSelectedProject(undefined);
   };
-
   return (
     <>
       <DropdownMenu>
@@ -104,26 +92,26 @@ export function TechDropdown({ tech }: Props) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
           <DropdownMenuSeparator />
-
           {auth?.roles.includes("Project Manager") && (
             <Dialog>
               <DialogTrigger asChild>
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  <CpuIcon className="mr-1" />
+                  <MilestoneIcon className="mr-1" />
                   Assign to project
                 </DropdownMenuItem>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Add technology</DialogTitle>
+                  <DialogTitle>Assign Team Role</DialogTitle>
                   <DialogDescription>
-                    Add the {tech.technology_name} to one of your existing
+                    Add the {teamRole.custom_role_name} to one of your existing
                     projects.
                   </DialogDescription>
                   <div>
-                    <Badge variant="secondary">{tech.technology_name}</Badge>
+                    <Badge variant="secondary">
+                      {teamRole.custom_role_name}
+                    </Badge>
                   </div>
                 </DialogHeader>
                 <section>
@@ -143,8 +131,7 @@ export function TechDropdown({ tech }: Props) {
                           variant="outline"
                           className="w-[200px] justify-between"
                         >
-                          {selectedProject ? "Selected"
-                            : "Select a project..."}
+                          {selectedProject ? "Selected" : "Select a project..."}
                           <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </PopoverTrigger>
@@ -196,7 +183,7 @@ export function TechDropdown({ tech }: Props) {
                     <Button variant="ghost">Cancel</Button>
                   </DialogClose>
                   <Button onClick={handleAddRole}>
-                    {addTechPending && (
+                    {addRolePending && (
                       <Loader2Icon className="mr-2 size-4 animate-spin" />
                     )}
                     Submit
@@ -208,38 +195,21 @@ export function TechDropdown({ tech }: Props) {
 
           {auth?.roles.includes("Organization Admin") && (
             <>
+              <EditTeamRoleDialog teamRole={teamRole} />
               <DropdownMenuSeparator />
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <DropdownMenuItem
-                    className="bg-destructive"
-                    onSelect={(e) => e.preventDefault()}
-                  >
-                    <Trash2Icon className="size-5 mr-2" /> Delete Tech
-                  </DropdownMenuItem>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      the skill from our servers.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={async () =>
-                        await deleteTechMutation({ token, _id: tech.id })
-                      }
-                    >
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+
+              <DropdownMenuItem
+                className="bg-destructive space-x-2"
+                onClick={async () =>
+                  await deleteMutation({ token, _id: teamRole.id })
+                }
+              >
+                {isPending && (
+                  <Loader2Icon className="mr-2 size-4 animate-spin" />
+                )}
+                <Trash2Icon />
+                <span>Delete</span>
+              </DropdownMenuItem>
             </>
           )}
         </DropdownMenuContent>

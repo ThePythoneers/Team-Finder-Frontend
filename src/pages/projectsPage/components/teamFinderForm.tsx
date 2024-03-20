@@ -86,7 +86,6 @@ export function TeamFinderForm({ setIsSearch, setResponseData }: Props) {
     const data = await teamFinderMutation(body);
     setResponseData(data);
     setIsSearch(true);
-    console.log(data);
   };
 
   return (
@@ -149,7 +148,9 @@ export function TeamFinderForm({ setIsSearch, setResponseData }: Props) {
                 name="deadline"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel className="lg:text-xl">How close do you want the deadline to be ?</FormLabel>
+                    <FormLabel className="lg:text-xl">
+                      How close do you want the deadline to be ?
+                    </FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>

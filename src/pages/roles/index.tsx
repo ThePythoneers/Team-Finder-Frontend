@@ -7,9 +7,11 @@ import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { teamRole } from "@/types";
 import { getAllTeamRoles } from "@/api/teamRoles";
-import { TeamRolesDropdown } from "../roles/components/data-table-team-roles-dropdown";
+import { TeamRolesDropdown } from "./components/data-table-team-roles-dropdown";
 import { Badge } from "@/components/ui/badge";
 import { AwardIcon } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TechnologiesPage } from "../technologiesPage";
 
 const columns: ColumnDef<teamRole>[] = [
   {
@@ -63,7 +65,7 @@ const columns: ColumnDef<teamRole>[] = [
   },
 ];
 
-export function TeamRolesPage() {
+export function RolesPage() {
   const token = useAuthHeader();
 
   const { data: teamRolesData, isLoading } = useQuery({
@@ -72,11 +74,24 @@ export function TeamRolesPage() {
   });
   return (
     <>
-      {isLoading ? (
-        <Skeleton className="w-full h-[300px]  rounded-md" />
-      ) : (
-        <DataTable columns={columns} data={teamRolesData} type="roles" />
-      )}
+      <main className="container mx-auto py-4">
+        {isLoading ? (
+          <Skeleton className="w-full h-[300px]  rounded-md" />
+        ) : (
+          <Tabs defaultValue="skills">
+            <TabsList>
+              <TabsTrigger value="skills">Team Roles</TabsTrigger>
+              <TabsTrigger value="skillCategories">Technologies</TabsTrigger>
+            </TabsList>
+            <TabsContent value="skills">
+              <DataTable columns={columns} data={teamRolesData} type="roles" />
+            </TabsContent>
+            <TabsContent value="skillCategories">
+              <TechnologiesPage />
+            </TabsContent>
+          </Tabs>
+        )}
+      </main>
     </>
   );
 }

@@ -11,9 +11,10 @@ type Props = {
 
 export function SkillDepartmentsCard({ skill }: Props) {
   const token = useAuthHeader();
+
   const results = useQueries({
     queries: skill.departments.map((department) => ({
-      queryKey: ["skillDepartments", {token}],
+      queryKey: ["skillDepartments", { department }],
       queryFn: () => getDepartmentInfo({ token, department_id: department }),
       staleTime: Infinity,
     })),

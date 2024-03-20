@@ -95,15 +95,12 @@ export function NewProjectDialog() {
   const [isFixed, setIsFixed] = useState(false);
 
   const [teamRoles, setTeamRoles] = useState<teamRole[]>([]);
-  const [teamRolesID, setTeamRolesID] = useState<string[]>([]);
   const { data: allTeamRolesData, isLoading: teamRolesLoading } = useQuery({
     queryKey: ["allTeamRoles"],
     queryFn: () => getAllTeamRoles(token),
   });
 
   const [technologiesStack, setTechnologiesStack] = useState<Tech[]>([]);
-  const [technologiesStackID, setTechnologiesStackID] = useState<string[]>([]);
-
   const { data: techStackData, isLoading: techLoading } = useQuery({
     queryKey: ["technologies"],
     queryFn: () => getAllTechnologies(token),
@@ -112,9 +109,7 @@ export function NewProjectDialog() {
   const handleReset = () => {
     form.reset(defaultValues);
     setTeamRoles([]);
-    setTeamRolesID([]);
     setTechnologiesStack([]);
-    setTechnologiesStackID([]);
   };
 
   const { mutateAsync: createProjectMutation, isPending } = useMutation({
@@ -128,14 +123,14 @@ export function NewProjectDialog() {
       return toast.error(
         "If the project has a fixed date you have to specify a deadline date."
       );
+    values.technologies = technologiesStack.map((tech) => tech.id);
+    values.project_roles = teamRoles.map((role) => role.id);
     const params = {
       token,
       ...values,
     };
-    console.log(params)
     await createProjectMutation(params);
-    form.reset(defaultValues);
-    handleReset();
+    // handleReset();
   };
 
   return (
@@ -427,8 +422,8 @@ export function NewProjectDialog() {
                                 ${!field.value && "text-muted-foreground"}
                               `}
                               >
-                                {technologiesStackID.length > 0
-                                  ? `${technologiesStackID.length} Selected`
+                                {technologiesStack.length > 0
+                                  ? `${technologiesStack.length} Selected`
                                   : "Select a technology"}
                                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                               </Button>
@@ -452,13 +447,6 @@ export function NewProjectDialog() {
                                           value={tech.technology_name}
                                           onSelect={() => {
                                             if (isSelected) {
-                                              setTechnologiesStackID(
-                                                (current) =>
-                                                  current.filter(
-                                                    (technology) =>
-                                                      tech.id !== technology
-                                                  )
-                                              );
                                               setTechnologiesStack((current) =>
                                                 current.filter(
                                                   (technology) =>
@@ -466,19 +454,15 @@ export function NewProjectDialog() {
                                                 )
                                               );
                                             } else {
-                                              setTechnologiesStackID(
-                                                (current) => [
-                                                  ...current,
-                                                  tech.id,
-                                                ]
-                                              );
                                               setTechnologiesStack(
                                                 (current) => [...current, tech]
                                               );
                                             }
                                             form.setValue(
                                               "technologies",
-                                              technologiesStackID
+                                              technologiesStack.map(
+                                                (tech) => tech.id
+                                              )
                                             );
                                           }}
                                         >
@@ -555,13 +539,13 @@ export function NewProjectDialog() {
                                 className={`
                                 w-[50%] justify-between
                                 ${
-                                  teamRolesID.length < 1 &&
+                                  teamRoles.length < 1 &&
                                   "text-muted-foreground"
                                 }
                               `}
                               >
-                                {teamRolesID.length > 0
-                                  ? `${teamRolesID.length} Selected`
+                                {teamRoles.length > 0
+                                  ? `${teamRoles.length} Selected`
                                   : "Select a team role"}
                                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                               </Button>
@@ -589,25 +573,15 @@ export function NewProjectDialog() {
                                                     role !== teamRole
                                                 )
                                               );
-                                              setTeamRolesID((current) =>
-                                                current.filter(
-                                                  (teamRole) =>
-                                                    role.id !== teamRole
-                                                )
-                                              );
                                             } else {
                                               setTeamRoles((current) => [
                                                 ...current,
                                                 role,
                                               ]);
-                                              setTeamRolesID((current) => [
-                                                ...current,
-                                                role.id,
-                                              ]);
                                             }
                                             form.setValue(
                                               "project_roles",
-                                              teamRolesID
+                                              teamRoles.map((role) => role.id)
                                             );
                                           }}
                                         >

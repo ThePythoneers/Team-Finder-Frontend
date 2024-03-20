@@ -8,7 +8,6 @@ type Props = {
 };
 
 export function TeamFinderResult({ responseData, project }: Props) {
-  console.log("🚀 ~ TeamFinderResult ~ responseData:", responseData);
   return (
     <>
       {responseData && responseData.length < 1 && <div>No employees</div>}

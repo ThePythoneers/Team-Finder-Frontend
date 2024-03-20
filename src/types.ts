@@ -8,7 +8,7 @@ export type AuthUser = {
   organization_name: string;
   roles: string[];
   department_id: string;
-  skills: string;
+  skills: { skill_id: string }[];
 };
 
 export type Department = {
@@ -78,9 +78,14 @@ export type Project = {
   description: string;
   users: { id: string; username: string; email: string }[];
   project_roles: { id: string; role_name: string }[];
-  technology_stack: { id: string; technology_name: string }[];
+  technology_stack: {
+    id: string;
+    technology_name: string;
+    tech_name?: string;
+  }[];
   project_manager?: string;
   deallocated_users: { id: string; username: string; email: string }[];
+  proposed_users: { id: string; username: string; email: string }[];
 };
 
 export type teamRole = {
@@ -122,4 +127,9 @@ export type findResponseData = {
   projects?: string[];
   primary_roles: string[];
   work_hours: number;
+};
+
+export type Notif = {
+  id: string;
+  type: string;
 };

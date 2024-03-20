@@ -15,11 +15,11 @@ import { AllEmployeesPage } from "./pages/employeesPage/components/allEmployees"
 import { UnassignedEmployeesPage } from "./pages/employeesPage/components/unassignedEmployees";
 import { AssignedEmployeesPage } from "./pages/employeesPage/components/assignedEmployees";
 import { ProfilePage } from "./pages/profilePage";
-import { TeamRolesPage } from "./pages/teamRolesPage.tsx";
-import { TechnologiesPage } from "./pages/technologiesPage/index.tsx";
 import { ProposalsPage } from "./pages/proposalsPage/index.tsx";
 import { ValidateSkillsPage } from "./pages/validateSkills/index.tsx";
 import { DepartmentProjects } from "./pages/departmentProjectsPage/index.tsx";
+import { OrganizationDashboard } from "./pages/dashboard/index.tsx";
+import { RolesPage } from "./pages/roles/index.tsx";
 
 const router = createBrowserRouter([
   {
@@ -60,12 +60,12 @@ const router = createBrowserRouter([
             element: <AssignedEmployeesPage />,
           },
           {
-            path: "/:organization_name/employees/teamroles",
-            element: <TeamRolesPage />,
+            path: "/:organization_name/employees/validate",
+            element: <ValidateSkillsPage />,
           },
           {
-            path: "/:organization_name/employees/technologies",
-            element: <TechnologiesPage />,
+            path: "/:organization_name/employees/departmentProjects",
+            element: <DepartmentProjects />,
           },
         ],
       },
@@ -90,12 +90,12 @@ const router = createBrowserRouter([
         element: <ProposalsPage />,
       },
       {
-        path: "/:organization_name/validate",
-        element: <ValidateSkillsPage />,
+        path: "/:organization_name/dashboard",
+        element: <OrganizationDashboard />,
       },
       {
-        path: "/:organization_name/departmentProjects",
-        element: <DepartmentProjects />,
+        path: "/:organization_name/roles",
+        element: <RolesPage />,
       },
     ],
   },

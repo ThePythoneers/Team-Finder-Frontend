@@ -31,7 +31,7 @@ export function AssignSkill({ skill }: Props) {
 
   const results = useQueries({
     queries: skill.skill_category.map((category_id) => ({
-      queryKey: ["category", category_id],
+      queryKey: ["category", { category_id }],
       queryFn: () => getSkillCategory({ token, category_id }),
       staleTime: Infinity,
     })),
@@ -51,7 +51,7 @@ export function AssignSkill({ skill }: Props) {
             <MilestoneIcon className="size-5 mr-2" /> Assign Skill
           </DropdownMenuItem>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="max-h-[90vh] overflow-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl">{skill.skill_name}</DialogTitle>
             {isLoading ? (

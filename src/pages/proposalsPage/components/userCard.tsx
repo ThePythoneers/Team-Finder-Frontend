@@ -11,11 +11,12 @@ type Props = {
 export function UserCard({ proposal }: Props) {
   const token = useAuthHeader();
   const { data, isLoading } = useQuery({
-    queryKey: ["allocationUserInfo"],
+    queryKey: ["allocationUserInfo", { id: proposal.user_id }],
     queryFn: () => getUserInfo({ token, user: proposal.user_id }),
     enabled: !!proposal.user_id,
   });
 
+  console.log("🚀 ~ UserCard ~ data:", data);
   return (
     <>
       {isLoading ? (

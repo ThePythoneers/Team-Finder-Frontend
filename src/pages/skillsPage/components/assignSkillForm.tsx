@@ -24,12 +24,15 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { assignSkillMe } from "@/api/user";
-import { useMutation } from "@tanstack/react-query";
-import { AuthUser, Skill } from "@/types";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { AuthUser, Project, Skill } from "@/types";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { getUserProjects } from "@/api/project";
+import { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const level = [
   { label: "1 - Learns", value: 1 },
@@ -79,18 +82,28 @@ export function AssignMeSkillForm({ skill }: Props) {
     defaultValues,
   });
 
+  const { data, isLoading } = useQuery({
+    queryKey: ["userProjects", { token }],
+    queryFn: () => getUserProjects(token),
+  });
+
+  const [selectedProject, setSelectedProject] = useState<Project>();
   const { mutateAsync: assignSkillMutation, isPending } = useMutation({
     mutationFn: assignSkillMe,
   });
 
   const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
     const user_id = auth?.id;
+    values.project_link = selectedProject?.project_id;
     const data = await assignSkillMutation({
       token,
       user_id,
       skill_id: skill.id,
       level: values.level,
       experience: values.experience,
+      training_title: values.training_title,
+      training_description: values.training_description,
+      project_link: values.project_link,
     });
     if (data) form.reset(defaultValues);
   };
@@ -253,6 +266,55 @@ export function AssignMeSkillForm({ skill }: Props) {
                 </FormItem>
               )}
             />
+            {isLoading ? (
+              <Skeleton className="size-[100px]" />
+            ) : (
+              <Popover modal>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-[200px] justify-between"
+                  >
+                    {selectedProject ? "Selected" : "Select a project..."}
+                    <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search project..." />
+                    <CommandEmpty>No project found.</CommandEmpty>
+                    <CommandGroup>
+                      {data.map((project: Project, index: number) => {
+                        const isSelected = selectedProject === project;
+                        return (
+                          <CommandItem
+                            key={index}
+                            value={project.project_id}
+                            onSelect={() => {
+                              if (isSelected) {
+                                setSelectedProject(undefined);
+                              } else {
+                                setSelectedProject(project);
+                              }
+                            }}
+                          >
+                            <Check
+                              className={`
+                                      mr-2 h-4 w-4
+                                      ${
+                                        isSelected ? "opacity-100" : "opacity-0"
+                                      }
+                                    `}
+                            />
+                            {project.project_name}
+                          </CommandItem>
+                        );
+                      })}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            )}
           </div>
 
           <Button type="submit" className="lg:text-xl">

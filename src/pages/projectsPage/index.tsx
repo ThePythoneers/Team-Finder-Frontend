@@ -95,7 +95,7 @@ export function ProjectsPage() {
   const token = useAuthHeader();
 
   const { data: projectsData, isLoading } = useQuery({
-    queryKey: ["userProjects"],
+    queryKey: ["userProjects", { token }],
     queryFn: () => getUserProjects(token),
   });
   return (

@@ -7,13 +7,14 @@ import {
   CREATE_DEALLOCATION,
   DEPARTMENT_ALLOCATION,
   DEPARTMENT_DEALLOCATION,
+  REJECT_ALLOCATION,
   REJECT_DEALLOCATION,
 } from "./URL";
 import { toast } from "sonner";
 
 type createAllocationProposalParams = {
   token: Token;
-  project_id_allocation: string;
+  project_id?: string;
   user_id: string;
   work_hours: number;
   roles: string[];
@@ -146,7 +147,7 @@ export const rejectAllocationProposal = async ({
   _id,
 }: getAllocationProposalsParams) => {
   try {
-    const response = await fetch(`${ACCEPT_ALLOCATION}?_id=${_id}`, {
+    const response = await fetch(`${REJECT_ALLOCATION}?_id=${_id}`, {
       method: "POST",
       headers: getAuthHeaders(token),
     });

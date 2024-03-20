@@ -30,12 +30,13 @@ import {
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { assignSkillMe } from "@/api/user";
+import { editSkillMe } from "@/api/user";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AuthUser, userSkill } from "@/types";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { removeUserSkill } from "@/api/skill";
+import { SkillEndorsementDialog } from "./skillEndorsementDialog";
 
 const level = [
   { label: "1 - Learns", value: 1 },
@@ -61,6 +62,9 @@ const FormSchema = z.object({
   experience: z.number({
     required_error: "Please select a level of experience.",
   }),
+  training_title: z.string().optional(),
+  training_description: z.string().optional(),
+  project_link: z.string().optional(),
 });
 
 type Props = {
@@ -74,6 +78,11 @@ export function UpdateMeSkillForm({ skill, isEdit, setIsEdit, edit }: Props) {
   const defaultValues = {
     level: skill.skill_level,
     experience: skill.skill_experience,
+    training_title: skill.training_title ? skill.training_title : "",
+    training_description: skill.training_description
+      ? skill.training_description
+      : "",
+    project_link: skill.project_link ? skill.project_link : "",
   };
   const token = useAuthHeader();
   const auth: AuthUser | null = useAuthUser();
@@ -89,7 +98,7 @@ export function UpdateMeSkillForm({ skill, isEdit, setIsEdit, edit }: Props) {
   });
 
   const { mutateAsync: assignSkillMutation, isPending } = useMutation({
-    mutationFn: assignSkillMe,
+    mutationFn: editSkillMe,
   });
 
   const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
@@ -255,6 +264,7 @@ export function UpdateMeSkillForm({ skill, isEdit, setIsEdit, edit }: Props) {
               )}
             />
           </div>
+          {skill.training_title && <SkillEndorsementDialog skill={skill} />}
 
           {isEdit && (
             <div className="flex justify-between w-full">

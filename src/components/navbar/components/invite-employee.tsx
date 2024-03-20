@@ -17,7 +17,7 @@ export function InviteEmployeesPopover() {
   const organization_id = auth?.organization_id;
 
   const { data: organizationData, isLoading } = useQuery({
-    queryKey: ["invite", { token }],
+    queryKey: ["invite", { organization_id }],
     queryFn: () => getOrganization({ token, organization_id }),
   });
   const [inviteLink, setInviteLink] = useState("");
@@ -33,7 +33,7 @@ export function InviteEmployeesPopover() {
 
   const handleRefreshClick = async () => {
     const data = await refreshInviteLinkMutation(token);
-    setInviteLink(`${window.location.origin}/invite/${data}`);
+    setInviteLink(`${window.location.origin}/invite/${data.refferal}`);
   };
   return (
     <>

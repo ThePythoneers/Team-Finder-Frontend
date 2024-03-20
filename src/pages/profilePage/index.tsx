@@ -14,36 +14,21 @@ import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { UserSkills } from "./components/userSkills";
-// import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// import { TabsContent } from "@radix-ui/react-tabs";
-// import { PastProjectsList } from "./components/currentProjectsList";
-// import { getProjectInfo } from "@/api/project";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { ActiveUserProjects } from "./components/activeProjects";
+import { PastProjects } from "./components/pastUserProjects";
 
 export function ProfilePage() {
   const auth: AuthUser | null = useAuthUser();
   const token = useAuthHeader();
 
   const { data: userDepartmentInfo, isLoading } = useQuery({
-    queryKey: ["userDepartment"],
+    queryKey: ["userDepartment", { departmet_id: auth?.department_id }],
     queryFn: () => {
       if (!auth?.department_id) return { department_name: "No department" };
       return getDepartmentInfo({ token, department_id: auth?.department_id });
     },
   });
-
-  // const results = useQueries({
-  //   queries: .map((category_id) => ({
-  //     queryKey: ["category", { category_id }],
-  //     queryFn: () => getSkillCategory({ token, category_id }),
-  //     staleTime: Infinity,
-  //   })),
-  //   combine: (results) => {
-  //     return {
-  //       data: results.map((result) => result.data),
-  //       pending: results.some((result) => result.isPending),
-  //     };
-  //   },
-  // });
 
   if (!auth) return;
   return (
@@ -77,16 +62,20 @@ export function ProfilePage() {
                   )}
                 </>
               )}
-              {/* <Tabs defaultValue="past">
+              <Tabs defaultValue="active">
                 <TabsList>
+                  <TabsTrigger value="active">Active Projects</TabsTrigger>
                   <TabsTrigger value="past">Past Projects</TabsTrigger>
                 </TabsList>
-                <TabsContent value="current">
-                  <PastProjectsList />
+                <TabsContent value="active">
+                  <ActiveUserProjects />
                 </TabsContent>
-              </Tabs> */}
+                <TabsContent value="past">
+                  <PastProjects />
+                </TabsContent>
+              </Tabs>
             </aside>
-            <section className="overflow-auto h-[calc(100vh-20vh)]">
+            <section className="overflow-auto h-[80vh]">
               <UserSkills token={token} />
             </section>
           </CardContent>

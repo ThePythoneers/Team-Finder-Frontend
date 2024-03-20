@@ -10,23 +10,37 @@ import {
 } from "@/components/ui/dialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Project, findResponseData } from "@/types";
-import { BotIcon, HeartHandshakeIcon, UsersIcon } from "lucide-react";
+import {
+  BotIcon,
+  HeartHandshakeIcon,
+  Loader2Icon,
+  UsersIcon,
+} from "lucide-react";
 import { TeamFinderForm } from "./teamFinderForm";
 import { useState } from "react";
 import { TeamFinderResult } from "./teamFinderResult";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { useMutation } from "@tanstack/react-query";
+import { gpt } from "@/api/gpt";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { toast } from "sonner";
 
 type Props = {
   project: Project;
 };
 
 export function TeamFinderDialog({ project }: Props) {
+  const token = useAuthHeader();
   const [isSearch, setIsSearch] = useState(false);
   const [responseData, setResponseData] = useState<findResponseData[]>([]);
 
   const [aiMessage, setAiMessage] = useState("");
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: gpt,
+  });
 
   return (
     <>
@@ -85,10 +99,20 @@ export function TeamFinderDialog({ project }: Props) {
                       <DialogClose asChild>
                         <Button variant="ghost">Cancel</Button>
                       </DialogClose>
-                      <Button>
-                        {/* {isPending && (
+                      <Button
+                        onClick={async () => {
+                          const data = await mutateAsync({
+                            token,
+                            message: aiMessage,
+                            project_id: project.project_id,
+                          });
+                          console.log(data);
+                          toast.success("Look in the console [F12]");
+                        }}
+                      >
+                        {isPending && (
                           <Loader2Icon className="mr-2 size-4 animate-spin" />
-                        )} */}
+                        )}
                         Submit
                       </Button>
                     </DialogFooter>

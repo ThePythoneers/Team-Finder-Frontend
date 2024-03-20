@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   AlbumIcon,
+  BadgePercentIcon,
   FolderGit2Icon,
   GanttChartSquareIcon,
   ShieldCheckIcon,
@@ -81,6 +82,20 @@ export function DesktopNav({ auth }: Props) {
               return (
                 <Button variant={isActive ? "secondary" : "ghost"} size="sm">
                   <ShieldCheckIcon className="mr-2" /> Proposals
+                </Button>
+              );
+            }}
+          </NavLink>
+        )}
+        {(auth?.roles.includes("Project Manager") || auth?.roles.includes("Organization Admin")) && (
+          <NavLink
+            to={`/${auth?.organization_name}/roles`}
+            className="flex items-center"
+          >
+            {({ isActive }) => {
+              return (
+                <Button variant={isActive ? "secondary" : "ghost"} size="sm">
+                  <BadgePercentIcon className="mr-2" /> Team Roles
                 </Button>
               );
             }}

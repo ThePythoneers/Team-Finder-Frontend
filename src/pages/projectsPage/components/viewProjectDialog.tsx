@@ -37,8 +37,10 @@ export function ViewProjectDialog({ project }: Props) {
               <FolderGit2Icon /> {project.project_name}
             </DialogTitle>
             <DialogDescription>
-              {project.start_date && `Date: ${project.start_date.toString().slice(0, 10)}`}
-              {project.deadline_date && ` <-> ${project.deadline_date.toString().slice(0, 10)}`}
+              {project.start_date &&
+                `Date: ${project.start_date.toString().slice(0, 10)}`}
+              {project.deadline_date &&
+                ` <-> ${project.deadline_date.toString().slice(0, 10)}`}
             </DialogDescription>
             <div className="flex justify-between">
               <Badge variant="secondary">{project.project_period}</Badge>
@@ -48,29 +50,62 @@ export function ViewProjectDialog({ project }: Props) {
           </DialogHeader>
           <Tabs defaultValue="members">
             <TabsList className="flex">
-              <TabsTrigger value="members" className="flex-1">
+              <TabsTrigger
+                value="members"
+                className="flex-1 text-[12px] lg:text-sm"
+              >
                 Members
               </TabsTrigger>
-              <TabsTrigger value="pastMembers" className="flex-1">
+              <TabsTrigger
+                value="proposed"
+                className="flex-1 text-[12px] lg:text-sm"
+              >
+                Proposed
+              </TabsTrigger>
+              <TabsTrigger
+                value="pastMembers"
+                className="flex-1 text-[12px] lg:text-sm"
+              >
                 Past Members
               </TabsTrigger>
-              <TabsTrigger value="teamRoles" className="flex-1">
+              <TabsTrigger
+                value="teamRoles"
+                className="flex-1 text-[12px] lg:text-sm"
+              >
                 Team Roles
               </TabsTrigger>
-              <TabsTrigger value="technologies" className="flex-1">
+              <TabsTrigger
+                value="technologies"
+                className="flex-1 text-[12px] lg:text-sm"
+              >
                 Technologies
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="members">
-              {project.users && <MembersList project={project} type="members" />}
+            <TabsContent value="members" className="max-h-[70vh] overflow-auto">
+              <MembersList project={project} type="members" />
             </TabsContent>
-            <TabsContent value="pastMembers">
+            <TabsContent
+              value="proposed"
+              className="max-h-[70vh] overflow-auto"
+            >
+              <MembersList project={project} type="proposed" />
+            </TabsContent>
+            <TabsContent
+              value="pastMembers"
+              className="max-h-[70vh] overflow-auto"
+            >
               {project.users && <MembersList project={project} type="past" />}
             </TabsContent>
-            <TabsContent value="teamRoles">
+            <TabsContent
+              value="teamRoles"
+              className="max-h-[70vh] overflow-auto"
+            >
               <TeamRolesList project={project} />
             </TabsContent>
-            <TabsContent value="technologies">
+            <TabsContent
+              value="technologies"
+              className="max-h-[70vh] overflow-auto"
+            >
               <TechnologiesList project={project} />
             </TabsContent>
           </Tabs>

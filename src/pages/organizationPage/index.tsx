@@ -8,7 +8,6 @@ import { getUserInfoByToken } from "@/api/auth";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
-// import { WebSocket } from "@/websocket";
 
 export function OrganizationPage() {
   const token = useAuthHeader();
@@ -32,13 +31,13 @@ export function OrganizationPage() {
       return <NotFoundPage errorMsg="This is not your organization" />;
   }
 
+
   return (
     <>
       {isLoading ? (
         <Skeleton className="mx-auto mt-48 w-[70%] h-[500px]" />
       ) : (
         <>
-          {/* <WebSocket /> */}
           <Navbar auth={auth} />
           <Outlet />
         </>

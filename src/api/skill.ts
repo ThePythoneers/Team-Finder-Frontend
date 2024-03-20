@@ -6,6 +6,7 @@ import {
   GET_SKILLS_ANY_USER,
   GET_SKILL_CATEGORIES,
   GET_SKILL_CATEGORY,
+  REJECT_VERIFY_SKILL,
   VERIFY_SKILL,
 } from "./URL";
 import { checkError, getAuthHeaders } from "./utils";
@@ -301,6 +302,24 @@ export const verifySkill = async ({ token, _id }: verifySkillParams) => {
       throw new Error(errMsg);
     }
     toast.success("You verified a skill with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+export const rejectVerifySkill = async ({ token, _id }: verifySkillParams) => {
+  try {
+    const response = await fetch(`${REJECT_VERIFY_SKILL}${_id}`, {
+      method: "POST",
+      headers: getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You rejected a skill with success!");
     return await response.json();
   } catch (error) {
     checkError(error);

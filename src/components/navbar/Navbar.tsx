@@ -17,7 +17,7 @@ export function Navbar({ auth }: NavbarProps) {
     <>
       <nav className="sticky top-0 z-50 backdrop-blur min-h-12 py-2 px-4 flex items-center justify-between border-b border-border/40 bg-background/25 md:px-[10%]">
         <div className="flex gap-2 items-center space-x-2">
-          <Link to={`/${auth?.organization_name}`} className="text-xl">
+          <Link to={`/${auth?.organization_name}/dashboard`} className="text-xl">
             {auth?.organization_name}
           </Link>
           {isDesktop && <DesktopNav auth={auth} />}

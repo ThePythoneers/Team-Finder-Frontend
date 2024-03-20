@@ -104,16 +104,13 @@ export function ValidateSkillsPage() {
     queryKey: ["validateSkills", { token }],
     queryFn: () => getAllUnverifiedSkills(token),
   });
-  console.log("🚀 ~ ValidateSkillsPage ~ skillsData:", skillsData);
   return (
     <>
-      <main className="container mx-auto py-4">
-        {isLoading ? (
-          <Skeleton className="w-full h-[300px]  rounded-md" />
-        ) : (
-          <DataTable columns={columns} data={skillsData} type="proposals" />
-        )}
-      </main>
+      {isLoading ? (
+        <Skeleton className="w-full h-[300px]  rounded-md" />
+      ) : (
+        <DataTable columns={columns} data={skillsData} type="proposals" />
+      )}
     </>
   );
 }
