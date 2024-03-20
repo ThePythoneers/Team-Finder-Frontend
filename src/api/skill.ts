@@ -72,6 +72,36 @@ export const createSkill = async (values: createSkillParams) => {
   }
 };
 
+type editSkillParams = {
+  token: Token;
+  skill_id: string;
+  skill_category: string[];
+  skill_name: string;
+  description: string;
+};
+
+export const editSkill = async (values: editSkillParams) => {
+  try {
+    const { token, ...body } = values;
+    console.log(body)
+    const response = await fetch(`${GET_CREATE_DELETE_SKILLS}`, {
+      method: "PATCH",
+      headers: getAuthHeaders(token),
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errMsg = await response.json();
+      if (errMsg.detail) throw new Error(errMsg.detail);
+      throw new Error(errMsg);
+    }
+    toast.success("You edted a skill with success!");
+    return await response.json();
+  } catch (error) {
+    checkError(error);
+  }
+};
+
 type deleteSkillParams = {
   token: Token;
   skill_id: string;
