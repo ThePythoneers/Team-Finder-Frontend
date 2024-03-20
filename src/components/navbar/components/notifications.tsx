@@ -28,7 +28,7 @@ export function Notifications() {
 
   setInterval(() => {
     queryClient.invalidateQueries({ queryKey: ["notifications"] });
-  }, 15000);
+  }, 50000);
   return (
     <>
       <Popover>
